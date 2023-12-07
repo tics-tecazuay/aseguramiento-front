@@ -1,0 +1,63 @@
+* {
+  box-sizing: border-box;
+  accent-color: #253b69;
+}
+
+.bigspace{
+  height: 100vh;
+}
+section {
+  width: 300px;
+  margin: 50px;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+}
+
+fieldset {
+  width: 100%;
+  border: 2px solid #152b59c0;
+  border-radius: 2px;
+  padding: 1rem 10%;
+}
+legend {
+  color: #152b59;
+  font-weight: bold;
+  padding: 0 .5rem;
+}
+
+button {
+  background-color: #152b59ee;
+  border: none;
+  border-radius: 3px;
+  color: white;
+  padding: .3rem 1rem;
+  letter-spacing: 1px;
+}
+button:disabled {
+  opacity: 0.5;
+}
+
+input, textarea, select {
+  width: 100%
+}
+textarea {
+  resize: vertical;
+  height: 100px;
+}
+
+input[type="checkbox"],input[type="radio"]{
+  width: revert;
+  margin-left: 1rem;
+}
+body {
+  font: 1em/1.618 Inter, sans-serif;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  min-height: 100vh;
+  padding: 30px;
+  
+  color: #224;
+}

@@ -1,0 +1,90 @@
+<body>
+  <div class="container bg-light border border-start-0 rounded-4">
+    <blockquote class="blockquote text-dark" style="margin-top: 5%">
+      <h1><strong> LISTA DE ACTIVIDADES RECHAZADAS</strong></h1>
+    </blockquote>
+    <div></div>
+
+    <div class="card">
+      <div class="card-body">
+
+        <div role="search" id="buscar">
+
+          <input class="form-control" type="text" placeholder="Buscar" aria-label="Search" [(ngModel)]="searchText" />
+
+        </div>
+        <br />
+
+        <br />
+        <br />
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th class="text-center">ID</th>
+              <th class="text-center">NOMBRE</th>
+              <th class="text-center">FECHA INICIO</th>
+              <th class="text-center">FECHA FIN</th>
+              <th class="text-center">OBSERVACIONES</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of actividad | buscar : searchText">
+              <td class="text-center">{{item.id_actividad}}</td>
+              <td class="text-center">{{item.nombre}}</td>
+              <td class="text-center">{{item.fecha_inicio}}</td>
+              <td class="text-center">{{item.fecha_fin}}</td>
+              <td class="text-center">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#materiaModal"
+                  (click)="mostrarObservacion(item)">
+                  <mat-icon>visibility</mat-icon>
+                  
+                </button>
+              </td>
+
+
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</body>
+
+<!--   MODAL DE ONSERVACION -->
+
+<div class="modal fade" id="materiaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-blue">
+        <h3 class="modal-title">
+          <i class="fas fa-clipboard"></i> Observaciones
+        </h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table" id="tbl_productos_mas_vendidos">
+          <thead>
+            <tr class="text-danger">
+              <th class="text-center">ID</th>
+              <th class="text-center">OBSERVACIÓN</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="text-center text-start" *ngFor="let item of observaciones">
+              <td>{{item.id_observacion}}</td>
+              <td>{{item.observacion}}</td>
+
+            </tr>
+          </tbody>
+        </table>
+        <div class="modal-footer">
+          <button type="button" form="formulario" class="btn btn-warning" data-bs-dismiss="modal">
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

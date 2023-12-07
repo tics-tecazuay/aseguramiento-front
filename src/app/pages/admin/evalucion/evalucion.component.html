@@ -1,0 +1,770 @@
+<body>
+    <div class="container bg-light border border-start-0 rounded-4">
+      <figure
+        class="text-center text-dark"
+        style="margin-top: 5%; font-style: italic"
+      >
+        <blockquote class="blockquote text-dark">
+          <h1><strong> BUSCAR USUARIOS</strong></h1>
+        </blockquote>
+      </figure>
+      <div class="container">
+        <div class="col col-lg-3">
+          <form class="example-form">
+            <mat-form-field class="example-full-width">
+              <mat-label>Cédula:</mat-label>
+              <input
+                matInput
+                placeholder="Ingrese la cédula"
+                [(ngModel)]="fenix.cedula"
+                name="cedula"
+              />
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <mat-label>Primer Nombre:</mat-label>
+              <input
+                matInput
+                placeholder="Ingresar un nombre"
+                [(ngModel)]="fenix.primer_nombre"
+                name="primer_nombre"
+              />
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <mat-label>Primer Apellido:</mat-label>
+              <input
+                matInput
+                placeholder="Ingrese el apellido"
+                [(ngModel)]="fenix.primer_apellido"
+                name="primer_apellido"
+              />
+            </mat-form-field>
+            
+            <button mat-raised-button color="primary" (click)="consultar()">
+              Buscar
+              <mat-icon>search</mat-icon>
+            </button>
+          </form>
+        </div>
+        <div class="row" style="margin-bottom: 5%">
+          <div class="col"></div>
+          <div class="col"></div>
+          <div class="col"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+            <ng-container matColumnDef="cedula">
+              <th mat-header-cell *matHeaderCellDef>Cédula</th>
+              <td mat-cell *matCellDef="let element">{{ element.cedula }}</td>
+            </ng-container>
+  
+            <ng-container matColumnDef="primer_apellido">
+              <th mat-header-cell *matHeaderCellDef>Primer Apellido</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.primer_apellido }}
+              </td>
+            </ng-container>
+  
+            <ng-container matColumnDef="segundo_apellido">
+              <th mat-header-cell *matHeaderCellDef>Segundo Apellido</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.segundo_apellido }}
+              </td>
+            </ng-container>
+  
+            <ng-container matColumnDef="primer_nombre">
+              <th mat-header-cell *matHeaderCellDef>Primer Nombre</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.primer_nombre }}
+              </td>
+            </ng-container>
+  
+            <ng-container matColumnDef="segundo_nombre">
+              <th mat-header-cell *matHeaderCellDef>Segundo Nombre</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.segundo_nombre }}
+              </td>
+            </ng-container>
+  
+            <ng-container matColumnDef="celular">
+              <th mat-header-cell *matHeaderCellDef>Celular</th>
+              <td mat-cell *matCellDef="let element">{{ element.celular }}</td>
+            </ng-container>
+  
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let element">
+                <button
+                  (click)="seleccionar(element)"
+                  mat-icon-button
+                  type="button"
+                  class="btn btn-primary"
+                  style="background-color: rgb(151, 166, 189); margin-right: 1%"
+                  data-bs-toggle="modal"
+                  data-bs-target="#staticBackdrop"
+                >
+                  <mat-icon>person_add</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+  
+          <div
+            class="modal fade"
+            id="staticBackdrop"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            tabindex="-1"
+            aria-labelledby="staticBackdropLabel"
+            aria-hidden="true"
+            (hidden.bs.modal)="limpiarFormulario()"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div
+                  class="modal-header"
+                  style="background-color: rgb(0, 122, 255)"
+                >
+                  <h1
+                    class="modal-title text-center display-2 fw-bold"
+                    style="font-family: Arial, sans-serif; color: white"
+                  >
+                    Asignar Usuario Responsable
+                  </h1>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                    (click)="limpiarFormulario()"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Cédula</span>
+                    <input
+                      disabled
+                      type="text"
+                      class="form-control"
+                      placeholder="Username"
+                      aria-label="Username"
+                      aria-describedby="basic-addon1"
+                      [value]="personaSele.cedula"
+                    />
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">Nombre y apellido</span>
+                    <input
+                      disabled
+                      type="text"
+                      aria-label="First name"
+                      class="form-control"
+                      [value]="personaSele.primer_nombre"
+                    />
+                    <input
+                      disabled
+                      type="text"
+                      aria-label="Last name"
+                      class="form-control"
+                      [value]="personaSele.primer_apellido"
+                    />
+                  </div>
+                  <hr />
+                  <mat-card-header>
+                    <mat-card-title
+                      >Ingrese los datos para el nuevo usuario</mat-card-title
+                    >
+                  </mat-card-header>
+                  <hr />
+                  <form [formGroup]="formulario" (ngSubmit)="guardarUsuario()">
+                    <mat-form-field class="full-width" appearance="outline">
+                      <mat-label>Nombre de usuario</mat-label>
+                      <input
+                        required
+                        formControlName="username"
+                        name="username"
+                        matInput
+                        placeholder="Digite su nombre de usuario"
+                        [value]="personaSele.cedula"
+                      />
+                    </mat-form-field>
+  
+                    <mat-form-field class="full-width" appearance="outline">
+                      <mat-label>Contraseña</mat-label>
+                      <input
+                        formControlName="password"
+                        type="password"
+                        matInput
+                        placeholder="Digite su contraseña"
+                      />
+                      <mat-error
+                        *ngIf="
+                          formulario.get('password')?.invalid &&
+                          formulario.get('password')?.touched
+                        "
+                      >
+                        El campo de contraseña es obligatorio
+                      </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                      <mat-label>ROL</mat-label>
+                      <select formControlName="rol" matNativeControl>
+                        <option *ngFor="let rol of roles" [value]="rol.rolId">
+                          {{ rol.rolNombre }}
+                        </option>
+                      </select>
+                      <mat-error
+                        *ngIf="
+                          formulario.get('rol')?.invalid &&
+                          formulario.get('rol')?.touched
+                        "
+                      >
+                        El campo de selección de rol es obligatorio
+                      </mat-error>
+                    </mat-form-field>
+                    <div class="container text-center">
+                      <button
+                        mat-raised-button
+                        color="primary"
+                        data-bs-dismiss="modal"
+                        [disabled]="formulario.invalid"
+                      >
+                        <mat-icon>save</mat-icon>Registrar
+                      </button>
+                      <button
+                        type="button"
+                        style="margin-left: 5%"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        <i class="fas fa-times"></i> Cancelar
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+  
+      <!--Listado de usuarios-->
+      <blockquote class="blockquote text-dark" style="margin-top: 5%">
+        <h1><strong> LISTADO DE RESPONSABLES</strong></h1>
+      </blockquote>
+      <div class="card">
+        <div class="card-body">
+          <div class="card-body">
+            <div class="form-group">
+              <input
+                type="text"
+                class="form-control"
+                name="filterPost3"
+                placeholder="Buscar..."
+                [(ngModel)]="filterPost" 
+              />
+            </div>
+          </div>
+          <div>
+            
+            </div>
+          <div class="tabla-container">
+          <div class="mat-elevation-z8 table-responsive" style="margin-bottom: 5%">
+            
+            <table mat-table [dataSource]="dataSource2.data | responsable: filterPost">
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef [style.display]="ocultar? '' : 'none'">ID</th>
+                <td mat-cell *matCellDef="let elemento" [style.display]="ocultar? '' : 'none'">
+                  {{ elemento.id }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                <td mat-cell *matCellDef="let elemento">
+                  {{ elemento.nombres }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="rol">
+                <th mat-header-cell *matHeaderCellDef>Rol</th>
+                <td mat-cell *matCellDef="let elemento">
+                  {{ elemento.rol }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="usuario">
+                <th mat-header-cell *matHeaderCellDef>Usuario</th>
+                <td mat-cell *matCellDef="let elemento">
+                  {{ elemento.usua }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="evidencia">
+                <th mat-header-cell *matHeaderCellDef>Evidencia</th>
+                <td mat-cell *matCellDef="let elemento">
+                  {{ elemento.evidencias }}
+                </td>
+              </ng-container>
+             
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
+                <td mat-cell *matCellDef="let elemento">
+                  <!---->
+                  <button
+                    class="btn btn-danger"
+                    style="background-color: red"
+                    (click)="eliminar(elemento)"
+                    style="margin-right: 5%"
+                
+                  >
+                    <i class="fas fa-user-times"></i>
+                  </button>
+             <!-- va en el boton de abajo-->
+                  <button
+                    type="button"
+                    style="margin-left: 6%"
+                    class="btn btn-primary  custom-buttonArchivos"
+                    style="background-color: rgb(32, 67, 165)"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal4"
+                    (click)="seleccionarUsuario(elemento)"
+                    
+                  >
+                    <i class="fas fa-plus-circle"></i>
+                  </button>
+
+                  <!-- Nuevo botón para editar la fecha -->
+                  <button
+                    type="button"
+                    class="btn btn-warning" 
+                    *ngIf="mostrarBotonEditarFecha" 
+                    (click)="editarFecha(elemento)"
+                  >
+                    <i class="fas fa-calendar-alt"></i> Editar
+                  </button>
+                </td>
+              </ng-container>
+  
+              <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+              <tr mat-row *matRowDef="let fila; columns: columnas"></tr>
+            </table> 
+            </div>
+          </div>
+  
+  
+          <div class="container" style="text-align: left">
+            <button
+              mat-fab
+              extended
+              color="primary"
+           
+              style="margin-bottom: 5%"
+              (click)="MostrarBotonDetalleEvalucaion()"
+            >
+              <mat-icon>list</mat-icon>
+              LISTADO DE ASIGNACIONES
+            </button>
+    
+            <button
+              mat-fab
+              extended
+              color="primary"
+              style="margin-bottom: 5%"
+              (click)="OcultarbotonDetalleEvalucaion()"
+              *ngIf="mostrarbotonDetalle"
+            >
+              <span>Ocultar</span>
+              <mat-icon class="hide-icon">visibility_off</mat-icon>
+            </button>
+          </div>
+  
+  
+  
+  
+  
+          <div class="card" *ngIf="mostrarbotonDetalle">
+            <div class="card-header">
+              <figure
+                class="text-center text-dark"
+                style="margin-top: 5%; font-style: italic"
+              >
+                <blockquote class="blockquote text-dark">
+                  <h1><strong> ASIGNACIÓN DE EVIDENCIAS</strong></h1>
+                </blockquote>
+              </figure>
+            </div>
+            <div class="card-body">
+              
+              <div class="tabla-container">
+              <div class= "table-responsive mat-elevation-z8" style="margin-bottom: 5%">
+                <table mat-table [dataSource]="dataSource4">
+                  <ng-container matColumnDef="usuario">
+                    <th mat-header-cell *matHeaderCellDef>RESPONSABLE</th>
+                    <td mat-cell *matCellDef="let elemento; let i = index"
+                    [attr.rowspan]="getRowSpan('usuario', i)" 
+                    [style.display]="getRowSpan('usuario', i) ? '' : 'none'">
+                      {{ elemento.respon }}
+                    </td>
+                  </ng-container>
+  
+                  <ng-container matColumnDef="criterio">
+                    <th mat-header-cell *matHeaderCellDef>CRITERIO</th>
+                    <td mat-cell *matCellDef="let elemento; let i = index"
+                    [attr.rowspan]="getRowSpan('criterio', i)" 
+                    [style.display]="getRowSpan('criterio', i) ? '' : 'none'">{{ elemento.crite }}</td>
+                  </ng-container>
+  
+                  <ng-container matColumnDef="subcriterio">
+                    <th mat-header-cell *matHeaderCellDef>SUBCRITERIO</th>
+                    <td mat-cell *matCellDef="let elemento; let i = index"
+                    [attr.rowspan]="getRowSpan('subcriterio', i)" 
+                    [style.display]="getRowSpan('subcriterio', i) ? '' : 'none'">{{ elemento.subcrite }}</td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="evidencia">
+                    <th mat-header-cell *matHeaderCellDef>INDICADOR</th>
+                    <td mat-cell *matCellDef="let elemento; let i = index"
+                    [attr.rowspan]="getRowSpan('evidencia', i)" 
+                    [style.display]="getRowSpan('evidencia', i) ? '' : 'none'">{{ elemento.indi }}</td>
+                  </ng-container>
+  
+                  
+                  <ng-container matColumnDef="idasigna">
+                    <th mat-header-cell *matHeaderCellDef [style.display]="ocultar ? '' : 'none'">ID</th>
+                    <td mat-cell *matCellDef="let elemento; let i = index"
+                    [attr.rowspan]="getRowSpan('idasigna', i)" 
+                    [style.display]="ocultar && getRowSpan('idasigna', i) ? '' : 'none'">
+                      {{ elemento.idevid}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="ideviden">
+                    <th mat-header-cell *matHeaderCellDef [style.display]="ocultar ? '' : 'none'">ID ev</th>
+                    <td mat-cell *matCellDef="let elemento; let i = index"
+                    [attr.rowspan]="getRowSpan('ideviden', i)" 
+                    [style.display]="ocultar && getRowSpan('ideviden', i) ? '' : 'none'">
+                      {{ elemento.ideviden}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="descripcion">
+                    <th mat-header-cell *matHeaderCellDef>DESCRIPCIÓN EVIDENCIA</th>
+                    <td mat-cell *matCellDef="let elemento; let i = index"
+                    [attr.rowspan]="getRowSpan('descripcion', i)" 
+                    [style.display]="getRowSpan('descripcion', i) ? '' : 'none'">
+                      {{ elemento.descev }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="inicio">
+                    <th mat-header-cell *matHeaderCellDef>Fecha Inicio</th>
+                    <td mat-cell *matCellDef="let elemento">
+                      {{ elemento.ini  | date : "yyyy-MM-dd" }}
+                    </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="fin">
+                    <th mat-header-cell *matHeaderCellDef>Fecha fin</th>
+                    <td mat-cell *matCellDef="let elemento">
+                      {{ elemento.fini  | date : "yyyy-MM-dd" }}
+                    </td>
+                  </ng-container>
+    
+                  <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
+                    <td mat-cell *matCellDef="let element">
+                      <button type="button"
+                  class="btn btn-primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal3"
+                  style="margin-right: 5%"
+                  (click)="EditarAsigna(element)"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+                      <button
+                      class="btn btn-danger"
+                      style="background-color: red"
+                      (click)="eliminarAsignacion(element)"
+                      style="margin-right: 5%"
+                    >
+                      <i class="fas fa-user-times"></i>
+                    </button>
+                   
+                    </td>
+                  </ng-container>
+    
+                  <tr mat-header-row *matHeaderRowDef="  columnasEvidenciaAsignacion"></tr>
+                  <tr mat-row *matRowDef="let fila; columns:   columnasEvidenciaAsignacion"></tr>
+                </table>
+              </div>
+              </div>
+            </div>
+          </div>
+    
+  
+  
+  
+          <div class="modal fade" id="exampleModal4"
+            tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+              <div class="modal-content" style="height: 89%">
+                <div
+                  class="modal-header text-center"
+                  style="background-color: rgb(0, 122, 255)"
+                >
+                  <strong>
+                    <h1
+                      class="modal-title font-weight-bold"
+                      style="font-family: Arial, sans-serif; color: white"
+                    >
+                      Asignar Evidencia
+                    </h1>
+                  </strong>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-sm-6">
+  
+  
+  
+                      <div class="card">
+                        <div class="card-header">
+                          <h2 class="card-title text-center">Usuario Seleccionado</h2>
+                        </div>
+                        <div class="card-body">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="form-floating mb-3">
+                                <input disabled type="text" class="form-control" id="floatingInput" [value]="usuarioSele.username" />
+                                <label for="floatingInput">Usuario</label>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-floating mb-3">
+                                <input disabled type="text" class="form-control" id="floatingInput" [value]="usuarioSele.persona" />
+                                <label for="floatingInput">Nombres</label>
+                              </div>
+                            </div> 
+                            <div>
+                              <h2>Seleccione un criterio:</h2>
+                              <mat-form-field class="mat-select-field">
+                                <mat-label>Criterios</mat-label>
+                                <mat-select [(value)]="selectedCriterio" (selectionChange)="criterioSeleccionado()">
+                                  <mat-option *ngFor="let criterio of listacriterios" [value]="criterio.id_criterio">
+                                    {{ criterio.nombre }}
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                         <!-- fechas -->
+                         <div class="date-fields">
+                          <mat-form-field appearance="fill" class="date-field">
+                            <mat-label>Fecha Inicial:</mat-label>
+                            <input matInput [matDatepicker]="dp1" [(ngModel)]="asignar.fecha_inicio" name="fecha_inicio"
+                            [min]="inicio"
+                            [max]="fin"/>
+                            <mat-hint>MM/DD/YYYY</mat-hint>
+                            <mat-datepicker-toggle matIconSuffix [for]="dp1"></mat-datepicker-toggle>
+                            <mat-datepicker #dp1 disabled="false"></mat-datepicker>
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" class="date-field">
+                            <mat-label>Fecha Final:</mat-label>
+                            <input matInput [matDatepicker]="dp2" [(ngModel)]="asignar.fecha_fin" name="fecha_fin"
+                            [min]="inicio"
+                            [max]="fin"/>
+                            <mat-hint>MM/DD/YYYY</mat-hint>
+                            <mat-datepicker-toggle matIconSuffix [for]="dp2"></mat-datepicker-toggle>
+                            <mat-datepicker #dp2 disabled="false"></mat-datepicker>
+                          </mat-form-field>
+                        </div>
+                        <!-- fin calendario -->
+                        </div>
+                       
+                      </div>
+  
+                    </div>
+                    <div class="col-sm-6">
+  
+                      <div class="card">
+                        <div class="card-header">
+                          <h2>{{titulocrite}}</h2>
+                          
+                        </div>
+                        <div class="card-body">
+                          
+                          <div
+                            class="mat-elevation-z8"
+                            style="margin-bottom: 10%"
+                          >
+                          <div class="btn-tabs">
+            
+                            <button mat-button class="btn-tab" [ngClass]="verSubcriterio ? 'selected' : ''" (click)="showSubcriterio()">
+                            Subcriterio
+                            </button>
+                      
+                            <button mat-button class="btn-tab" [ngClass]="verIndicador ? 'selected' : ''" (click)="showIndicador()">
+                            Indicador
+                            </button>
+                        </div>
+                            
+                            <table mat-table [dataSource]="dataSource3">
+                              
+  
+                              <ng-container matColumnDef="subcriterio">
+                                <th mat-header-cell *matHeaderCellDef  [style.display]="verSubcriterio ? '' : 'none'">
+                                  SUBCRITERIO
+                                </th>
+                                <td mat-cell *matCellDef="let elemento; let i = index"
+                                [attr.rowspan]="getRowSpan2('subcriterio', i)"
+                                [style.background-color]="elemento.randomColor"
+                                [style.display]="verSubcriterio && getRowSpan2('subcriterio', i) ? '' : 'none'">
+                                  {{ elemento.nombsub }}
+                                </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="indicador">
+                                <th mat-header-cell *matHeaderCellDef [style.display]="verIndicador ? '' : 'none'">
+                                  INDICADOR
+                                </th>
+                                <td mat-cell *matCellDef="let elemento; let i = index"
+                                [attr.rowspan]="getRowSpan2('indicador', i)"
+                                [style.background-color]="elemento.Colores"
+                                [style.display]="verIndicador && getRowSpan2('indicador', i) ? '' : 'none'">
+                                  {{ elemento.nombind }}
+                                  
+                                </td>
+                              </ng-container>
+                              
+                              <ng-container matColumnDef="descripcion">
+                                <th mat-header-cell *matHeaderCellDef>
+                                  DESCRIPCIÓN
+                                </th>
+                                <td mat-cell *matCellDef="let elemento; let i = index"
+                                [attr.rowspan]="getRowSpan2('descripcion', i)"
+                                [style.display]="getRowSpan2('descripcion', i) ? '' : 'none'">
+                                  {{ elemento.descripc }}
+                                </td>
+                              </ng-container>
+                              <ng-container matColumnDef="idevi">
+                                <th mat-header-cell *matHeaderCellDef [style.display]="ocultar ? '' : 'none'">ID</th>
+                                <td mat-cell *matCellDef="let elemento;let i=index"
+                                [style.display]="ocultar && getRowSpan2('idevi', i) ? '' : 'none'">
+                                  {{ elemento.idev }}
+                                </td>
+                              </ng-container>
+                              <ng-container matColumnDef="actions">
+                                <th mat-header-cell *matHeaderCellDef>
+                                  ASIGNAR
+                                </th>
+                                <td mat-cell *matCellDef="let element">
+                                  <button
+                                    type="button"
+                                    style="margin-left: 5%"
+                                    class="btn btn-primary"
+                                    (click)="AsignaUsuario(element)"
+                                  >
+                                    <i class="fas fa-plus"></i>
+                                  </button>
+                                </td>
+                              </ng-container>
+  
+                              <tr
+                                mat-header-row
+                                *matHeaderRowDef="columnasEvidencia"
+                              ></tr>
+                              <tr
+                                mat-row
+                                *matRowDef="let fila; columns: columnasEvidencia"
+                              ></tr>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="modal-footer"
+                  style="background-color: rgb(0, 122, 255)"
+                >
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    data-bs-dismiss="modal"
+                  >
+                    <i class="fas fa-times"></i> Cerrar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+        </div>
+      </div>
+    </div>
+
+    <!-- modal edicion -->
+    <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header text-center"
+                style="background-color: rgb(0, 122, 255)">
+                <strong>
+                  <h1 class="modal-title font-weight-bold"
+                    style="font-family: Arial, sans-serif; color: white">
+                    Editar Fechas
+                  </h1>
+                </strong>
+                <button type="button" class="btn-close"
+                  data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                
+                
+                  <div class="date-edits">
+                    <mat-form-field appearance="fill" class="date-edit">
+                      <mat-label>Fecha Inicial:</mat-label>
+                      <input matInput [matDatepicker]="dp3" [(ngModel)]="asignar2.fecha_inicio" name="fecha_inicio"
+                      [min]="inicio"
+                      [max]="fin"/>
+                      <mat-hint>MM/DD/YYYY</mat-hint>
+                      <mat-datepicker-toggle matIconSuffix [for]="dp3"></mat-datepicker-toggle>
+                      <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="date-edit">
+                      <mat-label>Fecha Final:</mat-label>
+                      <input matInput [matDatepicker]="dp4" [(ngModel)]="asignar2.fecha_fin" name="fecha_fin"
+                      [min]="inicio"
+                      [max]="fin"/>
+                      <mat-hint>MM/DD/YYYY</mat-hint>
+                      <mat-datepicker-toggle  matIconSuffix [for]="dp4"></mat-datepicker-toggle>
+                      <mat-datepicker #dp4 disabled="false"></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="container text-center">
+                    <button
+                      mat-raised-button
+                      color="primary"
+                      data-bs-dismiss="modal"
+                      (click)="Actualizarfecha()">
+                      <mat-icon>save</mat-icon>Guardar
+                    </button>
+                    <button type="button" style="margin-left: 5%"
+                      class="btn btn-secondary" data-bs-dismiss="modal">
+                      Cancelar
+                    </button>
+                  </div>
+               
+              </div>
+            </div>
+          </div>
+        </div>
+  </body>

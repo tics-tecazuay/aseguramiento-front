@@ -1,0 +1,144 @@
+<br />
+<blockquote class="blockquote text-dark" style="margin-top: 1%">
+  <h1><strong>Creacion del Modelo</strong></h1>
+</blockquote>
+<mat-dialog-content>
+  <mat-stepper [linear]="isLinear" #stepper>
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup" style="width: 100%">
+        <ng-template matStepLabel>Datos Generales</ng-template>
+        <br />
+        <form class="example-form">
+          <!-- crear un <mat form field> y guardar en el objeto modelo con ngModel -->
+          <mat-form-field class="example-full-width">
+            <mat-label>Nombre</mat-label>
+            <input
+              matInput
+              placeholder="Nombre del modelo"
+              [(ngModel)]="modelo.nombre"
+              name="nombre"
+            />
+          </mat-form-field>
+          <div class="date-fields">
+            <mat-form-field appearance="fill" class="date-field">
+              <mat-label>Fecha Inicial:</mat-label>
+              <input
+                matInput
+                [matDatepicker]="dp1"
+                [(ngModel)]="modelo.fecha_inicio"
+                name="fecha_inicio"
+              />
+              <mat-hint>MM/DD/YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="dp1"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #dp1 disabled="false"></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="date-field">
+              <mat-label>Fin Tareas:</mat-label>
+              <input
+                matInput
+                [matDatepicker]="dp3"
+                [(ngModel)]="modelo.fecha_final_act"
+                name="fecha_final_act"
+              />
+              <mat-hint>MM/DD/YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="dp3"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="date-field">
+              <mat-label>Fecha Final:</mat-label>
+              <input
+                matInput
+                [matDatepicker]="dp2"
+                [(ngModel)]="modelo.fecha_fin"
+                name="fecha_fin"
+              />
+              <mat-hint>MM/DD/YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="dp2"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #dp2 disabled="false"></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </form>
+        <button style="margin-top: 2%;" class="btn btn-primary" (click)="mostrarTabla()">Seleccionar Indicadores</button>
+        <div *ngIf="vertabla" class="mat-elevation-z8" style="width: 100%; height: 50%; margin-top: 2%;">
+          <h2><span class="negrita">Indicadores</span></h2>
+          <table mat-table [dataSource]="dataSource2" matSort>
+        
+            <ng-container matColumnDef="criterio">
+              <th mat-header-cell *matHeaderCellDef> Criterio </th>
+              <td mat-cell *matCellDef="let element;let i = index"
+              [attr.rowspan]="getRowSpan('criterio', i)"
+              [style.display]="getRowSpan('criterio', i) ? '' : 'none'" class="negrita" [style.background-color]="element.randomColor"> {{element.crite}} </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="subcriterio">
+              <th mat-header-cell *matHeaderCellDef> Subcriterio </th>
+              <td mat-cell *matCellDef="let element;let i = index"
+              [attr.rowspan]="getRowSpan('subcriterio', i)"
+              [style.display]="getRowSpan('subcriterio', i) ? '' : 'none'" [style.background-color]="element.Colores"> {{element.sub}} </td>
+            </ng-container>
+            <ng-container matColumnDef="id" >
+              <th mat-header-cell *matHeaderCellDef class="small-cell"> id </th>
+              <td mat-cell *matCellDef="let element" class="small-cell"> {{element.id_indi}} </td>
+            </ng-container>
+            <ng-container matColumnDef="indicador">
+              <th mat-header-cell *matHeaderCellDef> Indicadores </th>
+              <td mat-cell *matCellDef="let element"> {{element.ind_nombre}} </td>
+            </ng-container>
+            <ng-container matColumnDef="visi">
+              <th mat-header-cell *matHeaderCellDef> Elegir </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-checkbox [checked]="element.checked" (change)="onCheckboxChange($event, element)"></mat-checkbox>
+              </td>
+              
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+          </table>
+        </div>
+        
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup" label="Configurar modelo">
+      <br />
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef style="text-align: center">
+            <strong>INDICADORES SELECCIONADOS</strong>
+          </th>
+          <td mat-cell *matCellDef="let element">{{ element.nombre }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </mat-step>
+  </mat-stepper>
+</mat-dialog-content>
+<!-- <div [formGroup]="formulario">
+  <div *ngFor="let criterio of dataSource1">
+    <h3>{{ criterio.nombre }}</h3>
+    <div *ngFor="let subcriterio of criterio.subcriterios; let i = index">
+      <input type="checkbox" [formControlName]="'subcriterios_' + criterio.id + '_' + i" (change)="onChangeSubcriterio(criterio.id, i, subcriterio.id_subcriterio)">
+      {{ subcriterio.nombre }}
+    </div>
+    
+  </div>
+</div> -->
+
+
+
+<mat-dialog-actions align="end">
+  <button class="btn btn-warning" mat-dialog-close>Cancelar</button>
+  <button class="btn btn-primary" cdkFocusInitial (click)="modificarModelo()">
+    Modificar
+  </button>
+</mat-dialog-actions>

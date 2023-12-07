@@ -1,0 +1,60 @@
+@media (max-width: 768px) {
+  .navbar-collapse {
+    justify-content: space-between;
+    flex-basis: 100%;
+    flex-grow: 1;
+  }
+
+  ul {
+    list-style-type: none;
+  }
+  
+  .divider {
+    border: none;
+    height: 1px;
+    background-color: #ccc;
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+  
+  .navbar-nav {
+    margin: 0;
+    justify-content: flex-end;
+  }
+
+  .navbar-nav .nav-item {
+    margin-left: 0;
+    margin-right: 1rem;
+  }
+
+  .navbar-toggler {
+    order: 1;
+  }
+
+  .order-md-last {
+    order: 2;
+  }
+}
+.no-link-style {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Estilos personalizados para la barra de desplazamiento */
+::-webkit-scrollbar {
+  width: 8px; /* Ancho de la barra de desplazamiento */
+  height: 8px; /* Altura de la barra de desplazamiento */
+
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color de fondo de la barra de desplazamiento */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888; /* Color del pulgar de la barra de desplazamiento */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color del pulgar de la barra de desplazamiento al pasar el cursor sobre él */
+}

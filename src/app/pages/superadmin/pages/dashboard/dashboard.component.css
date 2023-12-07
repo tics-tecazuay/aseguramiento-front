@@ -1,0 +1,331 @@
+.btn-visible {
+  background-color: rgba(9, 19, 155, 0.815);
+  color: white;
+}
+
+.btn-oculto {
+  background-color: rgb(186, 236, 48);
+  color: rgb(5, 0, 0);
+}
+
+.pie-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+  justify-content: center;
+}
+
+.card {
+  width: 170px;
+  height: 170px;
+  background-color:transparent;
+  border-radius: 50%;
+  border: 8px solid #a7b7e2b9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+}
+
+.grafico {
+  margin-bottom: 1px;
+}
+
+.tabla {
+  margin-bottom: 180px;
+}
+
+.card-content {
+  text-align: center;
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+}
+.card-tot {
+  text-align: center;
+  color: black;
+  font-size: 12px;
+}
+.card-name {
+  font-size: 14px;
+  font-weight: bold;
+  color: black;
+}
+
+
+.men {
+  margin-bottom: 6%;
+}
+
+.cole {
+  color: white;
+}
+
+.tab-rech {
+  background-color: rgba(255, 0, 0, 0.158);
+}
+
+.tab-pend{
+  background-color: rgba(215, 224, 84, 0.158);
+}
+
+.tab-apr {
+  background-color: rgba(0, 255, 64, 0.158);
+}
+
+.cent{
+  flex-basis: 30%; margin-top: 2%;align-items: center;display: flex; flex-direction: column;justify-content: center;
+}
+
+.barra {
+  display: flex;
+  justify-content: center;
+  width: 15%;
+  height: 15%;
+}
+
+.titu {
+  margin-top: 2%;
+  margin-left: 2%;
+  font-weight: bold;
+}
+
+table {
+  width: 70%;
+}
+
+.calenda {
+  flex-grow: 1;
+  margin-block-end: auto;
+  writing-mode: horizontal-tb;
+}
+
+.container {
+  display: flex;
+}
+
+
+.calendar-container {
+  width: 80%;
+  height: 60%;
+}
+
+.fc .fc-daygrid-day {
+  font-size: auto;
+  padding: 0.2rem;
+  height: auto;
+  width: auto;
+}
+
+.fc-day-today {
+  background-color: rgb(5, 84, 110);
+}
+
+.fc .fc-title {
+  font-size: 12px;
+}
+
+.fc-button {
+  font-size: 12px;
+}
+
+.bar-container {
+  width: 100%;
+  height: 20px;
+  background-color: #f3f3f3;
+  border-radius: 5px;
+  border: 1px solid rgba(3, 3, 3);
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  background-color: #4caf50;
+  border-radius: 5px;
+}
+
+.rojo {
+  background-color: red;
+  color: white;
+  text-align: center;
+}
+
+.centrar {
+  background-color: rgb(252, 250, 250);
+  color: rgb(2, 2, 2);
+  text-align: center;
+}
+
+.naranja {
+  background-color: orange;
+  color: white;
+  text-align: center;
+}
+
+.amarillo {
+  background-color: yellow;
+  text-align: center;
+}
+
+.verde {
+  background-color: green;
+  color: white;
+  text-align: center;
+}
+
+.textTitulo {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  padding: 20px 0;
+  font-size: 20px;
+}
+
+.cards {
+  width: 100%;
+  padding: 35px 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 20px;
+}
+
+.cards .card {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+}
+
+.card-name {
+  color: #888;
+  font-weight: 600;
+}
+
+.icon-box i {
+  font-size: 45px;
+  color: #299b63;
+}
+
+.tabla-container {
+  max-height: 750px;
+  overflow-y: auto;
+}
+
+.btntext{
+  display: flex;
+  align-items: center; 
+}
+
+.imagen img {
+  max-width: 100%;  
+  max-height: 100%; 
+  width: auto;      
+  height: auto;    
+  display: block;   
+  margin: 0 auto;
+  opacity: 0.5;   
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-gap: 20px;
+  width: 100%;
+  padding: 20px;
+  padding-top: 0;
+}
+
+.chart {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+  width: 100%;
+}
+
+.chart h2 {
+  margin-bottom: 5px;
+  font-size: 20px;
+  color: #666;
+  text-align: center
+}
+
+
+@media (max-width:880px) {
+
+  .fa-bell {
+    justify-self: left;
+  }
+
+  .cards {
+    width: 100%;
+    padding: 35px 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+  }
+
+  .charts {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width:500px) {
+  .topbar {
+    grid-template-columns: 1fr 5fr 0.4fr 1fr;
+  }
+
+  .logo h2 {
+    font-size: 20px;
+  }
+
+  .search {
+    width: 80%;
+  }
+
+  .search input {
+    padding: 0 20px;
+  }
+
+  .fa-bell {
+    margin-right: 5px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+.mat-table th, .mat-table td {
+  border: 10px solid #0c0c0c;
+  padding: 8px;
+}
+
+.btn-tabs {
+  display: flex;
+}
+
+.btn-tab {
+  padding: 10px 20px;
+  border: none;
+  background-color: #dca500;
+  color: black;
+  font-weight: bold;
+  transform-origin: top right;
+  transform: skewX(-20deg);
+  margin-right: -10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.btn-tab.selected {
+  background-color: #044c9b;
+  color: white;
+}

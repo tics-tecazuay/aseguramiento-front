@@ -1,0 +1,78 @@
+<body>
+  <div class="card">
+    <h1 style="padding: 10px; text-align: center">
+      <strong>Listado de Archivos</strong>
+    </h1>
+    <div class="card-body">
+      <div role="search" id="buscar">
+        <input
+        type="text"
+        class="form-control"
+        name="filterPost3"
+        placeholder="Buscar..."
+        [(ngModel)]="filterPost"
+        (input)="aplicarFiltro()"
+      />
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <mat-table [dataSource]="dataSource | buscar : filterPost " class="mat-elevation-z8">
+            <ng-container matColumnDef="Id">
+              <mat-header-cell *matHeaderCellDef  [style.display]="ocultar? '' : 'none'">ID</mat-header-cell>
+              <mat-cell *matCellDef="let file"  [style.display]="ocultar? '' : 'none'">{{ file.id_archivo }}</mat-cell>
+            </ng-container>
+          
+            <ng-container matColumnDef="Evidencia">
+              <mat-header-cell *matHeaderCellDef>Evidencia</mat-header-cell>
+              <mat-cell *matCellDef="let file">
+                <a [href]="file.enlace">{{ file.nombre }}</a>
+              </mat-cell>
+            </ng-container>
+          
+            <ng-container matColumnDef="Descripcion">
+              <mat-header-cell *matHeaderCellDef>Descripcion</mat-header-cell>
+              <mat-cell *matCellDef="let file">{{ file.descripcion }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Borrar">
+              <mat-header-cell *matHeaderCellDef  [style.display]="veri? '' : 'none'">Borrar</mat-header-cell>
+              <mat-cell *matCellDef="let file"  [style.display]="veri? '' : 'none'">
+                <button class="btn btn-danger" style="background-color: red; margin-right: 5%" role="button"
+                (click)="elim(file.nombre,file)">
+                <i class="fa fa-trash"></i>
+              </button>
+          </mat-cell>
+            </ng-container>
+          
+            <!-- Fila de encabezado -->
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          
+            <!-- Filas de datos -->
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          </mat-table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <br />
+            <div class="form-group">
+              <label id="id_evidencia">Actividad: {{activ.nombre}}</label>
+            </div>
+            <div class="form-group">
+              <label for="archivo">Archivo:</label>
+              <input id="archivo" type="file" (change)="onFileChange($event)" />
+            </div>
+            <div class="form-group">
+              <label for="descripcion">Descripción:</label>
+              <textarea id="descripcion" class="form-control" [(ngModel)]="descripcion"></textarea>
+            </div>
+            <button class="btn btn-primary" type="button" (click)="onUpload()" *ngIf="veri" [disabled]="!filearchivo">
+              Subir archivo
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

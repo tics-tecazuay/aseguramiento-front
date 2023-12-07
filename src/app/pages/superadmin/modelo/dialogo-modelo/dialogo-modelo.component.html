@@ -1,0 +1,115 @@
+<br />
+<blockquote class="blockquote text-dark" style="margin-top: 1%">
+  <h1><strong>Creacion del Modelo</strong></h1>
+</blockquote>
+<mat-dialog-content>
+  <mat-stepper [linear]="isLinear" #stepper>
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup" style="width: 100%;">
+        <ng-template matStepLabel>Datos Generales</ng-template>
+        <br />
+        <form class="example-form">
+          <!-- crear un <mat form field> y guardar en el objeto modelo con ngModel -->
+          <mat-form-field class="example-full-width">
+            <mat-label>Nombre</mat-label>
+            <input
+              matInput
+              placeholder="Nombre del modelo"
+              [(ngModel)]="modelo.nombre"
+              name="nombre"
+            />
+          </mat-form-field>
+          <div class="date-fields">
+            <mat-form-field appearance="fill" class="date-field">
+              <mat-label>Fecha Inicial:</mat-label>
+              <input
+                matInput
+                [matDatepicker]="dp1"
+                [(ngModel)]="modelo.fecha_inicio"
+                name="fecha_inicio"
+              />
+              <mat-hint>MM/DD/YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="dp1"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #dp1 disabled="false"></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="date-field">
+              <mat-label>Fecha Final:</mat-label>
+              <input
+                matInput
+                [matDatepicker]="dp2"
+                [(ngModel)]="modelo.fecha_fin"
+                name="fecha_fin"
+              />
+              <mat-hint>MM/DD/YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="dp2"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #dp2 disabled="false"></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="date-field">
+              <mat-label>Fin Tareas:</mat-label>
+              <input
+                matInput
+                [matDatepicker]="dp3"
+                [(ngModel)]="modelo.fecha_final_act"
+                name="fecha_final_act"
+              />
+              <mat-hint>MM/DD/YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="dp3"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </form>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup" label="Configurar modelo">
+        <br>
+      <div>
+        <button
+          mat-raised-button
+          id="my-button"
+          class="btn btn-primary btn-lg btn-block"
+          (click)="abrirDialogo()"
+        >
+          Añadir Indicadores
+        </button>
+      </div>
+      <br>
+      <div *ngIf="dataSource.length > 0">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center; "><strong>INDICADORES SELECCIONADOS</strong></th>
+            <td mat-cell *matCellDef="let element">{{ element.nombre }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+      
+    </mat-step>
+  </mat-stepper>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button class="btn btn-warning" mat-dialog-close>Cancelar</button>
+  <button class="btn btn-primary" cdkFocusInitial (click)="createModelo()">Guardar</button>
+  <div *ngIf="copiando" class="fullscreen-spinner">
+    <div class="spinner-overlay">
+      <div class="spinner">
+        <p class="spinner-message">Copiando modelo...</p>
+      </div>
+    </div>
+  </div>
+  
+  <button class="btn btn-primary" *ngIf="idmax !== null && idmax !== 0 && idmax !== undefined" (click)="copiarmodelo()">Copiar modelo</button>
+
+  <!-- 
+    
+   -->
+</mat-dialog-actions>

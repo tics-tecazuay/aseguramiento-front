@@ -1,0 +1,14 @@
+.estado-pendiente {
+    background-color: yellow; 
+    color:blue;
+  }
+  
+  .estado-aprobada {
+    background-color: green;
+    color:white;
+  }
+  
+  .estado-rechazada {
+    background-color: red;
+    color:white;
+  }

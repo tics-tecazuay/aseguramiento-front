@@ -1,0 +1,150 @@
+<form>
+    <div class="container mb-3">
+        <h1 class="text-center">
+            <strong>Asignar Responsables</strong>
+        </h1>
+    </div>
+    <div class="container mb-3">
+        <div class="row">
+            <div class="col">
+              <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mo2">
+crear responsable
+</button>
+                <label for="">Seleccione el Responsable</label>
+                <select class="form-select" id="selecionarr" aria-label="Default select example" name="selecionar"
+                    [(ngModel)]="asigna.usuario" required>
+
+                    <option *ngFor="let usua of usuarioResponsable" [value]="usua.id">
+                        {{usua.username}}</option>
+
+                </select>
+
+            </div>
+            <div class="col">
+                <label for="">Seleccione el Criterio</label>
+                <select class="form-select" id="selecionarr" aria-label="Default select example" name="selecionar"
+                    [(ngModel)]="asigna.criterio" required>
+
+                    <option *ngFor="let crite of criterios" [ngValue]="crite.id_criterio">
+                        {{crite.nombre}}</option>
+
+                </select>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="container text-center mb-3">
+        <button (click)="guardar(asigna)" class="btn btn-primary">Asignar</button>
+    </div>
+</form>
+
+
+
+<div class="container mb-3">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Responsable</th>
+                <th scope="col">Criterio</th>
+                <th scope="col">Accion</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            <tr *ngFor="let asig of asignaciones">
+                <th>{{asig.id_asignacion}}</th>
+                <td>{{asig.usuario.username}}</td>
+                <td>{{asig.criterio.nombre}}</td>
+                <td>
+
+                    <button (click)="editar(asig)" type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop">
+                        Editar<i class=""></i>
+                    </button>
+                    <button (click)="eliminar(asig)" class="btn btn-danger" style="margin-left: 10px;">Eliminar</button>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+
+<div class="container">
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar la asignación de Responsable
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="">
+                        <div class="container">
+                            <label for="">Elija el Usuario</label>
+                        </div>
+                        <div class="container">
+                            <select class="form-select" id="selecionarr" aria-label="Default select example"
+                                name="selecionar" [(ngModel)]="asignaN.usuario">
+
+                                <option selected disabled> Seleccione el Usuario </option>
+                                <option *ngFor="let usua of usuarioResponsable" [value]="usua.id">
+                                    {{usua.username}}</option>
+
+                            </select>
+                            <!-- <h4 name="selecionarr" [(ngModel)]="asignaN.usuario">{{asignaN.usuario.username}}</h4> -->
+                        </div>
+
+                        <div class="container">
+                            <label for="">Elija el Criterio</label>
+                        </div>
+                        <div class="container">
+                            <select class="form-select" id="selecionarr" aria-label="Default select example"
+                                name="selecionar" [(ngModel)]="asignaN.criterio">
+
+                                <option selected disabled> Seleccione el criterio </option>
+                                <option *ngFor="let crite of criterios" [ngValue]="crite.id_criterio">
+                                    {{crite.nombre}}</option>
+
+                            </select>
+                        </div>
+                    </form>
+
+                    <div class="container text-center" style="padding: 10px 0;">
+                        <button (click)="Actualizar(asignaN)"
+                        type="button" class="btn btn-primary" data-bs-dismiss="modal">Modificar</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!-- <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-primary">Understood</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--modal user-->
+
+<!-- Modal -->
+<div class="modal fade" id="mo2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>

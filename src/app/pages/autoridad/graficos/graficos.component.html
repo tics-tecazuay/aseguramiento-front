@@ -1,0 +1,21 @@
+<body>
+    <div class="container bg-light border border-start-0 rounded-4">
+
+        <blockquote class="blockquote text-dark" style="margin-top: 5%">
+            <h1><strong> LISTADO DE MODELOS</strong></h1>
+        </blockquote>
+
+        <ng-container *ngFor="let item of datasource">
+            <mat-card class="mi-card">
+                <mat-card-content>
+                    <div class="item">
+                        <h3><b>{{ item.nombre }}</b></h3>
+                    </div>
+                    <button mat-button (click)="irDetalle(item)" id="my-button">Ver Contenido</button>
+                </mat-card-content>
+            </mat-card>
+            <br>
+        </ng-container>
+
+    </div>
+</body>

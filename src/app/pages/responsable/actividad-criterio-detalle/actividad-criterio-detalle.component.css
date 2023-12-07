@@ -1,0 +1,156 @@
+.table-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.carousel-container {
+  display: flex;
+  overflow: hidden;
+  width: 300px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+img {
+  width: 100%; 
+  height: 100%;
+}
+
+.imagen img {
+  max-width: 100%;  
+  max-height: 100%; 
+  width: auto;      
+  height: auto;    
+  display: block;   
+  margin: 0 auto;
+  opacity: 0.5;   
+}
+
+body {
+  font: 1em/1.618 Inter, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 30px;
+  color: #224;
+}
+
+.pie-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    justify-content: center;
+  }
+  
+  .card {
+    width: 170px;
+    height: 170px;
+    background-color:transparent;
+    border-radius: 50%;
+    border: 8px solid #a7b7e2b9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-content {
+    text-align: center;
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .card-tot {
+    text-align: center;
+    color: black;
+    font-size: 12px;
+  }
+
+  .card-name {
+    font-size: 14px;
+    font-weight: bold;
+    color: black;
+  }
+  
+  .btn-tabs {
+    display: flex;
+  }
+  
+  .btn-tab {
+    padding: 10px 20px;
+    border: none;
+    background-color: #dca500;
+    color: black;
+    font-weight: bold;
+    transform-origin: top right;
+    transform: skewX(-20deg);
+    margin-right: -10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  }
+  
+  .btn-tab.selected {
+    background-color: #044c9b;
+    color: white;
+  }
+  
+  .tabla-container {
+    max-height: 750px;
+    overflow-y: auto;
+  }
+  
+  .rojo {
+    background-color: red;
+    color: white;
+    text-align: center;
+  }
+  .centrar {
+    background-color: rgb(252, 250, 250);
+    color: rgb(2, 2, 2);
+    text-align: center;
+  }
+  .naranja {
+    background-color: orange;
+    color: white;
+    text-align: center;
+  }
+  
+  .amarillo {
+    background-color: yellow;
+    text-align: center;
+  }
+  
+  .verde {
+    background-color: green;
+    color: white;
+    text-align: center;
+  }
+
+  .imagen img {
+    max-width: 80%;  
+    max-height: 80%; 
+    width: auto;      
+    height: auto;    
+    display: block;   
+    margin: 0 auto;   
+  }
+  
+  .chart {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+    width: 100%;
+  }
+  
+  .chart h2 {
+    margin-bottom: 5px;
+    font-size: 20px;
+    color: #666;
+    text-align: center
+  }

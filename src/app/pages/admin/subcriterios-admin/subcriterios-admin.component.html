@@ -1,0 +1,81 @@
+<body>
+  <div class="container bg-light border border-start-0 rounded-4">
+    <blockquote class="blockquote text-dark" style="margin-top: 5%">
+      <h1 style="text-transform: uppercase">
+        <strong> <a>LISTADO SUBCRITERIOS </a> </strong>
+      </h1>
+    </blockquote>
+    <div class="card">
+      <div class="card-body">
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            name="filterPost3"
+            placeholder="Buscar..."
+            [(ngModel)]="filterPost"
+            (input)="aplicarFiltro()"
+          />
+        </div>
+        <div
+          class="mat-elevation-z8 table-responsive"
+          style="margin-bottom: 5%"
+        >
+          <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="nombreCriterio">
+              <th mat-header-cell *matHeaderCellDef>Criterio</th>
+              <td mat-cell *matCellDef="let elemento">
+                {{ elemento.nombreCriterio }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="id_subcriterio">
+              <th mat-header-cell *matHeaderCellDef>ID</th>
+              <td mat-cell *matCellDef="let elemento">
+                {{ elemento.id_subcriterio }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef>NOMBRE</th>
+              <td mat-cell *matCellDef="let elemento">
+                {{ elemento.nombre }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="descripcion">
+              <th mat-header-cell *matHeaderCellDef>DESCRIPCIÓN</th>
+              <td mat-cell *matCellDef="let elemento">
+                {{ elemento.descripcion }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="cantidadIndicadores">
+              <th mat-header-cell *matHeaderCellDef>INDICADORES</th>
+              <td mat-cell *matCellDef="let elemento">
+                <div class="d-flex">
+                  <p>
+                    Contiene
+                    <span style="color: red">{{
+                      elemento.cantidadIndicadores
+                    }}</span>
+                    Indicadores
+                  </p>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnasUsuario"></tr>
+            <tr mat-row *matRowDef="let fila; columns: columnasUsuario"></tr>
+          </table>
+          <mat-paginator
+            [pageSizeOptions]="[5, 10, 20]"
+            showFirstLastButtons
+            aria-label="Select page of periodic elements"
+            itemsPerPageLabel="Items por página:"
+            nextPageLabel="Siguiente"
+            previousPageLabel="Anterior"
+          >
+          </mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

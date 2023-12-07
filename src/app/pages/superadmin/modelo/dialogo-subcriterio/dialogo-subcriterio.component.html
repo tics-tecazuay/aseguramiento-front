@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>Añadir Subcriterios</h2>
+<button mat-raised-button id="my-button">Crear Subcriterio</button>
+<mat-dialog-content>
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+        <!-- This is the tree node template for leaf nodes -->
+        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+            <!-- use a disabled button to provide padding for tree leaf -->
+            <button mat-icon-button disabled></button>
+            <mat-checkbox [(ngModel)]="node.checked">{{node.name}}</mat-checkbox>
+        </mat-tree-node>
+        <!-- This is the tree node template for expandable nodes -->
+        <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+            <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+                <mat-icon class="mat-icon-rtl-mirror">
+                    {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                </mat-icon>
+            </button>
+            <mat-checkbox [(ngModel)]="node.checked">{{node.name}}</mat-checkbox>
+            <button mat-icon-button color="primary" (click)="addSubcriterio()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </mat-tree-node>
+    </mat-tree>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Guardar</button>
+</mat-dialog-actions>

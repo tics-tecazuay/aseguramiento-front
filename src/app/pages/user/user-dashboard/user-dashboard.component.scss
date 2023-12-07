@@ -1,0 +1,202 @@
+.chart {
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+	width: 100%;
+}
+
+.chart h2 {
+	margin-bottom: 5px;
+	font-size: 20px;
+	color: #666;
+	text-align: center
+}
+
+.btn-tab.selected {
+	background-color: #044c9b;
+	color: white;
+}
+
+.btn-tabs {
+	display: flex;
+}
+
+.btn-tab {
+	padding: 10px 20px;
+	border: none;
+	background-color: #dca500;
+	color: black;
+	font-weight: bold;
+	transform-origin: top right;
+	transform: skewX(-20deg);
+	margin-right: -10px;
+	cursor: pointer;
+	transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.btn-visible {
+	background-color: rgba(9, 19, 155, 0.815);
+	color: white;
+}
+
+.btn-oculto {
+	background-color: rgb(186, 236, 48);
+	color: rgb(5, 0, 0);
+}
+
+.tabla-container {
+	max-height: 600px;
+	overflow-y: auto;
+}
+
+.rojo {
+	background-color: red;
+	color: white;
+	text-align: center;
+}
+
+.centrar {
+	background-color: rgb(252, 250, 250);
+	color: rgb(2, 2, 2);
+	text-align: center;
+}
+
+.naranja {
+	background-color: orange;
+	color: white;
+	text-align: center;
+}
+
+
+.amarillo {
+	background-color: yellow;
+	text-align: center;
+}
+
+
+.verde {
+	background-color: green;
+	color: white;
+	text-align: center;
+}
+
+.background {
+	background: url('https://images.pexels.com/photos/7652179/pexels-photo-7652179.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	min-height: 100vh;
+	color: rgb(247, 247, 247);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+
+	&:before {
+		content: '';
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+		z-index: -1;
+		filter: blur(200px);
+
+	}
+
+	h1 {
+		font-size: 4rem;
+		font-weight: 700;
+	}
+}
+
+.display-5 {
+	font-size: 1.5rem;
+}
+
+#greeting {
+	margin-top: 2rem;
+	font-size: 2rem;
+}
+
+@media (min-width: 576px) {
+	.background h1 {
+		font-size: 5.5rem;
+		padding: 60px;
+	}
+
+	.display-5 {
+		font-size: 2.5rem;
+	}
+
+	#greeting {
+		margin-top: 2rem;
+		font-size: 2.5rem;
+	}
+}
+
+@media (min-width: 992px) {
+	.background h1 {
+		font-size: 6rem;
+	}
+
+	#greeting {
+		font-size: 3rem;
+	}
+}
+
+@media (min-width: 1200px) {
+	.background h1 {
+		font-size: 7.5rem;
+	}
+
+	#greeting {
+		font-size: 3.6rem;
+	}
+}
+
+.pie-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	padding: 20px;
+	justify-content: center;
+}
+
+.card-content {
+	text-align: center;
+	color: black;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.card-tot {
+	text-align: center;
+	color: black;
+	font-size: 12px;
+}
+
+.card-name {
+	font-size: 14px;
+	font-weight: bold;
+	color: black;
+}
+
+.card {
+	width: 170px;
+	height: 170px;
+	background-color: transparent;
+	border-radius: 50%;
+	border: 8px solid #a7b7e2b9;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.content-container {
+	position: relative;
+	z-index: 1;
+}

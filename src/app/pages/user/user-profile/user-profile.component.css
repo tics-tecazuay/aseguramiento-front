@@ -1,0 +1,26 @@
+.gradient-custom {
+    /* fallback for old browsers */
+    background: #f6d365;
+
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right bottom, rgb(132, 150, 252), rgb(11, 55, 197));
+
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right bottom, rgb(117, 146, 241), rgb(8, 5, 182))
+}
+
+body {
+    font: 1em/1.618 Inter, sans-serif;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    min-height: 100vh;
+    padding: 30px;
+    
+    color: #224;
+    background:
+      url(https://source.unsplash.com/E8Ufcyxz514/2400x1823)
+      center / cover no-repeat fixed;
+  }

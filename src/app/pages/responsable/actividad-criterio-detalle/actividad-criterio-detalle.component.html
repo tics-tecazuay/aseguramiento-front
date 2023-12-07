@@ -1,0 +1,218 @@
+<div *ngIf="!consul">
+  <figure class="text-center text-dark" style="margin-top: 1%; font-style: italic">
+    <blockquote class="blockquote text-dark">
+      <h1><strong> No se te asignaron criterios<br>en este modelo </strong></h1>
+    </blockquote>
+  </figure>
+
+  <div class="carousel-container">
+    <div>
+      <img src="./assets/LOGO_CUADRADO_SIN FONDO.png" alt="Imagen 1" />
+    </div>
+  </div>
+</div>
+<div *ngIf="consul">
+  <div class="container bg-light border border-start-0 rounded-4">
+    <div class="container contenedor">
+      <h1 class="text-center">DETALLE DEL MODELO</h1>
+      <h1>Nombre del Modelo</h1>
+      <div *ngIf="model">
+        <b>ID: {{ model.id_modelo }}</b>
+        <br />
+        <b>NOMBRE: {{ model.nombre }}</b>
+        <br />
+        <b>FECHA INICIO: {{ model.fecha_inicio | date : "dd/MM/yyyy" }}</b>
+        <br />
+        <b>FECHA FIN: {{ model.fecha_fin | date : "dd/MM/yyyy" }}</b>
+        <br />
+      </div>
+    </div>
+
+    <div style="border-bottom: thick double #32a1ce;" class="pie-grid" *ngIf="listain" id="indic">
+      <div class="card" *ngFor="let item of listain; let i = index" [style.background-color]="coloresTarjetas[i]"
+        [style.border]="borderStyles[i]" (click)="fetchAndProcessData(item.nombre)"
+        title="Haga clic para ver los datos">
+        <div class="card-content">
+          <div class="card-content">{{ (item.total / item.faltante)*100 | number: '1.0-2' }}%</div>
+          <div class="card-name" style="color: black;">{{ item.nombre }}</div>
+          <div class="card-tot">Total: {{ item.total| number: '1.2-4'}} de {{item.faltante| number: '1.2-4'}}</div>
+        </div>
+      </div>
+    </div>
+    <div style="display: flex; border-bottom: thick double #32a1ce">
+      <div style="flex-basis: 70%; border-right: thick double #32a1ce">
+        <div *ngIf="!clic" class="imagen">
+          <img src="./assets/LOGO_CUADRADO_SIN FONDO.png" alt="Logo ista" />
+        </div>
+
+        <div *ngIf="clic">
+
+          <div id="tit">
+            <h3><span style="font-weight: bold;">Criterio Seleccionado:</span> {{titulocriterio}}</h3>
+            <div class="btn-tabs">
+              <button mat-button class="btn-tab" [ngClass]="verCriterio ? 'selected' : ''" (click)="showCriterio()">
+                Criterio
+              </button>
+
+              <button mat-button class="btn-tab" [ngClass]="verSubcriterio ? 'selected' : ''"
+                (click)="showSubcriterio()">
+                Subcriterio
+              </button>
+
+              <button mat-button class="btn-tab" [ngClass]="verIndicador ? 'selected' : ''" (click)="showIndicador()">
+                Indicador
+              </button>
+
+              <button mat-button class="btn-tab" [ngClass]="verEvidencia ? 'selected' : ''" (click)="showEvidencia()">
+                Evidencia
+              </button>
+              <button mat-button class="btn-tab" [ngClass]="verPeso ? 'selected' : ''" (click)="showPeso()">
+                Peso
+              </button>
+              <button mat-button class="btn-tab" [ngClass]="verObtenido ? 'selected' : ''" (click)="showObtenido()">
+                % Obte
+              </button>
+              <button mat-button class="btn-tab" [ngClass]="verUtilidad ? 'selected' : ''" (click)="showUtilidad()">
+                % Util
+              </button>
+              <button mat-button class="btn-tab" [ngClass]="verValor ? 'selected' : ''" (click)="showValor()">
+                Valor
+              </button>
+            </div>
+
+          </div>
+
+          <div style="display: flex; margin-bottom: 2%;">
+
+            <div class="mat-elevation-z8 tabla-container">
+              <table mat-table [dataSource]="datacrite">
+                <ng-container matColumnDef="Criterio">
+                  <th mat-header-cell *matHeaderCellDef [style.display]="verCriterio ? '' : 'none'">Criterio</th>
+                  <td mat-cell style="padding: 4px;  font-size: 12px; " *matCellDef="let element; let i = index"
+                    [attr.rowspan]="getRowSpan3('Criterio', i)" [style.display]="verCriterio && 
+                         getRowSpan3('Criterio', i) ? '' : 'none'"
+                    [style.background-color]="getColorcelda('Criterio', 0.3)">
+                    {{ element.criterionomj }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="Subcriterio">
+                  <th mat-header-cell *matHeaderCellDef [style.display]="verSubcriterio ? '' : 'none'">Subcriterio</th>
+                  <td mat-cell style="padding: 4px; font-size: 12px;" *matCellDef="let element; let i = index"
+                    [attr.rowspan]="getRowSpan3('Subcriterio', i)" [style.background-color]="element.randomColor"
+                    [style.display]="verSubcriterio && getRowSpan3('Subcriterio', i) ? '' : 'none'">
+                    {{ element.subcrierioj }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="Indicador">
+                  <th mat-header-cell *matHeaderCellDef [style.display]="verIndicador ? '' : 'none'">Indicador</th>
+                  <td mat-cell style="padding: 4px; font-size: 12px;" *matCellDef="let element; let i = index"
+                    [attr.rowspan]="getRowSpan3('Indicador', i)" [style.background-color]="element.Colores"
+                    [style.display]="verIndicador && getRowSpan3('Indicador', i) ? '' : 'none'">
+                    {{ element.ind_nombrej }}
+                    {{ calcularRowSpanValue(i) }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="Peso">
+                  <th mat-header-cell *matHeaderCellDef [style.display]="verPeso ? '' : 'none'">Peso</th>
+                  <td mat-cell style="padding: 4px; font-size: 12px;" *matCellDef="let element; let i = index"
+                    [attr.rowspan]="getRowSpan3('Peso', i)"
+                    [style.display]="verPeso && getRowSpan3('Peso', i) ? '' : 'none'" class="centrar">
+                    {{ element.pes }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="Obtenido">
+                  <th mat-header-cell *matHeaderCellDef [style.display]="verObtenido ? '' : 'none'">% Obtenido</th>
+                  <td mat-cell style="padding: 4px; font-size: 12px;" *matCellDef="let element; let i = index"
+                    [attr.rowspan]="getRowSpan3('Obtenido', i)"
+                    [style.display]="verObtenido && getRowSpan3('Obtenido', i) ? '' : 'none'" [ngClass]="{
+                    'rojo': element.obt >= 0 && element.obt <= 25,
+                    'naranja': element.obt > 25 && element.obt <= 50,
+                    'amarillo': element.obt > 50 && element.obt <= 75,
+                    'verde': element.obt > 75 && element.obt <= 100
+                  }">
+                    {{ element.obt }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Utilidad">
+                  <th mat-header-cell *matHeaderCellDef [style.display]="verUtilidad ? '' : 'none'">% Utilidad</th>
+                  <td mat-cell style="padding: 4px; font-size: 12px;" *matCellDef="let element; let i = index"
+                    [attr.rowspan]="getRowSpan3('Utilidad', i)" class="centrar"
+                    [style.display]="verUtilidad && getRowSpan3('Utilidad', i) ? '' : 'none'">
+                    {{ element.uti }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="Valor">
+                  <th mat-header-cell *matHeaderCellDef [style.display]="verValor ? '' : 'none'">Valor</th>
+                  <td mat-cell style="padding: 4px; font-size: 12px;" *matCellDef="let element; let i = index"
+                    [attr.rowspan]="getRowSpan3('Valor', i)" class="centrar"
+                    [style.display]="verValor && getRowSpan3('Valor', i) ? '' : 'none'">
+                    {{ element.val }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="Evidencia">
+                  <th mat-header-cell *matHeaderCellDef [style.display]="verEvidencia ? '' : 'none'">Evidencia</th>
+                  <td mat-cell style="padding: 4px; font-size: 12px;" *matCellDef="let element; let i = index"
+                    [attr.rowspan]="getRowSpan3('Evidencia', i)" [style.background-color]="element.indicol"
+                    [style.display]="verEvidencia && getRowSpan3('Evidencia', i) ? '' : 'none'" class="scrollable-cell">
+                    {{ element.descrip }}
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns3"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--fin-->
+      <div class="barra" style="flex-basis: 30%; margin-top: 2%">
+        <div style="width: 100%;height: 90%;margin-top: 1%;">
+          <div style="width: 90%;height: 90%; ">
+            <div id="tit2">
+              <h3 style="font-weight: bold;">Estado de los indicadores</h3>
+            </div>
+            <table mat-table [dataSource]="tabla" class="mat-elevation-z8">
+              <ng-container matColumnDef="indicadores">
+                <th mat-header-cell *matHeaderCellDef style="background-color: gray;"> Indicadores </th>
+                <td mat-cell *matCellDef="let element" [style.background-color]="colores(element.color)">
+                  {{element.color.toUpperCase()}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="nindi">
+                <th mat-header-cell *matHeaderCellDef style="background-color: gray; text-align: center;"> N° indi </th>
+                <td mat-cell *matCellDef="let element" style=" text-align: center;"> {{element.indica}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="porcentaje">
+                <th mat-header-cell *matHeaderCellDef style="background-color: gray;text-align: center;"> % </th>
+                <td mat-cell *matCellDef="let element" style=" text-align: center;"> {{element.porcentaje}}% </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns4"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns4;"></tr>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!--  -->
+    <div style="display: flex; border-bottom: thick double #32a1ce">
+      <div style="flex-basis: 70%; border-right: thick double #32a1ce">
+        <h3 style="font-weight: bold;margin-left: 5%;margin-top:2%">Grafica de Criterios</h3>
+        <canvas baseChart class="chart" [data]="barChartData" [options]="barChartOptions" [plugins]="barChartPlugins"
+          [type]="barChartType" (chartClick)="chartClicked($event)">
+        </canvas>
+      </div>
+
+      <div class="barra" style="flex-basis: 30%; margin-top: 1%">
+        <div style="width: 100%;height: 90%;margin-top: 1%;">
+          <h3 style="font-weight: bold;margin-left: 10%;">Grafica de Indicadores</h3>
+          <canvas baseChart class="chart" [data]="pieChartData" [type]="pieChartType" [options]="pieChartOptions"
+            [plugins]="pieChartPlugins">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>

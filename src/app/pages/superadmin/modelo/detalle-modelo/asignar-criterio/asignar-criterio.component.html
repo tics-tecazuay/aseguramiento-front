@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>Asignar Administrador</h2>
+
+<mat-dialog-content>
+    <h3>{{nombreadmin}}</h3>
+    <mat-form-field>
+        <mat-label>Seleccionar</mat-label>
+        <mat-select [(value)]="valorSeleccionado">
+            <mat-option *ngFor="let element of datasource" [value]="element.id">
+                {{element?.persona?.primer_apellido + ' ' + element?.persona?.segundo_apellido + ' ' +
+                element?.persona?.primer_nombre + ' ' + element?.persona?.segundo_nombre}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button (click)="guardar()">Guardar</button>
+</mat-dialog-actions>

@@ -1,0 +1,36 @@
+
+<h1 style="text-align: center;">LISTA DE CORTES</h1>
+
+
+
+
+<table border="1px" class="table">
+  <thead class="table-dark">
+  
+    <tr>
+      <th >Id </th>
+      <th >Fecha de corte </th>
+      <th >Peso </th>
+      <th>% Nivel Obtenido</th>
+      <th>% Utilidad Obtenido</th>
+      <th>Valor obtenido </th>
+      <th>Modelo</th>
+      <th>Indicador</th>
+    </tr>
+  </thead>
+  <tbody  >
+    <tr *ngFor="let item of dataSource">
+      <td>{{item.id_ponderacion}}</td>
+      <td>{{item.fecha}}</td>
+      <td>{{item.peso}}</td>
+      <td>{{item.porc_obtenido}}</td>
+      <td>{{item.porc_utilidad_obtenida}}</td>
+      <td>{{item.valor_obtenido}}</td>
+   <!---   <td>{{item.modelo.id_modelo}}</td>
+      <td>{{item.indcador.id_indicador}}</td> -->
+    </tr>
+  </tbody>
+ 
+  
+</table>
+

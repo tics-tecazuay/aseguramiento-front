@@ -1,0 +1,88 @@
+<body>
+  <div class="container" style="background-color: inherit; border: none; position: relative;">
+    <div class="row">
+      <div class="col-md-7 gradient-custom text-center text-white">
+        <div class="d-flex justify-content-center align-items-center" style="height: 100%;">
+          <img src="assets/LOGO_CUADRADO_SIN FONDO.png" width="70%" height="auto"/>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <mat-card class="panelform">
+                <h1 class="text-center" style="margin-top: 6%"><strong>BIENVENIDO</strong></h1>
+                <form (ngSubmit)="formSubmit()">
+                  <mat-form-field class="full-width" appearance="outline">
+                    <mat-icon matPrefix class="mat-icon-start"
+                      >account_circle</mat-icon
+                    >
+                    <mat-label>Usuario</mat-label>
+                    <input
+                      required
+                      [(ngModel)]="loginData.username"
+                      name="username"
+                      matInput
+                      placeholder="Ingrese su usuario"
+                    />
+                  </mat-form-field>
+                  <mat-form-field class="full-width" appearance="outline">
+                    <mat-icon matPrefix class="mat-icon-start">lock</mat-icon>
+                    <mat-label>Contraseña</mat-label>
+                    <input
+                      [(ngModel)]="loginData.password"
+                      name="password"
+                      required
+                      type="password"
+                      matInput
+                      placeholder="Digite su contraseña"
+                    />
+                  </mat-form-field>
+                  <br /><br />
+                  <div class=" text-center">
+                    <button type="submit" mat-raised-button color="primary">
+                      Iniciar sesión
+                    </button>
+                  </div>
+                  <br /><br />
+                </form>
+              </mat-card>
+            </div>
+          </div>
+          <!-- Botones debajo del logo y el mat-card -->
+          <div *ngIf="mision" class="misi">
+          <h2>El Instituto Superior Universitario Tecnológico del Azuay se consolida como una institución de educación superior que sustenta sus procesos de enseñanza-aprendizaje en el ámbito técnico y tecnológico de grado y posgrado, con la más alta calidad académica y humana, sobre la base de fundamentos científicos; con el propósito de proveer soluciones a los problemas y necesidades de la sociedad desde la docencia, la investigación científica y la vinculación.</h2>
+          </div>
+          <div *ngIf="vision" class="visi">
+            <h2>Ser una institución de calidad, solidaria, inclusiva, intercultural y diversa, reconocida por su excelencia académica y sus aportes a la sociedad en el área de la investigación, innovación tecnológica y vinculación, a nivel nacional e internacional, promoviendo el desarrollo integral de la persona y el entorno, en busca de una sociedad justa y equitativa.</h2>
+            </div>
+            <div *ngIf="prin" class="background-container">
+
+              <h3>Los principios por los cuales se rige la institución, señalados en la Constitución de la República y la Ley Orgánica de Educación Superior,<br>son los siguientes:
+                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a)&nbsp;Cogobierno.
+                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b)&nbsp;Igualdad de oportunidades.
+                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c)&nbsp;Calidad.
+                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d)&nbsp;Pertinencia.
+                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e)&nbsp;Integralidad.
+                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f)&nbsp;Autodeterminación para la producción del pensamiento y conocimiento.
+                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;g)&nbsp;Universalidad.
+                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;h)&nbsp;Equidad.
+                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i)&nbsp;Progresividad.
+                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j)&nbsp;Interculturalidad.
+                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k)&nbsp;Solidaridad.
+                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;l)&nbsp;Movilidad.
+                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m)&nbsp;Inclusión.
+                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n)&nbsp;Humanismo.
+                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;o)&nbsp;Responsabilidad.
+                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p)&nbsp;Trabajo Colaborativo.
+                <br>Estos principios se aplicarán bajo criterios de calidad, eficiencia, eficacia, transparencia, responsabilidad y participación.<br>Los mecanismos para efectivizarlos se desarrollan en los artículos que conforman el presente Estatuto.
+            </h3>
+              </div>
+          <div class="row mt-4" >
+
+            <div class="col text-center" style="margin-top: 10%;">
+
+              <button mat-button class="btn-tab" [ngClass]="{ 'selected': sobre }"(mouseenter)="abrir()" (mouseleave)="cerrar()">Misión</button>
+              <button mat-button class="btn-tab" [ngClass]="{ 'selected': sobre2 }"(mouseenter)="abrir2()" (mouseleave)="cerrar2()">Visión</button>
+              <button mat-button class="btn-tab" [ngClass]="{ 'selected': sobre3 }"(mouseenter)="abrir3()" (mouseleave)="cerrar3()">Principios</button>
+            </div>
+          </div>
+        </div>
+</body>

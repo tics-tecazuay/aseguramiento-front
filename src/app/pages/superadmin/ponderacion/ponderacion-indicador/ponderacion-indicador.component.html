@@ -1,0 +1,37 @@
+
+  
+    <div *ngIf="model">
+      <b> ID: {{model.id_modelo}}</b>
+      <br>
+      <b> NOMBRE : {{model.nombre}}</b>
+      <br>
+      <b> FECHA INICIO: {{model.fecha_inicio}}</b>
+      <br>
+      <b> FECHA FIN: {{model.fecha_fin}}</b>
+  </div>
+  
+  <table border="1px" class="table">
+    <thead class="table-dark">
+      <tr *ngIf="indicadorClase">
+        <th  style="text-align: center;" colspan="5">{{indicadorClase.nombre}}</th>
+  
+      </tr>
+      <tr>
+        <th >Peso </th>
+        <th>%Porc Obtenido</th>
+        <th>% Utilidad Obtenido</th>
+        <th>Valor obtenido </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr  *ngIf="indicadorClase">
+        
+        <td>{{indicadorClase.peso}} i</td>
+        <td>{{indicadorClase.porc_obtenido}}</td>
+        <td>{{indicadorClase.porc_utilida_obtenida}}</td>
+        <td>{{indicadorClase.valor_obtenido}}</td>
+      </tr>
+    </tbody>
+   
+    
+  </table>

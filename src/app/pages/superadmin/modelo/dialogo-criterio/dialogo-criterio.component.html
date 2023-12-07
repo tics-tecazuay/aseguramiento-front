@@ -1,0 +1,116 @@
+<br />
+<blockquote class="blockquote text-dark" style="margin-top: 1%">
+  <h1><strong>Seleccione sus indicadores</strong></h1>
+</blockquote>
+<mat-dialog-content>
+
+    <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+        <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+            <th mat-header-cell *matHeaderCellDef><strong>{{columnNames[column]}}</strong></th>
+            <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+        </ng-container>
+        <ng-container matColumnDef="expand">
+            <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
+            <td mat-cell *matCellDef="let element">
+                <button mat-icon-button aria-label="expand row"
+                    (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()"
+                    (click)="boton(element.id_criterio)">
+                    <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
+                    <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+        <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
+                <div class="example-element-detail"
+                    [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+
+
+                    <table mat-table [dataSource]="dataSource2" multiTemplateDataRows class="mat-elevation-z8" style="background-color: rgba(233, 232, 231, 0.7); box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); ">
+                        <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay2">
+                            <th mat-header-cell *matHeaderCellDef><strong>{{columnNamesSub[column]}}</strong></th>
+                            <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="expand">
+                            <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
+                            <td mat-cell *matCellDef="let element">
+                                <button mat-icon-button aria-label="expand row"
+                                    (click)="(expandedElement2 = expandedElement2 === element ? null : element); $event.stopPropagation()"
+                                    (click)="boton2(element.id_subcriterio)">
+                                    <mat-icon *ngIf="expandedElement2 !== element">keyboard_arrow_down</mat-icon>
+                                    <mat-icon *ngIf="expandedElement2 === element">keyboard_arrow_up</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+                        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                        <ng-container matColumnDef="expandedDetail">
+                            <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand2.length">
+                                <div class="example-element-detail"
+                                    [@detailExpand]="element == expandedElement2 ? 'expanded' : 'collapsed'">
+
+
+                                    <table mat-table [dataSource]="dataSource3" multiTemplateDataRows
+                                        class="mat-elevation-z8">
+                                        <ng-container matColumnDef="{{column}}"
+                                            *ngFor="let column of columnsToDisplay3">
+                                            <th mat-header-cell *matHeaderCellDef><strong>{{columnNamesInd[column]}}</strong></th>
+                                            <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="expand">
+                                            <th mat-header-cell *matHeaderCellDef aria-label="row actions">
+                                                &nbsp;</th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <mat-checkbox [checked]="element.selected"
+                                                    [(ngModel)]="element.selected"
+                                                    (change)="toggleSelectAll(element)"></mat-checkbox>
+                                            </td>
+                                        </ng-container>
+
+
+                                        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                                        <ng-container matColumnDef="expandedDetail">
+                                            <td mat-cell *matCellDef="let element"
+                                                [attr.colspan]="columnsToDisplayWithExpand3.length">
+                                            </td>
+                                        </ng-container>
+                                        <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand3"></tr>
+                                        <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand3;"
+                                            class="example-element-row"
+                                            [class.example-expanded-row]="expandedElement3 === element">
+                                        </tr>
+                                        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']"
+                                            class="example-detail-row">
+                                        </tr>
+                                    </table>
+
+
+
+                                </div>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand2"></tr>
+                        <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand2;"
+                            class="example-element-row" [class.example-expanded-row]="expandedElement2 === element">
+                        </tr>
+                        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row">
+                        </tr>
+                    </table>
+
+
+                </div>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
+        <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;" class="example-element-row"
+            [class.example-expanded-row]="expandedElement === element">
+        </tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+    </table>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button class="btn btn-warning" mat-dialog-close>Cancelar</button>
+    <button class="btn btn-primary"[mat-dialog-close]="true" cdkFocusInitial (click)="guardar()">Guardar</button>
+</mat-dialog-actions>

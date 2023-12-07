@@ -1,0 +1,94 @@
+<body>
+  <div class="container bg-light border border-start-0 rounded-4">
+    <blockquote class="blockquote text-dark" style="margin-top: 5%">
+      <h1 style="text-transform: uppercase">
+        <strong
+          ><a style="cursor: pointer" (click)="irinicio()">Modelos </a>
+          >
+          <a style="cursor: pointer" (click)="verCriterios()"
+            >{{ model.nombre }}
+          </a>
+          >
+          <a style="cursor: pointer" (click)="goBack()">SUBCRITERIOS </a>
+          >
+          <a>INDICADORES </a></strong
+        >
+      </h1>
+    </blockquote>
+    <div class="mat-elevation-z8 table-responsive" style="margin-bottom: 5%">
+      <div class="container">
+        <div class="detalle">
+          <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="id_indicador">
+              <th mat-header-cell *matHeaderCellDef>ID</th>
+              <td mat-cell *matCellDef="let elemento">
+                {{ elemento.id_indicador }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef>NOMBRE</th>
+              <td mat-cell *matCellDef="let elemento">
+                {{ elemento.nombre }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="descripcion">
+              <th mat-header-cell *matHeaderCellDef>DESCRIPCIÓN</th>
+              <td mat-cell *matCellDef="let elemento">
+                {{ elemento.descripcion }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="peso">
+              <th mat-header-cell *matHeaderCellDef>PESO</th>
+              <td mat-cell *matCellDef="let elemento">
+                {{ elemento.peso }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="valor_obtenido">
+              <th mat-header-cell *matHeaderCellDef>VALOR</th>
+              <td mat-cell *matCellDef="let elemento">
+                {{ elemento.valor_obtenido }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="porc_obtenido">
+              <th mat-header-cell *matHeaderCellDef>PORCENTAJE</th>
+              <td
+                mat-cell
+                *matCellDef="let elemento"
+                [class.color-verde]="elemento.color === 'verde'"
+                [class.color-rojo]="elemento.color === 'rojo'"
+                [class.color-naranja]="elemento.color === 'naranja'"
+                [class.color-amarillo]="elemento.color === 'amarillo'"
+              >
+                {{ elemento.porc_obtenido }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="estandar">
+              <th mat-header-cell *matHeaderCellDef>ESTANDAR</th>
+              <td mat-cell *matCellDef="let elemento">
+                {{ elemento.estandar }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="tipo">
+              <th mat-header-cell *matHeaderCellDef>TIPO</th>
+              <td mat-cell *matCellDef="let elemento">
+                {{ elemento.tipo }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnasUsuario"></tr>
+            <tr mat-row *matRowDef="let fila; columns: columnasUsuario"></tr>
+          </table>
+          <mat-paginator
+            [pageSizeOptions]="[5, 10, 20]"
+            showFirstLastButtons
+            aria-label="Select page of periodic elements"
+            itemsPerPageLabel="Items por página:"
+            nextPageLabel="Siguiente"
+            previousPageLabel="Anterior"
+          >
+          </mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

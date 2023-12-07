@@ -1,0 +1,77 @@
+/* @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
+
+.input-group {
+  margin-top: 10px;
+}
+
+.input-group .form-control {
+  height: auto;
+  border-radius: 20px;
+}
+
+.input-group .btn {
+  border-radius: 20px;
+}
+
+.input-group .fa-search {
+  font-size: 18px;
+}
+
+.tabla {
+  width: 100%;
+  max-width: 900px; 
+  margin: 0 auto; 
+}
+
+.tabla th,
+.tabla td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.tabla th {
+  background-color: #2260d3;
+  color: white;
+}
+
+.tabla td:last-child button {
+  margin-left: 8px;
+}
+/* Ultima columna */
+/* .tabla td:last-child {
+  width: 10%;
+  border-bottom-width: 2px;
+}
+
+#buscar{
+  width: 300px; 
+  margin: 0 auto;
+}
+
+#titulo{
+  width: 300px; 
+  margin: 0 auto;
+}
+
+.fa-trash {
+  color: red;
+}
+
+.fa-edit {
+  color: tomato;
+}  */
+
+body {
+  font: 1em/1.618 Inter, sans-serif;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  min-height: 100vh;
+  padding: 30px;
+  
+  color: #224;
+
+}

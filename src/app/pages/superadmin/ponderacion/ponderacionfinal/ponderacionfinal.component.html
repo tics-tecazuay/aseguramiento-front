@@ -1,0 +1,61 @@
+
+
+<h1 style="text-align: center;">LISTA DE CORTES</h1>
+<br>
+<br>
+<div>
+  
+    
+    Mayores a 75%<div class="cuadro-verde"></div>  
+    <br>
+    Mayores a 50% y menor o igual a 75% <div class="cuadro-amarillo"></div>
+    <br>
+    Mayores a 25% y menor o igual a 50% <div class="cuadro-naranja"></div>
+    <br>
+    Menores o igual a 25% <div class="cuadro-rojo"></div>
+  
+</div>
+
+
+
+
+<br>
+<div  class="tabla-contenedor">
+<table border="1px" class="table">
+    <thead class="table-dark">
+    
+      <tr>
+        <th >Id </th>
+        <th >Fecha de corte </th>
+        <th >Peso </th>
+        <th>% Nivel Obtenido</th>
+        <th>% Utilidad Obtenida</th>
+        <th>Valor obtenido </th>
+        <th>Indicador</th>
+        <th>Modelo</th>
+      </tr>
+    </thead>
+    <tbody  >
+      <tr *ngFor="let item of ponderacion  " style="text-align: center;" >
+        <td>{{item.id_ponderacion}}</td>
+        <td>{{ item.fecha | date: 'dd/MM/yyyy' }}</td>
+        <td>{{item.peso}}</td>
+        <td style="font-weight: bold;"  [class.color-verde]="item.color === 'verde'" [class.color-rojo]="item.color === 'rojo'" [class.color-naranja]="item.color === 'naranja'"  [class.color-amarillo]="item.color === 'amarillo'">{{item.porc_obtenido}}%</td>
+        <td>{{item.porc_utilida_obtenida}}</td>
+        <td>{{item.valor_obtenido}}</td>
+        <td>{{ item.indicador.id_indicador }}</td>
+        <td>{{ item.modelo.id_modelo}}</td>
+      
+       
+           
+        
+
+       
+     
+        
+      </tr>
+    </tbody>
+   
+    
+  </table>
+  </div>

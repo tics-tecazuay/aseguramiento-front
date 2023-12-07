@@ -1,0 +1,29 @@
+form.formulario div input{
+ 
+ 
+}
+form {
+   
+    
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 400px
+    
+  }
+
+  .color-rojo {
+    background-color: red;
+  }
+  
+  .color-verde {
+    background-color: green;
+  }
+  .color-amarillo {
+    background-color: rgb(255, 251, 0);
+  }
+  
+  .color-naranja {
+    background-color: rgb(243, 137, 16);
+  }

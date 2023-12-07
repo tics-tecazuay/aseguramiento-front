@@ -1,0 +1,111 @@
+.mat-select-panel.mat-select-panel-right {
+  margin-left: auto !important;
+}
+.no-asignado {
+  color: gray; /* Cambia el color de texto a gris u otro color deseado */
+  font-style: italic; /* Puede usar cursiva para denotar que es un valor predeterminado */
+}
+
+input:disabled,
+mat-label {
+  color: #000000;
+  background-color: #ffffff;
+}
+
+.btn-close {
+  background-color: #f00;
+}
+
+.mat-cell {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.matCellDef {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mat-header-cell {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+table {
+  width: 100%;
+}
+.custom-select-panel {
+  z-index: 9999;
+}
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-btn {
+  background-color: #f9f9f9;
+  color: #000;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: #000;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown-content a.active {
+  background-color: #ccc;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+.custom-select {
+  z-index: 1000; /* Ajusta el valor del z-index según sea necesario para que aparezca por encima del modal */
+}
+body {
+  font: 1em/1.618 Inter, sans-serif;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  min-height: 100vh;
+  padding: 30px;
+  
+  color: #224;
+}

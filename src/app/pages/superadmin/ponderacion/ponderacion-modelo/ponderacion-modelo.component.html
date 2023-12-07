@@ -1,0 +1,192 @@
+<body>
+  <div class="container bg-light border border-start-0 rounded-4">
+    <blockquote class="blockquote text-dark" style="margin-top: 5%">
+      <h1 style="text-transform: uppercase">
+        <strong
+          ><a style="cursor: pointer" (click)="irinicio()">Modelos </a>
+          >
+          <a style="cursor: pointer" (click)="verCriterios()"
+            >{{ model.nombre }}
+          </a>
+          >
+          <a>PONDERACIÓN DE MODELO </a></strong
+        >
+      </h1>
+    </blockquote>
+    <table>
+      <tr>
+        <td><b>ID:</b></td>
+        <td>{{ model.id_modelo }}</td>
+      </tr>
+      <tr>
+        <td><b>NOMBRE:</b></td>
+        <td>{{ model.nombre }}</td>
+      </tr>
+      <tr>
+        <td><b>FECHA INICIO:</b></td>
+        <td>{{ model.fecha_inicio | date : "dd/MM/yyyy" }}</td>
+      </tr>
+      <tr>
+        <td><b>FECHA FIN:</b></td>
+        <td>{{ model.fecha_fin | date : "dd/MM/yyyy" }}</td>
+      </tr>
+      <tr>
+        <td><b>PESO TOTAL:</b></td>
+        <td style="text-align: right;">{{ sumaTotalPesos.toFixed(2) }}</td>
+      </tr>
+      <tr>
+        <td><b>UTILIDAD TOTAL:</b></td>
+        <td style="text-align: right;">{{ sumaUtilidad.toFixed(2) }}</td>
+      </tr>
+    </table>
+
+    <br />
+
+    <div class="container">
+      <form (submit)="guardarDatosEnAPI($event)" action="">
+        <div class="tabla-contenedor"  border="1px" class="table">
+          
+
+          <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="criterio_nombre">
+              <th mat-header-cell *matHeaderCellDef>CRITERIO</th>
+              <td
+                mat-cell
+                *matCellDef="let elemento; let i = index"
+                [ngClass]="{
+                  'same-name':
+                    i !== 0 &&
+                    elemento.subcriterio?.criterio?.nombre ===
+                      dataSource.data[i - 1].subcriterio?.criterio?.nombre,
+                  'different-name':
+                    i === 0 ||
+                    elemento.subcriterio?.criterio?.nombre !==
+                      dataSource.data[i - 1].subcriterio?.criterio?.nombre
+                }"
+               
+              >
+                <!-- Verifica si es el primer elemento o si el nombre es diferente al elemento anterior -->
+                <ng-container
+                  *ngIf="
+                    i === 0 ||
+                      elemento.subcriterio?.criterio?.nombre !==
+                        dataSource.data[i - 1].subcriterio?.criterio?.nombre;
+                    else sameName
+                  "
+                >
+                  {{ elemento.subcriterio?.criterio?.nombre }}
+                </ng-container>
+                <!-- Si el nombre es el mismo que el elemento anterior, no muestra nada -->
+                <ng-template #sameName></ng-template>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="subcriterio_nombre">
+              <th mat-header-cell *matHeaderCellDef>SUBCRITERIO</th>
+              <td
+                mat-cell
+                *matCellDef="let elemento; let i = index"
+                [ngClass]="{
+                  'same-name':
+                    i !== 0 &&
+                    elemento.subcriterio?.nombre ==
+                      dataSource.data[i - 1].subcriterio?.nombre,
+                  'different-name':
+                    i === 0 ||
+                    elemento.subcriterio?.nombre !==
+                      dataSource.data[i - 1].subcriterio?.nombre
+                }"
+                
+              >
+                <ng-container
+                  *ngIf="
+                    i === 0 ||
+                      elemento.subcriterio?.nombre !==
+                        dataSource.data[i - 1].subcriterio?.nombre;
+                    else sameName
+                  "
+                >
+                  {{ elemento.subcriterio?.nombre }}
+                </ng-container>
+                <ng-template #sameName></ng-template>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="indicador_nombre">
+              <th mat-header-cell *matHeaderCellDef>INDICADOR</th>
+              <td mat-cell *matCellDef="let elemento">{{ elemento.nombre }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="peso">
+              <th style="text-align: right;" mat-header-cell *matHeaderCellDef>PESO</th>
+              <td style="text-align: right;" mat-cell *matCellDef="let elemento">{{ elemento.peso }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="porc_valor">
+              <th style="text-align: right;" mat-header-cell *matHeaderCellDef>%VALOR</th>
+              <td
+                mat-cell
+                *matCellDef="let elemento"
+                [class.color-verde]="elemento.color === 'verde'"
+                [class.color-rojo]="elemento.color === 'rojo'"
+                [class.color-naranja]="elemento.color === 'naranja'"
+                [class.color-amarillo]="elemento.color === 'amarillo'"
+                style="text-align: right;"
+              >
+                {{ elemento.porc_obtenido }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="porc_utilidad">
+              <th style="text-align: right;" mat-header-cell *matHeaderCellDef>%UTILIDAD</th>
+              <td style="text-align: right;" mat-cell *matCellDef="let elemento">
+                {{ elemento.porc_utilida_obtenida }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="valor_obt">
+              <th style="text-align: right;" mat-header-cell *matHeaderCellDef>VALOR</th>
+              <td style="text-align: right;" mat-cell *matCellDef="let elemento">
+                {{ elemento.valor_obtenido }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnasUsuario"></tr>
+            <tr mat-row *matRowDef="let fila; columns: columnasUsuario"></tr>
+          </table>
+
+          <mat-paginator
+            [pageSizeOptions]="[5, 10, 20]"
+            showFirstLastButtons
+            aria-label="Select page of periodic elements"
+            itemsPerPageLabel="Items por página:"
+            nextPageLabel="Siguiente"
+            previousPageLabel="Anterior"
+          >
+          </mat-paginator>
+        </div>
+        <button type="submit" class="btn btn-primary" *ngIf="!ocultarBoton">
+          Guardar
+        </button>
+      </form>
+
+      <br />
+      <br />
+      <!--el estilo es para alinear las graficas en la misma direccion-->
+      <div style="display: flex; justify-content: space-between">
+        <div>
+          <h1 style="text-align: center">Grafica de pastel por Indicadores</h1>
+          <div style="width: 500px; height: 500px">
+            <canvas id="pastel"></canvas>
+          </div>
+        </div>
+
+        <div>
+          <h1 style="text-align: center">Grafica de Barras Por Criterios</h1>
+          <div style="width: 500px; height: 500px" class="chart-container">
+            <canvas id="MyChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

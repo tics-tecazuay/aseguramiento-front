@@ -1,0 +1,60 @@
+.tabla-contenedor {
+    max-height: 400px; /* Altura máxima del contenedor */
+    overflow-y: auto; /* Habilitar el scroll vertical */
+  }
+  
+  .tabla-contenedor thead {
+    /* Fijar el encabezado en su posición original */
+    position: sticky;
+    top: 0;
+    background-color: #f8f8f8;
+    z-index: 1;
+  }
+
+  
+  .color-verde {
+    background-color: rgb(78, 241, 78);
+  }
+  
+  .color-rojo {
+    background-color: rgb(226, 90, 90);
+  }
+
+  .color-naranja {
+    background-color: rgb(248, 192, 89);
+  }
+  .color-amarillo {
+    background-color: rgb(255, 255, 86);
+  }
+
+  .cuadro-verde{
+    width: 20px;
+    height: 20px;
+    background-color: green; /* O el color que desees para los valores mayores a 75 */
+    display: inline-block;
+    margin-left: 10px;
+  }
+  .cuadro-amarillo {
+    width: 20px;
+    height: 20px;
+    background-color: yellow; /* O el color que desees para los valores mayores a 75 */
+    display: inline-block;
+    margin-left: 10px;
+  }
+  .cuadro-naranja {
+    width: 20px;
+    height: 20px;
+    background-color: orange; /* O el color que desees para los valores mayores a 75 */
+    display: inline-block;
+    margin-left: 10px;
+  }
+  .cuadro-rojo {
+    width: 20px;
+    height: 20px;
+    background-color: red; /* O el color que desees para los valores mayores a 75 */
+    display: inline-block;
+    margin-left: 10px;
+  }
+  
+  
+  

@@ -1,0 +1,15 @@
+<body>
+  <div class="container bg-light border border-start-0 rounded-4">
+<div *ngFor="let item of datasource" class="card">
+  <div class="card-body">
+    <h3><b>{{ item.nombre }}</b></h3>
+    <br>
+    <b>Fecha Inicio: {{ item.fecha_inicio | date:'dd/MM/yyyy' }}</b>
+    <br>
+    <b>Fecha Fin: {{ item.fecha_fin | date:'dd/MM/yyyy' }}</b>
+    <br>
+    <a class="btn btn-primary" (click)="enviarModelo(item)">Ver</a>
+  </div>
+</div>
+<br>
+  </div></body>

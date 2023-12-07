@@ -1,0 +1,44 @@
+.negrita{
+    font-weight: bold;
+  }
+
+.small-cell {
+    max-width: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    background-color: transparent;
+    color:white;
+  }
+  
+.example-form {
+    min-width: 150px;
+    width: 100%;
+}
+
+.example-full-width {
+    width: 100%;
+}
+
+#my-button {
+    background-color: #272E56;
+    color: white;
+    /* margin: 10px; */
+}
+
+#button-dialogue {
+    border: #272E56;
+}
+
+.date-fields {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.date-field {
+    flex-basis: calc(33.33% - 10px); /* Ajusta el ancho de los campos de fecha */
+    width:  calc(33.33% - 10px);
+    /* Distribuye el espacio disponible de manera uniforme entre los campos de fecha */
+    
+    /* Añade un margen derecho entre los campos de fecha */
+}

@@ -1,0 +1,9 @@
+table {
+    width: 100%;
+}
+
+#my-button {
+    background-color: #272E56;
+    color: white;
+    margin: 10px;
+}

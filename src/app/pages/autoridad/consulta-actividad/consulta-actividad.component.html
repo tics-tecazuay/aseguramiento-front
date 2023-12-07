@@ -1,0 +1,50 @@
+<body>
+    <div class="container bg-light border border-start-0 rounded-4">
+        <blockquote class="blockquote text-dark" style="margin-top: 5%">
+            <h1><strong> LISTADO DE ACTIVIDADES CUMPLIDAS</strong></h1>
+        </blockquote>
+        <div></div>
+
+        <div class="card">
+            <div class="card-body">
+                <br />
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                    <ng-container matColumnDef="Código">
+                      <mat-header-cell *matHeaderCellDef class="text-center">Código</mat-header-cell>
+                      <mat-cell *matCellDef="let item" class="text-center">{{ item.id_actividad }}</mat-cell>
+                    </ng-container>
+                    
+                    <ng-container matColumnDef="Nombre">
+                      <mat-header-cell *matHeaderCellDef class="text-center">Nombre</mat-header-cell>
+                      <mat-cell *matCellDef="let item" class="text-center">{{ item.nombre }}</mat-cell>
+                    </ng-container>
+                    
+                    <ng-container matColumnDef="Fecha Inicio">
+                      <mat-header-cell *matHeaderCellDef class="text-center">Fecha Inicio</mat-header-cell>
+                      <mat-cell *matCellDef="let item" class="text-center">{{ item.fecha_inicio }}</mat-cell>
+                    </ng-container>
+                    
+                    <ng-container matColumnDef="Fecha Fin">
+                      <mat-header-cell *matHeaderCellDef class="text-center">Fecha Fin</mat-header-cell>
+                      <mat-cell *matCellDef="let item" class="text-center">{{ item.fecha_fin }}</mat-cell>
+                    </ng-container>
+                    
+                    <ng-container matColumnDef="Responsable">
+                      <mat-header-cell *matHeaderCellDef class="text-center">Responsable</mat-header-cell>
+                      <mat-cell *matCellDef="let item" class="text-center">{{ item.usuario.persona.primer_nombre+" "+item.usuario.persona.primer_apellido }}</mat-cell>
+                    </ng-container>
+                  
+                    <!-- Fila de encabezado -->
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    
+                    <!-- Filas de datos -->
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                  </table>
+                  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+<!--   BODY DE FORMULA CUANTITATIVA -->

@@ -1,0 +1,29 @@
+<h1>Listado de Evidencias</h1>
+<button mat-raised-button (click)="regresar()" class="boton">
+    Regresar
+</button>
+<div class="container">
+    <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+        <ng-container matColumnDef="rowNumber">
+            <th mat-header-cell *matHeaderCellDef> No. </th>
+            <td mat-cell *matCellDef="let element">{{element.rowNumber}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+            <th mat-header-cell *matHeaderCellDef> {{columnNames[column]}} </th>
+            <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
+
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
+        <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand" class="example-element-row"
+            (click)="mostrarEvidencias(element)">
+        </tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+    </table>
+</div>

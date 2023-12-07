@@ -1,0 +1,73 @@
+.color-verde {
+    background-color: green;
+  }
+  
+  .color-rojo {
+    background-color: red;
+  }
+
+  .color-naranja {
+    background-color: orange;
+  }
+  .color-amarillo {
+    background-color: yellow;
+  }
+  .color-verde {
+    background-color: green;
+  }
+  
+  .color-amarillo {
+    background-color: yellow;
+  }
+  
+  .tabla-contenedor {
+    max-height: 400px; /* Altura máxima del contenedor */
+    overflow-y: auto; /* Habilitar el scroll vertical */
+  }
+  
+  .tabla-contenedor thead {
+    /* Fijar el encabezado en su posición original */
+    position: sticky;
+    top: 0;
+    background-color: #f8f8f8;
+    z-index: 1;
+  }
+
+
+  .table {
+    table-layout: fixed;
+  }
+  
+  
+  .table th,
+  .table td {
+    white-space: pre-wrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 150px; /* Ajusta el ancho mínimo según tus necesidades */
+  }
+
+ 
+  
+  body {
+    font: 1em/1.618 Inter, sans-serif;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    min-height: 100vh;
+    padding: 30px;
+    
+    color: #224;
+ 
+  }
+  /* Estilo para las celdas con el mismo nombre */
+.same-name {
+  border-bottom: none;
+}
+
+/* Estilo para las celdas con diferentes nombres */
+.different-name {
+  border-bottom: 1px solid #ccc; /* Puedes ajustar el color según tus preferencias */
+}

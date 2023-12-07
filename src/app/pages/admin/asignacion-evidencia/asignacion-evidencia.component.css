@@ -1,0 +1,110 @@
+::ng-deep .cdk-overlay-container{
+  z-index:2000;
+}
+
+.tabla-container {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.date-fields {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.date-field {
+  flex-basis: calc(33.33% - 10px);
+  width:  calc(33.33% - 10px);
+}
+
+.date-edits {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.date-edit {
+  width: 100%; 
+  max-width: 300px;
+  margin: 10px;
+}
+
+.btn-tabs {
+  display: flex;
+}
+
+.btn-tab {
+  padding: 10px 20px;
+  border: none;
+  background-color: #dca500;
+  color: black;
+  font-weight: bold;
+  transform-origin: top right;
+  transform: skewX(-20deg);
+  margin-right: -10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.btn-tab.selected {
+  background-color: #044c9b;
+  color: white;
+}
+
+.modal-table {
+    max-height: calc(100vh - 100px);
+  }
+
+  
+  input:disabled,mat-label {
+    color: #000000; 
+    background-color: #ffffff; 
+  }
+  .btn-close {
+    background-color: #f00;
+  }
+  .mat-cell {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }.custom-buttonArchivos {
+    position: relative;
+  }
+  
+  .custom-buttonArchivos::after {
+    content: "Asignar";
+    position: absolute;
+    top: -5px; 
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 10px;
+    background-color: rgba(34, 32, 32, 0.8);
+    color: #fff;
+    font-size: 14px;
+    border-radius: 5px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .custom-buttonArchivos:hover::after {
+    opacity: 1;
+  }
+  
+  
+  body {
+    font: 1em/1.618 Inter, sans-serif;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    min-height: 100vh;
+    padding: 30px;
+    
+    color: #224;
+ 
+  }

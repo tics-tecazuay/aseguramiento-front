@@ -1,0 +1,74 @@
+<body>
+  <div class="container bg-light border border-start-0 rounded-4">
+    <blockquote class="blockquote text-dark" style="margin-top: 5%">
+      <h1 style="text-transform: uppercase">
+        <strong>Modelos </strong>
+      </h1>
+    </blockquote>
+    <button
+      type="button"
+      class="btn btn-primary btn-lg btn-block"
+      (click)="openDialog()"
+    >
+      Iniciar Nuevo Modelo
+    </button>
+
+    <div class="horizontal-list">
+      <ng-container *ngFor="let item of datasource; let i = index">
+        <div class="card mi-card card-{{ i }}">
+          <div class="card-header">
+            <strong>NRO MODELO: </strong> {{ item.id_modelo
+            }}<span *ngIf="i === 0" class="recent-icon">
+              <mat-icon>new_releases</mat-icon>
+            </span>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ item.nombre }}</h5>
+            <p class="card-text">
+              <strong>INICIO: </strong>{{ item.fecha_inicio | customDate }}
+              <br />
+              <strong>FINAL: </strong> {{ item.fecha_fin | customDate }}
+            </p>
+            <table class="table text-center">
+              <thead>
+                <tr>
+                  <th scope="col">Criterios</th>
+                  <th scope="col">Subcriterios</th>
+                  <th scope="col">Indicadores</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ item.nro_criterios }}</td>
+                  <td>{{ item.nro_subcriterios }}</td>
+                  <td>{{ item.nro_indicadores }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <br />
+            <div
+              class="btn-group -flex justify-content-center"
+              role="group"
+              aria-label="Basic example"
+            >
+              <button
+                (click)="enviarModelo(item)"
+                type="button"
+                class="btn btn-primary"
+              >
+                Detalle
+              </button>
+              <!-- <button type="button" class="btn btn-danger"
+              (click)="eliminar(item)">Eliminar</button> -->
+              <button *ngIf="i === 0" (click)="openDialogMod(item)" class="btn btn-primary">Modificar</button>
+            </div>
+          </div>
+          <div class="card-footer text-muted">
+            <strong>ACTIVIDADES: </strong>
+            {{ item.fecha_final_act | customDate }}
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</body>

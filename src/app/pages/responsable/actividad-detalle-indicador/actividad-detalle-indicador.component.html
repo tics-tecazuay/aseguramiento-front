@@ -1,0 +1,45 @@
+<body>
+  <div class="container bg-light border border-start-0 rounded-4">
+    <div class="container">
+      <h1 style="text-align: center">DETALLE DE INDICADORES</h1>
+
+      <div class="detalle">
+        <br />
+
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>NOMBRE</th>
+              <th>DESCRIPCION</th>
+              <th>PESO</th>
+              <th>VALOR OBTENIDO</th>
+              <th>% VALOR OBTENIDO</th>
+              <th>ESTANDAR</th>
+              <th>TIPO</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let indicador of dataSource | buscar : searchText">
+              <td>{{ indicador.id_indicador }}</td>
+              <td>{{ indicador.nombre }}</td>
+              <td>{{ indicador.descripcion }}</td>
+              <td>{{ indicador.peso }}</td>
+              <td>{{ indicador.valor_obtenido }}</td>
+              <td
+                [class.color-verde]="indicador.color === 'verde'"
+                [class.color-rojo]="indicador.color === 'rojo'"
+                [class.color-naranja]="indicador.color === 'naranja'"
+                [class.color-amarillo]="indicador.color === 'amarillo'"
+              >
+                {{ indicador.porc_obtenido }} %
+              </td>
+              <td>{{ indicador.estandar }}</td>
+              <td>{{ indicador.tipo }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>

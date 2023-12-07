@@ -1,0 +1,14 @@
+form.formulario div input{
+ 
+ 
+}
+form {
+   
+    
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 400px
+    
+  }

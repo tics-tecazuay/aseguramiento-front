@@ -1,0 +1,208 @@
+<body>
+  <div class="container bg-light border border-start-0 rounded-4">
+    <div class="card" style="max-height: 500px;">
+      <div class="card-body">
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Buscar..."
+            [(ngModel)]="searchTerm"
+          />
+        </div>
+        <div class="mat-elevation-z8">
+          <table
+            mat-table
+            [dataSource]="model | responsable : searchTerm"
+            class="table table-hover"
+          >
+            <ng-container matColumnDef="id_modelo">
+              <th mat-header-cell *matHeaderCellDef>ID</th>
+              <td mat-cell *matCellDef="let m">{{ m.id_modelo }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef>Nombre</th>
+              <td
+                mat-cell
+                *matCellDef="let m"
+                (mouseenter)="showHint = true"
+                (mouseleave)="showHint = false"
+                [class.show-hint]="showHint"
+              >
+                {{ m.nombre }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fecha_inicio">
+              <th mat-header-cell *matHeaderCellDef>Fecha Inicio</th>
+              <td mat-cell *matCellDef="let m">
+                {{ m.fecha_inicio | date : "yyyy-MM-dd" }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="fecha_fin">
+              <th mat-header-cell *matHeaderCellDef>Fecha Fin</th>
+              <td mat-cell *matCellDef="let m">
+                {{ m.fecha_fin | date : "yyyy-MM-dd" }}
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedModel"></tr>
+            <tr
+              mat-row
+              *matRowDef="let m; columns: displayedModel"
+              (click)="cargarTabla(m.id_modelo)"
+            ></tr>
+          </table>
+          <mat-paginator
+            [pageSizeOptions]="[5, 10, 20]"
+            showFirstLastButtons
+            aria-label="Seleccione"
+          >
+          </mat-paginator>
+        </div>
+      </div>
+    </div>
+    <!--mat group  -->
+    <div>
+      <section class="content-header" id="enc">
+        <div class="container-fluid" style="border: 1px; border-radius: 2%">
+          <div class="row mb-2">
+            <div class="col-sm-6" id="letra">
+              <h3>
+                <strong>Responsables de los Criterios del modelo:</strong>
+                {{ nombremodelo }}
+              </h3>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <mat-tab-group>
+      <mat-tab label="Responsables Actuales">
+        <div class="card">
+          <div class="card-body">
+            <div class="input-group mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Buscar..."
+                [(ngModel)]="searchTerm1"
+              />
+            </div>
+            <div class="mat-elevation-z8">
+              <table
+                mat-table
+                [dataSource]="asig | responsable : searchTerm1"
+                class="table table-hover"
+              >
+                <ng-container matColumnDef="enc">
+                  <th mat-header-cell *matHeaderCellDef>ID</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let a; let i = index"
+                    [attr.rowspan]="getRowSpan('enc', i)"
+                    [style.display]="getRowSpan('enc', i) ? '' : 'none'"
+                  >
+                    {{ a.enc }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nombrescri">
+                  <th mat-header-cell *matHeaderCellDef>Nombres</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let a; let i = index"
+                    [attr.rowspan]="getRowSpan('nombrescri', i)"
+                    [style.display]="getRowSpan('nombrescri', i) ? '' : 'none'"
+                  >
+                    {{ a.nombrescri }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actividasi">
+                  <th mat-header-cell *matHeaderCellDef>Criterio</th>
+                  <td mat-cell *matCellDef="let a">
+                    {{ a.actividasi }}
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let a; columns: displayedColumns"></tr>
+              </table>
+              <mat-paginator
+                [pageSizeOptions]="[5, 10, 20]"
+                showFirstLastButtons
+                aria-label="Seleccione"
+              >
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Tab para Actividades Rechazadas -->
+      <mat-tab label="Responsables Anteriores">
+        <div class="card">
+          <div class="card-body">
+            <div class="input-group mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Buscar..."
+                [(ngModel)]="searchTerm2"
+              />
+            </div>
+            <div class="mat-elevation-z8">
+              <table
+                mat-table
+                [dataSource]="asig2 | responsable : searchTerm1"
+                class="table table-hover"
+              >
+                <ng-container matColumnDef="enc">
+                  <th mat-header-cell *matHeaderCellDef>ID</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let a; let i = index"
+                    [attr.rowspan]="getRowSpan2('enc', i)"
+                    [style.display]="getRowSpan2('enc', i) ? '' : 'none'"
+                  >
+                    {{ a.enc }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nombrescri">
+                  <th mat-header-cell *matHeaderCellDef>Nombres</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let a; let i = index"
+                    [attr.rowspan]="getRowSpan2('nombrescri', i)"
+                    [style.display]="getRowSpan2('nombrescri', i) ? '' : 'none'"
+                  >
+                    {{ a.nombrescri }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actividasi">
+                  <th mat-header-cell *matHeaderCellDef>Actividad</th>
+                  <td mat-cell *matCellDef="let a">
+                    {{ a.actividasi }}
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                <tr mat-row *matRowDef="let a; columns: displayedColumns2"></tr>
+              </table>
+              <mat-paginator
+                [pageSizeOptions]="[5, 10, 20]"
+                showFirstLastButtons
+                aria-label="Seleccione"
+              >
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+    <!-- fin matgroup -->
+  </div>
+</body>
