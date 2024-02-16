@@ -8,20 +8,21 @@
       <div class="row" style="margin-top: 2%; margin-bottom: 10%">
         <div class="card">
           <div class="card-body">
-            <figure class="text-center text-dark" style="margin-top: 5%; font-style: italic; font-size: smaller">
-              <blockquote class="blockquote text-dark">
-                <h1>
-                  <strong> LISTADO DE RESPONSABLES </strong>
-                </h1>
-              </blockquote>
-            </figure>
-
-            <div class="info-message">
-              <span class="info-text" style="opacity: 0.5">Seleccione un responsable</span>
+            <div class="d-flex flex-row align-items-center">
+              <figure class="text-center text-dark" style="margin-top: 5%; font-style: italic; font-size: smaller">
+                <blockquote class="blockquote text-dark">
+                  <h1>
+                    <strong>LISTADO RESPONSABLE</strong>
+                  </h1>
+                </blockquote>
+              </figure>
             </div>
             <div class="form-group">
               <input type="text" class="form-control" name="filterPost3" placeholder="Buscar..."
                 [(ngModel)]="filterPost" />
+            </div>
+            <div class="info-message">
+              <span class="info-text" style="opacity: 0.5">Seleccione un responsable</span>
             </div>
             <mat-selection-list [multiple]="false" (selectionChange)="onSelectionChange($event)"
               class="selection-list-container">
@@ -67,7 +68,7 @@
                     </ng-container>
 
                     <ng-container matColumnDef="nombre">
-                      <th mat-header-cell *matHeaderCellDef>NOMBRE</th>
+                      <th mat-header-cell *matHeaderCellDef>CRITERIO</th>
                       <td mat-cell *matCellDef="let elemento">
                         {{ elemento.indicador?.subcriterio?.criterio?.nombre }}
                       </td>
@@ -88,7 +89,7 @@
                     </ng-container>
                     
                     <ng-container matColumnDef="descripcion">
-                      <th mat-header-cell *matHeaderCellDef>DESCRIPCIÓN</th>
+                      <th mat-header-cell *matHeaderCellDef>EVIDENCIA</th>
                       <td mat-cell *matCellDef="let elemento">
                         {{ elemento.descripcion }}
                       </td>
@@ -98,7 +99,7 @@
                       <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
                       <td mat-cell *matCellDef="let element">
                         <div style="display: flex; align-items: center;">
-                        <button type="button" class="btn btn-primary custom-button" title="Ver las actividades" style="
+                        <button type="button" class="btn btn-primary custom-button" title="Ver las evidencias" style="
                             background-color: rgb(58, 156, 156);
                             margin-right: 5%;
                           " (click)="verDetalles(element)" [disabled]="

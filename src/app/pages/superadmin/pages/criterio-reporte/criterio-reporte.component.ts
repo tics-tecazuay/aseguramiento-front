@@ -58,10 +58,10 @@ export class CriterioReporteComponent {
        (data: Indicador[]) => {
          this.indicadors = data;
          this.listarcriterio();
-        //  console.log('Datos de criterios totales:', this.indicadors);
+         console.log('Datos de criterios totales:', this.indicadors);
        },
        (error: any) => {
-        //  console.error('Error al listar los indicadors:', error);
+         console.error('Error al listar los indicadors:', error);
        }
   );
   }
@@ -69,7 +69,7 @@ export class CriterioReporteComponent {
     this.indicadorservice.indicadoresPorCriteriosPruebaAlvCL([]).subscribe(
       (datacuali: Indicador[]) => {
         this.criteriosCuali = datacuali;
-        // console.log('Datos de criterios cualitativos:', this.criteriosCuali);
+        console.log('Datos de criterios cualitativos:', this.criteriosCuali);
         this.listarcriterio();
       },
       (error: any) => {
@@ -81,7 +81,7 @@ export class CriterioReporteComponent {
     this.indicadorservice.indicadoresPorCriteriosPruebaAlvCT([]).subscribe(
       (datacuanti: Indicador[]) => {
         this.criteriosCuanti = datacuanti;
-        // console.log('Datos de criterios cuantitativos:', this.criteriosCuanti);
+        console.log('Datos de criterios cuantitativos:', this.criteriosCuanti);
         this.listarcriterio();
       },
       (error: any) => {
@@ -339,7 +339,7 @@ alternarTabla(tabla: 'tablaGeneral' | 'tablaCualitativa' | 'tablaCuantitativa') 
       styles,
       pageOrientation: 'landscape',
     };
-  // console.log('Contenido del informe cualitativo:', content);
+  console.log('Contenido del informe cualitativo:', content);
     // Genera el PDF y descárgalo
     pdfMake.createPdf(documentDefinition).download('ReportesIndicadores.pdf');
   }

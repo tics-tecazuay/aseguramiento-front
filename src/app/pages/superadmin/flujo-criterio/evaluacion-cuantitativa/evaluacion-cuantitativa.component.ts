@@ -26,21 +26,16 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
   styleUrls: ['./evaluacion-cuantitativa.component.css']
 })
 export class EvaluacionCuantitativaComponent implements OnInit {
-
-
-
   miModal!: ElementRef;
   public encabezado_evaluar = new Encabezado_Evaluar();
   public evaluarcuantitativa = new Evaluar_Cuantitativa();
   public formulaobject = new Formulas();
-
-
+  ocultar = false;
   listaEvaluarCuant: Evaluar_Cuantitativa[] = [];
   listaCuantitativa: Cuantitativa[] = [];
   encabezadoslist: Encabezado_Evaluar[] = [];
   formula: string = '';
   descripcion: string = '';
-
 
   valores: any[] = [{ valor: 'asdf', escala: 'asdf' }];
   indicador: Indicador = new Indicador();
@@ -53,7 +48,7 @@ export class EvaluacionCuantitativaComponent implements OnInit {
 
   filterPostmodal = '';
   dataSourcemodal = new MatTableDataSource<Cuantitativa>();
-  columnasmodal: string[] = ['id_cuantitativa','abreviatura', 'descripcion', 'actions'];
+  columnasmodal: string[] = ['id_cuantitativa', 'abreviatura', 'descripcion', 'actions'];
 
   @ViewChild('datosModalRef') datosModalRef: any;
   @ViewChild('paginator', { static: false }) paginator?: MatPaginator;
@@ -67,10 +62,9 @@ export class EvaluacionCuantitativaComponent implements OnInit {
     private router: Router
   ) {
   }
+
   ngAfterViewInit() {
     if (this.dataSource) {
-
-
       this.dataSource.paginator = this.paginator || null;
     }
 
@@ -78,17 +72,19 @@ export class EvaluacionCuantitativaComponent implements OnInit {
       this.dataSourcemodal.paginator = this.paginatormodal || null;
     }
   }
+
   ngOnInit() {
     this.indicador = history.state.data;
     this.subcriterio = history.state.subcriterio;
     this.criterio = history.state.criterio;
     if (this.indicador == undefined) {
       this.router.navigate(['user-dashboard']);
-      location.replace('#/use/user-dashboard');
+      location.replace('/use/user-dashboard');
     }
     this.findEncabezado();
 
   }
+
   agregarOperador(operador: string) {
     const ultimoCaracter = this.formula.slice(-1);
     const regex = /[\d\w\)]/; // Expresión regular para buscar números, letras o el paréntesis de cierre
@@ -119,14 +115,14 @@ export class EvaluacionCuantitativaComponent implements OnInit {
       this.pilaParentesis.pop();
     }
   }
+
   agregarValor(valor: any) {
     if (this.formula && !/[\+\-\*\(\)\/]$/.test(this.formula)) {
-
     } else {
       this.formula += valor.cuantitativa.abreviatura;
     }
-
   }
+
   agregarDescripcion(descripcion: string) {
     if (this.formula && !/[\+\-\*\(\)\/]$/.test(this.formula)) {
 
@@ -135,6 +131,7 @@ export class EvaluacionCuantitativaComponent implements OnInit {
     }
 
   }
+
   borrarUltimoCaracter() {
     const ultimoCaracter = this.formula.slice(-1);
     if (ultimoCaracter === '(') {
@@ -152,6 +149,7 @@ export class EvaluacionCuantitativaComponent implements OnInit {
       this.formula = this.formula.slice(0, -1);
     }
   }
+
   guardarFormula(): void {
     this.formulaobject.formula = this.formula
     this.formulaobject.descripcion = this.descripcion
@@ -159,7 +157,7 @@ export class EvaluacionCuantitativaComponent implements OnInit {
       //Creo la formula si no existe
       this.service.crear(this.formulaobject).subscribe(
         (response: any) => {
-          // console.log('formula creado con éxito:', response);
+          console.log('formula creado con éxito:', response);
 
           this.formulaobject = response;
           this.encabezado_evaluar.formula = response;
@@ -182,10 +180,10 @@ export class EvaluacionCuantitativaComponent implements OnInit {
         }
       );
     } else {
-      //Actualizo la formula
+      //Actualizo la formula 
       this.service.actualizar(this.encabezado_evaluar.formula?.id_formula, this.formulaobject).subscribe(
         (response: any) => {
-          // console.log('formula actualizada con éxito:', response);
+          console.log('formula actualizada con éxito:', response);
           this.formulaobject = response;
           this.encabezado_evaluar.formula = response;
           this.encabezadoservice.actualizar(this.encabezado_evaluar).subscribe(response => {
@@ -210,7 +208,6 @@ export class EvaluacionCuantitativaComponent implements OnInit {
   }
 
   findEncabezado(): void {
-
     this.encabezadoservice.getEncabezado_Evaluar().subscribe(
       (data: any) => {
         this.encabezadoslist = data.filter((encabezado: Encabezado_Evaluar) => encabezado.indicador?.id_indicador === this.indicador.id_indicador);
@@ -223,7 +220,7 @@ export class EvaluacionCuantitativaComponent implements OnInit {
                 'Se ha creado un nuevo proceso de evaluacion cuantitativa',
                 'success'
               )
-              // console.log('Encabezado creado con éxito:', response);
+              console.log('Encabezado creado con éxito:', response);
               this.encabezado_evaluar = response;
               this.listarEvaCuant();
             },
@@ -234,13 +231,12 @@ export class EvaluacionCuantitativaComponent implements OnInit {
         } else {
 
           this.encabezado_evaluar = this.encabezadoslist[0];
-          // console.log(this.encabezado_evaluar)
+          console.log(this.encabezado_evaluar)
           this.listarEvaCuant();
           if (this.encabezado_evaluar.formula != undefined) {
             this.formula = this.encabezado_evaluar.formula?.formula + "";
             this.descripcion = this.encabezado_evaluar.formula?.descripcion + "";
           }
-
 
         }
       },
@@ -257,7 +253,7 @@ export class EvaluacionCuantitativaComponent implements OnInit {
     this.evacuantitativaservice.crear(this.evaluarcuantitativa).
       subscribe(
         (reponse) => {
-          // console.log('Formula Cauntitativa creado con éxito:', reponse);
+          console.log('Formula Cauntitativa creado con éxito:', reponse);
           this.listarEvaCuant();
           Swal.fire(
             'Exitoso',
@@ -275,6 +271,7 @@ export class EvaluacionCuantitativaComponent implements OnInit {
         }
       )
   }
+
   eliminarevacuant(cuanti: any) {
     Swal.fire({
       title: 'Estas seguro de eliminar el registro?',
@@ -311,6 +308,7 @@ export class EvaluacionCuantitativaComponent implements OnInit {
       }
     })
   }
+
   listarCaunti(): void {
     this.service.getCuantitativa().subscribe(
       (data: any) => {
@@ -319,19 +317,20 @@ export class EvaluacionCuantitativaComponent implements OnInit {
             return evaluacion_cuantitativa.cuantitativa?.id_cuantitativa === cuantitativa.id_cuantitativa;
           });
         });
-        this.dataSourcemodal.data=this.listaCuantitativa;
+        this.dataSourcemodal.data = this.listaCuantitativa;
       },
       (error: any) => {
         console.error('Error al listar las formulas cuantitativas', error);
       }
     )
   }
+
   listarEvaCuant(): void {
     this.evacuantitativaservice.getEvaluar_Cuantitativas().
       subscribe(
         (data: any) => {
           this.listaEvaluarCuant = data.filter((evaluacion_cuantitativa: Evaluar_Cuantitativa) => evaluacion_cuantitativa.encabezado_evaluar?.id_encabezado_evaluar === this.encabezado_evaluar.id_encabezado_evaluar);
-          this.dataSource.data=this.listaEvaluarCuant;
+          this.dataSource.data = this.listaEvaluarCuant;
         },
         (error: any) => {
           console.error('Error al listar las formulas cuantitativas', error);
@@ -350,10 +349,9 @@ export class EvaluacionCuantitativaComponent implements OnInit {
     return math.evaluate(substitutedEquation);
   }
 
-
   test(): void {
-    // console.log(this.formula);
-    // console.log(this.listaEvaluarCuant);
+    console.log(this.formula);
+    console.log(this.listaEvaluarCuant);
 
     // Verifica si los paréntesis están balanceados
     if (!this.VerificarParentesis(this.formula)) {
@@ -372,7 +370,7 @@ export class EvaluacionCuantitativaComponent implements OnInit {
     for (const cuantitativa of this.listaEvaluarCuant) {
       const value = Math.random() * 10;
       letterValues[cuantitativa.cuantitativa?.abreviatura as keyof typeof letterValues] = value;
-      // console.log(cuantitativa.cuantitativa?.abreviatura, value);
+      console.log(cuantitativa.cuantitativa?.abreviatura, value);
     }
     const substitutedEquation = this.formula.replace(/([a-zA-Z]+)/g, (match, letter) => {
       const value = letterValues[letter];
@@ -390,7 +388,7 @@ export class EvaluacionCuantitativaComponent implements OnInit {
     } catch (error) {
       result = 'Error';
     }
-    // console.log(result);
+    console.log(result);
 
     // Mostrar alerta con los valores utilizados y el resultado
     const abreviaturas = Object.keys(letterValues).map(abreviatura => `${abreviatura}: ${letterValues[abreviatura].toFixed(2)}`);
@@ -422,7 +420,6 @@ export class EvaluacionCuantitativaComponent implements OnInit {
     return contador === 0;
   }
 
-
   info(): void {
     Swal.fire({
       title: 'Info',
@@ -439,6 +436,7 @@ export class EvaluacionCuantitativaComponent implements OnInit {
       confirmButtonAriaLabel: 'Thumbs up, great!'
     })
   }
+
   infooperadores(): void {
     Swal.fire({
       title: 'Info',
@@ -455,6 +453,7 @@ export class EvaluacionCuantitativaComponent implements OnInit {
       confirmButtonAriaLabel: 'Thumbs up, great!'
     })
   }
+
   infocuantitativas(): void {
     Swal.fire({
       title: 'Info',
@@ -476,15 +475,19 @@ export class EvaluacionCuantitativaComponent implements OnInit {
       confirmButtonAriaLabel: 'Thumbs up, great!'
     })
   }
+
   verIndicadores() {
     this.router.navigate(['/sup/flujo-criterio/subcriterios-indicador'], { state: { data: this.subcriterio, criterio: this.criterio } });
   }
+
   verSubcriterios() {
     this.router.navigate(['/sup/flujo-criterio/criterios-subcriterio'], { state: { data: this.criterio } });
   }
+
   verCriterios() {
     this.router.navigate(['/sup/flujo-criterio/criterioSuper']);
   }
+
   irCuantitativas() {
     this.router.navigate(['/sup/formula/cuantitativa']);
   }
@@ -499,6 +502,7 @@ export class EvaluacionCuantitativaComponent implements OnInit {
       this.dataSource.data = this.listaEvaluarCuant;;
     }
   }
+
   aplicarFiltromodal() {
     if (this.filterPostmodal) {
       const lowerCaseFilter = this.filterPostmodal.toLowerCase();
@@ -509,7 +513,6 @@ export class EvaluacionCuantitativaComponent implements OnInit {
       this.dataSourcemodal.data = this.listaCuantitativa;;
     }
   }
-
 
   generarReportePDFevaluacion(subcriterio: Subcriterio, criterio: Criterio) {
     const dataSubcriterio = [

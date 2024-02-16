@@ -2,60 +2,37 @@
   <div class="container bg-light border border-start-0 rounded-4">
     <blockquote class="blockquote text-dark" style="margin-top: 5%">
       <h1 style="text-transform: uppercase">
-        <strong
-          ><a style="cursor: pointer" (click)="verCriterios()"
-            >LISTADO CRITERIOS
+        <strong><a style="cursor: pointer" (click)="verCriterios()">LISTADO CRITERIOS
           </a>
           >
-          <a style="cursor: pointer" (click)="verSubcriterios()"
-            >{{ criterio.nombre }}
+          <a style="cursor: pointer" (click)="verSubcriterios()">{{ criterio.nombre }}
           </a>
           >
-          <a>{{ subcriterio.nombre }}</a></strong
-        >
+          <a>{{ subcriterio.nombre }}</a></strong>
       </h1>
     </blockquote>
     <div class="card">
       <div class="card-body">
         <div class="form-group">
-          <input
-            type="text"
-            class="form-control"
-            name="filterPost3"
-            placeholder="Buscar..."
-            [(ngModel)]="filterPost"
-            (input)="aplicarFiltro()"
-          />
+          <input type="text" class="form-control" name="filterPost3" placeholder="Buscar..." [(ngModel)]="filterPost"
+            (input)="aplicarFiltro()" />
         </div>
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#materiaModal"
-        >
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#materiaModal">
           CREAR NUEVO INDICADOR
         </button>
 
         <br />
-        <button
-          type="button"
-          class="btn btn-warning"
-          (click)="generarReportePDFindisub()"
-          style="margin-right: 5%"
-        >
-        <i class="fas fa-file-pdf"></i>
-        GENERAR REPORTE
+        <button type="button" class="btn btn-warning" (click)="generarReportePDFindisub()" style="margin-right: 5%">
+          <i class="fas fa-file-pdf"></i>
+          GENERAR REPORTE
         </button>
         <br />
-        <div
-          class="mat-elevation-z8 table-responsive"
-          style="margin-bottom: 5%"
-        >
-         
+        <div class="mat-elevation-z8 table-responsive" style="margin-bottom: 5%">
+
           <table mat-table [dataSource]="dataSource">
             <ng-container matColumnDef="id_indicador">
-              <th mat-header-cell *matHeaderCellDef>ID</th>
-              <td mat-cell *matCellDef="let elemento">
+              <th mat-header-cell *matHeaderCellDef [style.display]="ocultar ? '' : 'none'">ID</th>
+              <td mat-cell *matCellDef="let elemento" [style.display]="ocultar  ? '' : 'none'">
                 {{ elemento.id_indicador }}
               </td>
             </ng-container>
@@ -86,32 +63,24 @@
             <ng-container matColumnDef="tipo">
               <th mat-header-cell *matHeaderCellDef>TIPO</th>
               <td mat-cell *matCellDef="let elemento">
-                <button
-                  class="btn btn-primary"
-                  role="button"
-                  (click)="verEvaluacion(elemento)"
-                  *ngIf="elemento.tipo !== 'cualitativa'"
-                >
+                <button class="btn btn-primary" role="button" (click)="verEvaluacion(elemento)"
+                  *ngIf="elemento.tipo !== 'cualitativa'">
                   <div class="d-flex">
                     <i class="fas fa-file-pdf"></i>
                   </div>
                 </button>
               </td>
             </ng-container>
-            
+
 
             <ng-container matColumnDef="cantidadEvidencia">
               <th mat-header-cell *matHeaderCellDef>EVIDENCIAS</th>
               <td mat-cell *matCellDef="let elemento">
-                <button
-                  class="btn btn-primary"
-                  role="button"
-                  (click)="verEvidencias(elemento)"
-                >
+                <button class="btn btn-primary" role="button" (click)="verEvidencias(elemento)">
                   <div class="d-flex">
                     <span class="badge">{{
                       elemento.cantidadEvidencia
-                    }}</span>
+                      }}</span>
                     <i class="fas fa-file-pdf"></i>
                   </div>
                 </button>
@@ -121,244 +90,138 @@
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
               <td mat-cell *matCellDef="let element">
-                <button
-                  class="btn btn-danger"
-                  style="background-color: red"
-                  (click)="eliminar(element)"
-                  style="margin-right: 5%"
-                >
+                <button class="btn btn-danger" style="background-color: red" (click)="eliminar(element)"
+                  style="margin-right: 5%">
                   <i class="fas fa-user-times"></i>
                 </button>
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  data-bs-toggle="modal"
-                  data-bs-target="#materiaModal"
-                  style="margin-right: 5%"
-                  (click)="editDatos(element)"
-                >
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#materiaModal"
+                  style="margin-right: 5%" (click)="editDatos(element)">
                   <i class="fas fa-edit"></i>
                 </button>
-                
+
               </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="columnasUsuario"></tr>
             <tr mat-row *matRowDef="let fila; columns: columnasUsuario"></tr>
           </table>
-          <mat-paginator
-            [pageSizeOptions]="[5, 10, 20]"
-            showFirstLastButtons
-            aria-label="Select page of periodic elements"
-            itemsPerPageLabel="Items por página:"
-            nextPageLabel="Siguiente"
-            previousPageLabel="Anterior"
-          >
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+            aria-label="Select page of periodic elements" itemsPerPageLabel="Items por página:"
+            nextPageLabel="Siguiente" previousPageLabel="Anterior">
           </mat-paginator>
         </div>
-        <div
-          class="modal fade"
-          id="materiaModal"
-          tabindex="-1"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-          (hidden.bs.modal)="limpiarFormulario()"
-        >
+        <div class="modal fade" id="materiaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+          (hidden.bs.modal)="limpiarFormulario()">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header bg-blue">
                 <h3 class="modal-title">
                   <i class="fas fa-clipboard"></i> Indicador
                 </h3>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <form
-                  [formGroup]="frmIndicador"
-                  (ngSubmit)="guardar()"
-                  id="formulario"
-                >
+                <form [formGroup]="frmIndicador" (ngSubmit)="guardar()" id="formulario">
                   <div>
                     <label for="nombre">Nombre:</label>
-                    <input
-                      class="form-control"
-                      formControlName="nombre"
-                      type="text"
-                      id="nombre"
-                      name="nombre"
-                      style="margin-bottom: 10px"
-                    />
-                    <div
-                      class="alert alert-danger"
-                      *ngIf="
+                    <input class="form-control" formControlName="nombre" type="text" id="nombre" name="nombre"
+                      style="margin-bottom: 10px" />
+                    <div class="alert alert-danger" *ngIf="
                         frmIndicador.controls['nombre'].invalid &&
                         frmIndicador.controls['nombre'].touched
-                      "
-                    >
-                      <div
-                        *ngIf="
+                      ">
+                      <div *ngIf="
                           frmIndicador.controls['nombre'].hasError('required')
-                        "
-                      >
+                        ">
                         Debe ingresar un nombre
                       </div>
                     </div>
                     <label for="descripcion">Descripción:</label>
-                    <textarea
-                      class="form-control"
-                      formControlName="descripcion"
-                      id="descripcion"
-                      name="descripcion"
-                      style="margin-bottom: 10px"
-                    ></textarea>
-                    <div
-                      class="alert alert-danger"
-                      *ngIf="
+                    <textarea class="form-control" formControlName="descripcion" id="descripcion" name="descripcion"
+                      style="margin-bottom: 10px"></textarea>
+                    <div class="alert alert-danger" *ngIf="
                         frmIndicador.controls['descripcion'].invalid &&
                         frmIndicador.controls['descripcion'].touched
-                      "
-                    >
-                      <div
-                        *ngIf="
+                      ">
+                      <div *ngIf="
                           frmIndicador.controls['descripcion'].hasError(
                             'required'
                           )
-                        "
-                      >
+                        ">
                         La descripcion no puede estar vacia
                       </div>
-                      <div
-                        *ngIf="
+                      <div *ngIf="
                           frmIndicador.controls['descripcion'].hasError(
                             'maxlength'
                           )
-                        "
-                      >
+                        ">
                         Excedio el numero de caracteres permitido
                       </div>
                     </div>
 
                     <label for="peso">Peso:</label>
-                    <input
-                      class="form-control"
-                      formControlName="peso"
-                      type="number"
-                      id="peso"
-                      name="peso"
-                      style="margin-bottom: 10px"
-                    />
-                    <div
-                      class="alert alert-danger"
-                      *ngIf="
+                    <input class="form-control" formControlName="peso" type="number" id="peso" name="peso"
+                      style="margin-bottom: 10px" />
+                    <div class="alert alert-danger" *ngIf="
                         frmIndicador.controls['peso'].invalid &&
                         frmIndicador.controls['peso'].touched
-                      "
-                    >
-                      <div
-                        *ngIf="
+                      ">
+                      <div *ngIf="
                           frmIndicador.controls['peso'].hasError('required')
-                        "
-                      >
+                        ">
                         Debe ingresar un peso
                       </div>
                     </div>
 
                     <div class="form-group">
                       <label for="tipo">Tipo:</label>
-                      <select
-                        class="form-control"
-                        formControlName="tipo"
-                        id="tipo"
-                        name="tipo"
-                        [(ngModel)]="selectedTipo"
-                      >
+                      <select class="form-control" formControlName="tipo" id="tipo" name="tipo"
+                        [(ngModel)]="selectedTipo">
                         <option value="cualitativa">Cualitativa</option>
                         <option value="cuantitativa">Cuantitativa</option>
                       </select>
-                      <div
-                        class="alert alert-danger"
-                        *ngIf="
+                      <div class="alert alert-danger" *ngIf="
                           frmIndicador.controls['tipo'].invalid &&
                           frmIndicador.controls['tipo'].touched
-                        "
-                      >
-                        <div
-                          *ngIf="
+                        ">
+                        <div *ngIf="
                             frmIndicador.controls['tipo'].hasError('required')
-                          "
-                        >
+                          ">
                           Debe ingresar un tipo
                         </div>
                       </div>
                     </div>
 
-                    <label for="peso" *ngIf="selectedTipo === 'cuantitativa'"
-                      >Estandar:</label
-                    >
-                    <input
-                      class="form-control"
-                      formControlName="estandar"
-                      type="number"
-                      id="estandar"
-                      name="estandar"
-                      style="margin-bottom: 10px"
-                      *ngIf="selectedTipo === 'cuantitativa'"
-                    />
-                    <div
-                      class="alert alert-danger"
-                      *ngIf="
+                    <label for="peso" *ngIf="selectedTipo === 'cuantitativa'">Estandar:</label>
+                    <input class="form-control" formControlName="estandar" type="number" id="estandar" name="estandar"
+                      style="margin-bottom: 10px" *ngIf="selectedTipo === 'cuantitativa'" />
+                    <div class="alert alert-danger" *ngIf="
                         frmIndicador.controls['estandar'].invalid &&
                         frmIndicador.controls['estandar'].touched &&
                         selectedTipo === 'cuantitativa'
-                      "
-                    >
-                      <div
-                        *ngIf="
+                      ">
+                      <div *ngIf="
                           frmIndicador.controls['estandar'].hasError('required')
-                        "
-                      >
+                        ">
                         Debe ingresar un estandar
                       </div>
                     </div>
                   </div>
                 </form>
                 <div class="modal-footer">
-                  <button
-                    type="button"
-                    form="formulario"
-                    class="btn btn-warning"
-                    data-bs-dismiss="modal"
-                  >
+                  <button type="button" form="formulario" class="btn btn-warning" data-bs-dismiss="modal">
                     Cancelar
                   </button>
-                  <button
-                    type="submit"
-                    class="btn btn-primary"
-                    form="formulario"
-                    *ngIf="!indic.id_indicador"
-                    data-dismiss="modal"
-                    data-bs-dismiss="modal"
-                    [disabled]="
+                  <button type="submit" class="btn btn-primary" form="formulario" *ngIf="!indic.id_indicador"
+                    data-dismiss="modal" data-bs-dismiss="modal" [disabled]="
                       !frmIndicador.valid ||
                       (selectedTipo === 'cuantitativa' &&
                         !frmIndicador.controls['estandar'].value)
-                    "
-                  >
+                    ">
                     Agregar
                   </button>
-                  <button
-                    class="btn btn-primary"
-                    *ngIf="indic.id_indicador"
-                    data-dismiss="modal"
-                    data-bs-dismiss="modal"
-                    (click)="actualizar()"
-                    [disabled]="!frmIndicador.valid"
-                  >
+                  <button class="btn btn-primary" *ngIf="indic.id_indicador" data-dismiss="modal"
+                    data-bs-dismiss="modal" (click)="actualizar()" [disabled]="!frmIndicador.valid">
                     Actualizar
                   </button>
                 </div>

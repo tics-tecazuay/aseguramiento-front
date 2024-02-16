@@ -22,7 +22,7 @@ export class SignupComponent implements OnInit {
   }
 
   formSubmit(){
-    // console.log(this.usuario);
+    console.log(this.usuario);
     if(this.usuario.username == '' || this.usuario.username == null){
       this.snack.open('El nombre de usuario es requerido !!','Aceptar',{
         duration : 3000,
@@ -34,10 +34,10 @@ export class SignupComponent implements OnInit {
 
     this.userService.añadirUsuario(this.usuario, this.rol).subscribe(
       (data) => {
-        // console.log(data);
+        console.log(data);
         Swal.fire('Usuario guardado','Usuario registrado con exito en el sistema','success');
       },(error) => {
-        // console.log(error);
+        console.log(error);
         this.snack.open('Ha ocurrido un error en el sistema !!','Aceptar',{
           duration : 3000
         });

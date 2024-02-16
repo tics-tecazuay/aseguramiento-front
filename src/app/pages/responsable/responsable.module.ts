@@ -10,6 +10,10 @@ import { ActividadCriterioDetalle } from './actividad-criterio-detalle/actividad
 import { ActividadCriterioSubcriterio } from './atividad-criterio-subcriterio/atividad-criterio-subcriterio.component';
 import { ActiviadDetalleIndicadorComponent } from './actividad-detalle-indicador/actividad-detalle-indicador.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { CriterioResponsableComponent } from './criterio-responsable/criterio-responsable.component';
+import { CriterioModeloResponsableComponent } from './criterio-modelo-responsable/criterio-modelo-responsable.component';
+import { SubcriterioResponsableComponent } from './subcriterio-responsable/subcriterio-responsable.component';
 
 
 @NgModule({
@@ -21,6 +25,10 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ActividadCriterioDetalle,
     ActividadCriterioSubcriterio,
     ActiviadDetalleIndicadorComponent,
+    DashboardComponent,
+    CriterioResponsableComponent,
+    CriterioModeloResponsableComponent,
+    SubcriterioResponsableComponent,
   ],
   imports: [
     CommonModule,

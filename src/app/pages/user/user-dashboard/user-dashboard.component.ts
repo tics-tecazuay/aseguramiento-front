@@ -70,7 +70,7 @@ export class UserDashboardComponent implements OnInit {
     )
     setInterval(() => this.updateClock(), 1000);
     this.rol = this.login.getUserRole();
-    // console.log("ROL " + this.rol);
+    console.log("ROL " + this.rol);
     this.modeloMax();
   }
 
@@ -122,7 +122,7 @@ export class UserDashboardComponent implements OnInit {
     event?: ChartEvent;
     active?: object[];
   }): void {
-    // console.log(event, active);
+    console.log(event, active);
   }
 
   public chartHovered({
@@ -132,7 +132,7 @@ export class UserDashboardComponent implements OnInit {
     event?: ChartEvent;
     active?: object[];
   }): void {
-    // console.log(event, active);
+    console.log(event, active);
   }
 
   showTipo() {
@@ -184,7 +184,7 @@ export class UserDashboardComponent implements OnInit {
   valoresadmin() {
     this.httpCriterios.getvalorad(this.idmodel, this.id).subscribe((valores: ValoresProjection[]) => {
       this.valoresp = valores;
-      // console.log("Valores de tabla" + JSON.stringify(this.valoresp))
+      console.log("Valores de tabla" + JSON.stringify(this.valoresp))
       this.barChartData.labels = this.valoresp.map(val => val.nomcriterio);
       this.barChartData.datasets[0].data = this.valoresp.map(val => val.vlObtenido);
       this.barChartData.datasets[1].data = this.valoresp.map(val => val.vlobtener);
@@ -198,7 +198,7 @@ export class UserDashboardComponent implements OnInit {
   valoresresp() {
     this.httpCriterios.getvaloresponsable(this.idmodel, this.id).subscribe((valores: ValoresProjection[]) => {
       this.valoresp = valores;
-      // console.log("Valores de tabla" + JSON.stringify(this.valoresp))
+      console.log("Valores de tabla" + JSON.stringify(this.valoresp))
       this.barChartData.labels = this.valoresp.map(val => val.nomcriterio);
       this.barChartData.datasets[0].data = this.valoresp.map(val => val.vlObtenido);
       this.barChartData.datasets[1].data = this.valoresp.map(val => val.vlobtener);
@@ -361,14 +361,14 @@ export class UserDashboardComponent implements OnInit {
   }
 
   calificar(valor: any, id: any, peso: any): void {
-    // console.log("tipo " + valor + " id ind " + id + " peso " + peso);
+    console.log("tipo " + valor + " id ind " + id + " peso " + peso);
     const dialogRef = this.dialog.open(CalificacionComponent, {
       data: { valor, id, peso },
     });
     dialogRef.afterClosed().subscribe(result => {
-      // console.log(result);
+      console.log(result);
       if (result.event == 'success') {
-        // console.log(result);
+        console.log(result);
         this.listardatos();
         this.cargarDatos();
         this.listaind();
@@ -421,37 +421,11 @@ export class UserDashboardComponent implements OnInit {
 
       }
     });
-    if (this.datacrite.length == 0) {
-      this.verresponsable();
-    }
   }
   verresponsable() {
-    this.cali = false;
-    this.service.getcriterioresp(this.idmodel, this.id).subscribe((data: criteriosdesprojection[]) => {
-      if (data.length != 0) {
-        this.verdash = true;
-        this.datacrite = data;
-        this.datacrite.forEach(item => {
-          if (typeof this.seleccionados[item.criterionomj] === 'undefined') {
-            this.seleccionados[item.criterionomj] = false;
-          }
-        });
-        this.cacheSpan3('Criterio', (d) => d.criterionomj);
-        this.cacheSpan3('Subcriterio', (d) => d.criterionomj + d.subcrierioj);
-        this.cacheSpan3('Indicador', (d) => d.criterionomj + d.subcrierioj + d.ind_nombrej);
-        this.cacheSpan3('Peso', (d) => d.criterionomj + d.subcrierioj + d.ind_nombrej + d.pes);
-        this.cacheSpan3('Obtenido', (d) => d.criterionomj + d.subcrierioj + d.ind_nombrej + d.pes + d.obt);
-        this.cacheSpan3('Utilidad', (d) => d.criterionomj + d.subcrierioj + d.ind_nombrej + d.pes + d.obt + d.uti);
-        this.cacheSpan3('Valor', (d) => d.criterionomj + d.subcrierioj + d.ind_nombrej + d.pes + d.obt + d.uti + d.val);
-        this.cacheSpan3('Evidencia', (d) => d.criterionomj + d.subcrierioj + d.ind_nombrej + d.pes + d.obt + d.uti + d.val + d.descrip);
-        this.cacheSpan3('Archivos', (d) => d.criterionomj + d.subcrierioj + d.ind_nombrej + d.pes + d.obt + d.uti + d.val + d.descrip + d.archivo_enlace);
-        setTimeout(() => {
-          this.aplicar();
-        }, 0);
-
-      }
-    });
+    location.replace('/res/dashboard');
   }
+
   aplicar() {
     this.datacrite.forEach(element => {
       element.randomCelda = this.generarC();
@@ -483,6 +457,7 @@ export class UserDashboardComponent implements OnInit {
     const b = Math.floor(Math.random() * 256);
     return `rgba(${r}, ${g}, ${b}, 0.3)`;
   }
+  
   generarColor2(): string {
     const r = Math.floor(Math.random() * 256);
     const g = Math.floor(Math.random() * 256);

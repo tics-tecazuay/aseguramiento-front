@@ -37,11 +37,11 @@ export class NavbarComponent implements OnInit {
       }
     );
     this.listarnot(this.user.id);
-
+   
   }
 
   listarnot(id: any) {
-    // console.log("id ver " + id);
+    console.log("id ver " + id);
     // Cargar notificaciones propias por id
     this.notificationService.getNotificaciones(id).subscribe(
       (dataPropias: Notificacion[]) => {
@@ -58,19 +58,19 @@ export class NavbarComponent implements OnInit {
               this.notificaciones.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
             },
             (errorRol: any) => {
-              // console.error('No se pudieron listar las notificaciones por rol');
+              console.error('No se pudieron listar las notificaciones por rol');
             }
           );
         }
       },
       (errorPropias: any) => {
-        // console.error('No se pudieron listar las notificaciones propias');
+        console.error('No se pudieron listar las notificaciones propias');
       }
     );
   }
-
-
-
+  
+  
+  
 ir(noti:any){
   noti.url;
   if(noti.idactividad!=0){
@@ -86,23 +86,11 @@ ir(noti:any){
   public logout() {
     localStorage.clear();
     this.login.logout();
-    // Reiniciar las variables del componente
-  this.isLoggedIn = false;
-  this.user = null;
-  this.rol = null;
-  this.numNotificacionesSinLeer = 0;
-  this.notificaciones = [];
-  this.notificaciones2 = [];
-  this.showNotificationsModal = false;
-
-  // Redirigir al inicio o a la página de login
-  location.replace('#/use/login');
-  location.reload();
-    
+    location.replace('/use/login');
   }
 
   perfil() {
-    location.replace('#/adm/admin');
+    location.replace('/adm/admin');
   }
 
 
@@ -113,7 +101,7 @@ ir(noti:any){
         n.visto = true;
         // Actualizar el estado de la notificación en el servidor
         this.notificationService.actualizar(n.id).subscribe(() => {
-          // console.log(`Notificación ${n.id} actualizada`);
+          console.log(`Notificación ${n.id} actualizada`);
         });
       }
     });

@@ -31,7 +31,7 @@ export class PonderacionCriterioComponent implements OnInit {
   firstPageLabel = 'Primera';
   previousPageLabel = 'Anterior';
 
-
+  ocultar=false;
   rango: any = (page: number, pageSize: number, length: number) => {
     if (length == 0 || pageSize == 0) {
       return `0 de ${length}`;
@@ -72,7 +72,7 @@ export class PonderacionCriterioComponent implements OnInit {
     public asignacionIndicadorService: AsignacionIndicadorService,
     private activatedRoute: ActivatedRoute
 
-
+    
   ) {
     this.paginatorIntl.nextPageLabel = this.nextPageLabel;
     this.paginatorIntl.lastPageLabel = this.lastPageLabel;
@@ -85,13 +85,13 @@ export class PonderacionCriterioComponent implements OnInit {
   ngAfterViewInit() {
 
     this.dataSource.paginator = this.paginator || null;
-
+    
 
   }
   ngOnInit(): void {
     this.llenar_datasource();
-
-
+  
+  
   }
 
   llenar_datasource() {
@@ -108,11 +108,11 @@ export class PonderacionCriterioComponent implements OnInit {
             enlace: `${baserUrl}/archivo/${indicador.id_indicador}.pdf` // Reemplaza 'URL_DEL_BACKEND' con la URL correcta de tu backend
           };
         });
-
+  
         this.dataSource = new MatTableDataSource(mappedData); // Crear instancia de MatTableDataSource
-
-        // console.log(this.dataSource.data + 'criteriooooooo');
-
+  
+        console.log(this.dataSource.data + 'criteriooooooo');
+  
         this.coloresTabla();
         this.GraficaPastel();
       }
@@ -169,7 +169,7 @@ export class PonderacionCriterioComponent implements OnInit {
   }
 
   irinicio() {
-    this.router.navigate(['/sup/modelo/modelo']);
+    this.router.navigate(['/sup/modelo/modelo']); 
   }
 
 
@@ -184,7 +184,7 @@ export class PonderacionCriterioComponent implements OnInit {
           (data) => {
 
             this.archivos = data;
-            // console.log(this.archivos);
+            console.log(this.archivos);
 
           }
         );

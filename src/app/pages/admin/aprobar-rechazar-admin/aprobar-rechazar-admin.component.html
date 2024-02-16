@@ -8,20 +8,21 @@
       <div class="row" style="margin-top: 10%; margin-bottom: 10%">
         <div class="card">
           <div class="card-body">
-            <figure class="text-center text-dark" style="margin-top: 5%; font-style: italic; font-size: smaller">
-              <blockquote class="blockquote text-dark">
-                <h1>
-                  <strong> LISTADO DE RESPONSABLES </strong>
-                </h1>
-              </blockquote>
-            </figure>
-
-            <div class="info-message">
-              <span class="info-text" style="opacity: 0.5">Seleccione un responsable</span>
+            <div class="d-flex flex-row align-items-center">
+              <figure class="text-center text-dark" style="margin-top: 5%; font-style: italic; font-size: smaller">
+                <blockquote class="blockquote text-dark">
+                  <h1>
+                    <strong>LISTADO RESPONSABLE</strong>
+                  </h1>
+                </blockquote>
+              </figure>
             </div>
             <div class="form-group">
               <input type="text" class="form-control" name="filterPost3" placeholder="Buscar..."
                 [(ngModel)]="filterPost" />
+            </div>
+            <div class="info-message">
+              <span class="info-text" style="opacity: 0.5">Seleccione un responsable</span>
             </div>
             <mat-selection-list [multiple]="false" (selectionChange)="onSelectionChange($event)"
               class="selection-list-container">
@@ -45,7 +46,7 @@
               <figure class="text-center text-dark" style="margin-top: 5%; font-style: italic; font-size: smaller">
                 <blockquote class="blockquote text-dark">
                   <h1>
-                    <strong> EVIDENCIAS ASIGNADAS</strong>
+                    <strong> ACTIVIDADES ASIGNADAS</strong>
                   </h1>
                 </blockquote>
               </figure>
@@ -106,7 +107,7 @@
                           ">
                           <i class="fas fa-list"></i>
                         </button>
-                        <button type="button" class="btn btn-primary custom-buttonEvaluar" mat-icon-button type="button"
+                        <!-- <button type="button" class="btn btn-primary custom-buttonEvaluar" mat-icon-button type="button"
                           (click)="seleccionarTarea(element)" style="
                             background-color: rgb(190, 170, 78);
                             margin-right: 5%;
@@ -114,7 +115,7 @@
                             element.estado === 'Aprobada'
                           ">
                           <mat-icon> functions</mat-icon>
-                        </button>
+                        </button> -->
                       </div>
                       <div style="display: flex; align-items: center;">
                         <button type="button" class="btn btn-primary custom-button" mat-icon-button type="button"

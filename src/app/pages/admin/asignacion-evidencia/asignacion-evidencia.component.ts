@@ -32,7 +32,7 @@ let ELEMENT_DATA: Fenix[] = [];
   styleUrls: ['./asignacion-evidencia.component.css']
 })
 export class AsignacionEvidenciaComponent implements OnInit {
-  columnas: string[] = ['id', 'nombre', 'rol', 'usuario','evidencia', 'actions'];
+  columnas: string[] = ['nombre', 'rol', 'usuario','evidencia', 'actions'];
   columnasEvidencia: string[] = ['criterio','subcriterio','indicador', 'descripcion','idev', 'actions'];
   columnasEvidenciaAsignacion: string[] = ['usuario','criterio','subcriterio', 'evidencia',  'idasigna', 'ideviden','descripcion','inicio','fin', 'actions'];
   rowspanArray: number[] = [];
@@ -90,6 +90,7 @@ export class AsignacionEvidenciaComponent implements OnInit {
   inicio:any;
   fin:any;
   formulario: FormGroup;
+  idUsuarioAsignador!: number;
   roles = [
     { rolId: 3, rolNombre: 'RESPONSABLE' },
   ];
@@ -144,7 +145,7 @@ export class AsignacionEvidenciaComponent implements OnInit {
     this.paginatorIntl.itemsPerPageLabel = this.itemsPerPageLabel;
     this.paginatorIntl.getRangeLabel=this.rango;
     this.dataSource2.data = this.listaUsuarios;
-    
+    this.rol = this.login.getUserRole();
   }
 
   ngOnInit(): void {
@@ -154,17 +155,16 @@ export class AsignacionEvidenciaComponent implements OnInit {
       data => {
         this.isLoggedIn = this.login.isLoggedIn();
         this.user = this.login.getUser();
-
       }
     )
 
-    this.personaService.getPersonas().subscribe(
-      listaPerso => this.listaPersonas = listaPerso);
+    this.idUsuarioAsignador = this.user.id;
 
+    this.personaService.getPersonas().subscribe(listaPerso => this.listaPersonas = listaPerso);
+  
     this.modeloMax();
 
     this.listar();
-
     this.Listado();
     this.ListarAsignacion();
   }
@@ -180,7 +180,6 @@ export class AsignacionEvidenciaComponent implements OnInit {
   showIndicador() {
     this.verIndicador = !this.verIndicador;
   }
-  //
   
   cacheSpan(key: string, accessor: (d: any) => any) {
     for (let i = 0; i < this.dataSource4.length;) {
@@ -212,15 +211,16 @@ export class AsignacionEvidenciaComponent implements OnInit {
     this.asignar2.fecha_inicio=element.ini;
     this.asignar2.fecha_fin=element.fini;
   }
+  
   notificar() {
     this.noti.fecha = new Date();
     this.noti.rol = "SUPERADMIN";
-    this.noti.mensaje = this.user.persona.primer_nombre+" "+this.user.persona.primer_apellido+" ha asignado la evidencia " + this.nombreasignado
+    this.noti.mensaje = this.rol +" "+ this.user.persona.primer_nombre+" "+this.user.persona.primer_apellido+" ha asignado la evidencia " + this.nombreasignado
     +" a "+this.nombre;
     this.noti.visto = false;
     this.noti.usuario =  0;
     this.noti.url="/sup/aprobaciones";
-    this.noti.idactividad=0;
+    this.noti.idactividad=this.noti.idactividad=this.asignacion.evidencia.id_evidencia;;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
@@ -232,6 +232,7 @@ export class AsignacionEvidenciaComponent implements OnInit {
     );
   }
 
+
   notificaruser() {
     this.noti.fecha = new Date();
     this.noti.rol = "";
@@ -239,7 +240,7 @@ export class AsignacionEvidenciaComponent implements OnInit {
     this.noti.visto = false;
     this.noti.usuario =  this.idusuario;
     this.noti.url="/res/evidenasignada";
-    this.noti.idactividad=0;
+    this.noti.idactividad=this.noti.idactividad=this.asignacion.evidencia.id_evidencia;;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
@@ -254,12 +255,13 @@ export class AsignacionEvidenciaComponent implements OnInit {
   notificaradmin() {
     this.noti.fecha = new Date();
     this.noti.rol = "ADMIN";
-    this.noti.mensaje = this.user.persona.primer_nombre+" "+this.user.persona.primer_apellido+" ha asignado la evidencia " + this.nombreasignado
+    this.noti.mensaje = this.user.persona.primer_nombre+" "+this.user.persona.primer_apellido+" has asignado la evidencia " + this.nombreasignado
     +" a "+this.nombre;
     this.noti.visto = false;
     this.noti.usuario =  0;
     this.noti.url="/adm/apruebaAdmin";
-    this.noti.idactividad=0;
+    this.noti.idactividad=this.asignacion.evidencia.id_evidencia;
+    console.log(this.noti.idactividad=this.asignacion.evidencia.id_evidencia);
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
@@ -382,11 +384,6 @@ export class AsignacionEvidenciaComponent implements OnInit {
     }
   }
   
-
-
-
-
-
   public seleccionar(element: any) {
 
     this.personaSele.cedula = element.cedula;
@@ -427,6 +424,9 @@ export class AsignacionEvidenciaComponent implements OnInit {
     this.asignacion.fecha_inicio=this.asignar.fecha_inicio;
     this.asignacion.fecha_fin=this.asignar.fecha_fin;
     this.asignacion.usuario.id = this.usuarioSele.id;
+    console.log("ID DEL USUARIO QUE ASIGNA:"+this.idUsuarioAsignador)
+    this.asignacion.id_usuario_asignador= this.idUsuarioAsignador;
+    console.log("ID DEL USUARIO QUE ASIGNA 2:"+ this.asignacion.id_usuario_asignador)
     console.log("Asigna: "+JSON.stringify(this.asignacion));
     this.asignarEvidenciaService.createAsigna(this.asignacion)
       .subscribe(
@@ -439,9 +439,7 @@ export class AsignacionEvidenciaComponent implements OnInit {
           this.listar();
           this.ListarAsignacion();
           this.Listado();
-          
-          
-          
+
           Swal.fire(
             'Exitoso',
             'Se ha completado la asignación con exito',
@@ -527,7 +525,7 @@ export class AsignacionEvidenciaComponent implements OnInit {
 });
   }
   Listado() {
-    this.responsableService.getResponsables().subscribe(
+    this.responsableService.getlistadeResponsablesByAdmin(this.idUsuarioAsignador).subscribe(
       listaUsua => {
         this.listaUsuariosResponsables = listaUsua;
         this.dataSource2.data = this.listaUsuariosResponsables;
@@ -550,7 +548,6 @@ export class AsignacionEvidenciaComponent implements OnInit {
 
   limpiarFormulario() {
   }
-
 
 
   registrarUsuario() {
@@ -588,9 +585,8 @@ export class AsignacionEvidenciaComponent implements OnInit {
     );
   }
   crearUsuario() {
-    
     console.log(this.usuarioGuardar)
-    this.usuariosService.createUsuario(this.usuarioGuardar, this.rol).subscribe(
+    this.usuariosService.createUsuarioAdm(this.usuarioGuardar, this.rol,this.idUsuarioAsignador ,this.id_modelo).subscribe(
       () => {
         Swal.fire(
           'Usuario Registrado!',
@@ -634,6 +630,7 @@ export class AsignacionEvidenciaComponent implements OnInit {
           Swal.fire('Usuario existente', 'El usuario ya está registrado', 'warning');
         } else {
           this.registrarUsuario();
+          this.Listado();
         }
       }),
       catchError((error) => {
@@ -679,6 +676,14 @@ export class AsignacionEvidenciaComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.usuariosService.eliminarUsuarioLogic(id).subscribe((response) => {
+          this.responsableService.deleteAsignacionResponsableAdmin(id).subscribe(
+            (response) => {
+              console.log('Se ha eliminado correctamente el usuario con id:'+id)
+            },
+            (error) => {
+              console.error('Error al eliminar el usuario responsable a su administrador', error);
+            }
+          );
           this.Listado();
         });
 

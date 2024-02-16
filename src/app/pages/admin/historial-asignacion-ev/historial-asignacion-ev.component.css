@@ -1,0 +1,57 @@
+.show-hint::before {
+    content: "Haga clic sobre una fila para cargar el historial";
+    position: absolute;
+    top: 25%;
+    left: 45%;
+    transform: translateX(-50%);
+    padding: 0.5em;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    white-space: nowrap;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s, visibility 0.2s;
+}
+
+.show-hint:hover::before {
+    visibility: visible;
+    opacity: 1;
+}
+
+body {
+    font: 1em/1.618 Inter, sans-serif;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 100vh;
+    padding: 30px;
+
+    color: #224;
+}
+
+.estado-pendiente {
+    background-color: yellow;
+    color: blue;
+}
+
+.estado-aprobada {
+    background-color: green;
+    color: white;
+}
+
+.estado-rechazada {
+    background-color: red;
+    color: white;
+}
+
+.acciones-cell {
+    min-width: 150px;
+}
+
+.accioness-cell {
+    min-width: 100px;
+}

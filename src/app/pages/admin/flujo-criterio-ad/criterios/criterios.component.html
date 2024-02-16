@@ -1,0 +1,63 @@
+<body>
+  <div class="container bg-light border border-start-0 rounded-4">
+    <blockquote class="blockquote text-dark" style="margin-top: 5%">
+      <h1><strong> LISTADO CRITERIOS</strong></h1>
+    </blockquote>
+    <div></div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            name="filterPost3"
+            placeholder="Buscar..."
+            [(ngModel)]="filterPost"
+            (input)="aplicarFiltro()"
+          />
+        </div>
+        <br />
+        <div
+          class="mat-elevation-z8 table-responsive"
+          style="margin-bottom: 5%"
+        >
+          <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef>NOMBRE</th>
+              <td mat-cell *matCellDef="let elemento">
+                {{ elemento.nombre_criterio }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="descripcion">
+              <th mat-header-cell *matHeaderCellDef>DESCRIPCIÓN</th>
+              <td mat-cell *matCellDef="let elemento">
+                {{ elemento.descripcion_criterio }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="cantidadSubcriterios">
+              <th mat-header-cell *matHeaderCellDef>SUBCRITERIOS</th>
+              <td mat-cell *matCellDef="let elemento">
+                <button
+                  class="btn btn-primary"
+                  role="button"
+                  (click)="verDetalles(elemento)"
+                >
+                  <div class="d-flex">
+                    <span class="badge">{{
+                      elemento.cantidadSubcriterios
+                    }}</span>
+                    <i class="fa fa-folder-open"></i>
+                  </div>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnasUsuario"></tr>
+            <tr mat-row *matRowDef="let fila; columns: columnasUsuario"></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

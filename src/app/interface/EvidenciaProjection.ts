@@ -5,4 +5,7 @@ export interface EvidenciaProjection{
     indicador:string;
     estado:string;
     descripcion:string;
+    [key: string] : any
+
+
 }

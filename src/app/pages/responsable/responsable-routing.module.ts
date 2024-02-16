@@ -9,8 +9,20 @@ import { ActividadCriterioSubcriterio } from './atividad-criterio-subcriterio/at
 import { ActiviadDetalleIndicadorComponent } from './actividad-detalle-indicador/actividad-detalle-indicador.component';
 import { NormalGuard } from 'src/app/services/Guards/normal.guard';
 import { RoleguardGuard } from 'src/app/services/Guards/roleguard.guard';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { CriterioResponsableComponent } from './criterio-responsable/criterio-responsable.component';
+import { CriterioModeloResponsableComponent } from './criterio-modelo-responsable/criterio-modelo-responsable.component';
+import { SubcriterioResponsableComponent } from './subcriterio-responsable/subcriterio-responsable.component';
+
 
 const routes: Routes = [
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    pathMatch: 'full',
+    canActivate: [RoleguardGuard],
+    data: { allowedRoles: ['RESPONSABLE', 'SUPERADMIN', 'ADMIN'] }
+  },
   {
     path: 'ActividadesResponsable',
     component: ActividadesResponsableComponent,
@@ -49,10 +61,30 @@ const routes: Routes = [
     data: { allowedRoles: ['RESPONSABLE','ADMIN'] }
   },
   {
+    path: 'modeloCriterio',
+    component: CriterioModeloResponsableComponent,
+    canActivate: [RoleguardGuard],
+    data: { allowedRoles: ['RESPONSABLE'] }
+  },
+  {
+    path: 'detalleCriterio',
+    component: CriterioResponsableComponent,
+    pathMatch: 'full',
+    canActivate: [RoleguardGuard],
+    data: { allowedRoles: ['RESPONSABLE'] }
+  },
+  {
     path: 'criterio-subcriterio',
     component: ActividadCriterioSubcriterio,
     pathMatch: 'full',
     canActivate: [NormalGuard]
+  },
+  {
+    path: 'detalleSubcriterio',
+    component: SubcriterioResponsableComponent,
+    pathMatch: 'full',
+    canActivate: [RoleguardGuard],
+    data: { allowedRoles: ['RESPONSABLE'] }
   },
  {
     path: 'subcriterio-indicador',

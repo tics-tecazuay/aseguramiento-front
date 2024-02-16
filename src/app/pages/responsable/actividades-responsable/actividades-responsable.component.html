@@ -16,11 +16,6 @@
       />
       </div>
       <br />
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#materiaModal"
-      *ngIf="crear">
-        CREAR NUEVA ACTIVIDAD
-      </button>
-      <br />
       <br />
       <table  mat-table [dataSource]="dataSource | buscar : filterPost" class="mat-elevation-z8">
         <!-- Encabezados de la tabla -->
@@ -28,17 +23,12 @@
           <th mat-header-cell *matHeaderCellDef
           [style.display]="ocultar? '' : 'none'">ID</th>
           <td mat-cell *matCellDef="let acti"
-          [style.display]="ocultar? '' : 'none'">{{ acti.id_actividad }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="NOMBRE">
-          <th mat-header-cell *matHeaderCellDef>NOMBRE</th>
-          <td mat-cell *matCellDef="let acti">{{ acti.nombre }}</td>
+          [style.display]="ocultar? '' : 'none'">{{ acti.id_asignacion_evidencia }}</td>
         </ng-container>
       
-        <ng-container matColumnDef="DESCRIPCIÓN">
-          <th mat-header-cell *matHeaderCellDef>DESCRIPCIÓN</th>
-          <td mat-cell *matCellDef="let acti">{{ acti.descripcion }}</td>
+        <ng-container matColumnDef="ACTIVIDAD">
+          <th mat-header-cell *matHeaderCellDef>ACTIVIDAD</th>
+          <td mat-cell *matCellDef="let acti">{{ acti.descripcion_evidencia }}</td>
         </ng-container>
       
         <ng-container matColumnDef="FECHA DE INICIO">
@@ -52,10 +42,10 @@
         </ng-container>
         <ng-container matColumnDef="ESTADO">
           <th mat-header-cell *matHeaderCellDef>ESTADO</th>
-          <td mat-cell *matCellDef="let acti" [ngClass]="getColorEstado(acti.estado)">{{ acti.estado.toUpperCase() }}</td>
+          <td mat-cell *matCellDef="let acti" [ngClass]="getColorEstado(acti.estado_evidencia)">{{ acti.estado_evidencia.toUpperCase() }}</td>
         </ng-container>
-        <ng-container matColumnDef="observacion">
-          <th mat-header-cell *matHeaderCellDef>Observación</th>
+        <ng-container matColumnDef="Observacion">
+          <th mat-header-cell *matHeaderCellDef>OBSERVACION</th>
           <td mat-cell *matCellDef="let elemento">
             <div *ngFor="let observacion of elemento.observacion">
               {{ observacion }}
@@ -63,34 +53,20 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="Subir evidencia">
-          <th mat-header-cell *matHeaderCellDef>Subir evidencia</th>
+          <th mat-header-cell *matHeaderCellDef>EVIDENCIA</th>
           <td mat-cell *matCellDef="let acti">
-            <button class="btn btn-primary" role="button" (click)="verDetalles(acti)" >
-              <div class="d-flex">
-                <span class="badge">
-                </span>
-                <i class="fa fa-folder-open"></i>
-              </div>
-            </button>
-          </td>
-        </ng-container>
-      
-        <ng-container matColumnDef="ACCIÓN">
-          <th mat-header-cell *matHeaderCellDef>ACCIÓN</th>
-          <td mat-cell *matCellDef="let acti">
-            <div class="btn-group" role="group">
-              <button type="button" class="btn btn-primary" style="margin-right: 5%" data-bs-toggle="modal"
-              data-bs-target="#materiaModal" (click)="editDatos(acti)" *ngIf="acti.estado !== 'Aprobada'">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="btn btn-danger" style="background-color: red; margin-right: 5%" role="button"
-              (click)="eliminar(acti)" *ngIf="acti.estado !== 'Aprobada'">
-              <i class="fa fa-trash"></i>
-            </button>
+            <div class="button-container">
+              <button class="btn btn-primary" role="button" (click)="verDetalles(acti)" [disabled]="esFechaPasada(acti)">
+                <div class="d-flex">
+                  <span class="badge"></span>
+                  <i class="fa fa-folder-open"></i>
+                </div>
+              </button>
+              <span *ngIf="esFechaPasada(acti)" class="error-message">La fecha está atrasada. No se puede subir la evidencia.</span>
             </div>
           </td>
         </ng-container>
-
+        
       
         <!-- Fila de encabezado -->
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -105,97 +81,6 @@
         aria-label="Seleccione"
       >
       </mat-paginator>
-
-
-      <div class="modal fade" id="materiaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
-        (hidden.bs.modal)="limpiarFormulario()">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header bg-blue">
-              <h3 class="modal-title">
-                <i class="fas fa-clipboard"></i> Actividades
-              </h3>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form [formGroup]="frmActividades" (ngSubmit)="guardar()" id="formulario">
-                <div>
-                  <label for="nombre">Nombre:</label>
-                  <input class="form-control" formControlName="nombre" type="text" id="nombre" name="nombre"
-                    style="margin-bottom: 10px" />
-                  <div class="alert alert-danger" *ngIf="
-                frmActividades.controls['nombre'].invalid &&
-                frmActividades.controls['nombre'].touched
-              ">
-                    <div *ngIf="
-                frmActividades.controls['nombre'].hasError('required')
-              ">
-                      Debe ingresar un nombre
-                    </div>
-                  </div>
-                  <label for="descripcion">Descripción:</label>
-                  <textarea class="form-control" formControlName="descripcion" id="descripcion" name="descripcion"
-                    style="margin-bottom: 10px"></textarea>
-                  <div class="alert alert-danger" *ngIf="
-                frmActividades.controls['descripcion'].invalid &&
-                frmActividades.controls['descripcion'].touched
-              ">
-                    <div *ngIf="
-                frmActividades.controls['descripcion'].hasError(
-                  'required'
-                )
-              ">
-                      La descripción no puede estar vacía
-                    </div>
-                    <div *ngIf="
-                frmActividades.controls['descripcion'].hasError(
-                  'maxlength'
-                )
-              ">
-                      Excedió el número de caracteres permitidos
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="fecha_inicio">Fecha de inicio:</label>
-                    <div class="input-group">
-                      <input type="date" id="fecha_inicio" name="fecha_inicio" formControlName="fecha_inicio"
-                        class="form-control"  [min]="fechaMinima" [max]="fechaMax" (change)="validarFechas()" />
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="fecha_fin">Fecha de finalizar:</label>
-                    <div class="input-group">
-                      <input type="date" id="fecha_fin" name="fecha_fin" formControlName="fecha_fin"
-                        class="form-control" [min]="fechaMinima" [max]="fechaMax" (change)="validarFechas()" />
-                    </div>
-                    <div class="alert alert-danger" *ngIf="frmActividades.hasError('fechasInvalidas')">
-                      La fecha de finalización debe ser posterior a la fecha de inicio.
-                    </div>
-                  </div>
-
-                </div>
-
-              </form>
-              <div class="modal-footer">
-                <button type="button" form="formulario" class="btn btn-warning" data-bs-dismiss="modal">
-                  Cancelar
-                </button>
-                <button type="submit" class="btn btn-primary" form="formulario" *ngIf="!actividad.id_actividad"
-                  data-dismiss="modal" data-bs-dismiss="modal"
-                  [disabled]="!frmActividades.valid || frmActividades.hasError('fechasInvalidas')">
-                  Agregar
-                </button>
-                <button class="btn btn-primary" *ngIf="actividad.id_actividad" data-dismiss="modal"
-                  data-bs-dismiss="modal" (click)="actualizar()"
-                  [disabled]="!frmActividades.valid || frmActividades.hasError('fechasInvalidas')">
-                  Actualizar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </div>

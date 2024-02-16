@@ -15,7 +15,7 @@ export class DetalleEvaluacionService {
   create(r: detalleEvaluacion): Observable<detalleEvaluacion> {
     return this.http.post<detalleEvaluacion>(`${baserUrl}/api/detalle_evaluacion/crear`, r).pipe(
       catchError((error) => {
-        // console.error(error);
+        console.error(error);
         throw error;
       })
     );
@@ -26,7 +26,7 @@ export class DetalleEvaluacionService {
     return this.http.get<detalleEvaluacion[]>(`${baserUrl}/api/detalle_evaluacion/listarporEviRecha/${idEvi}`)
       .pipe(
         catchError(error => {
-          // console.log('Error:', error);
+          console.log('Error:', error);
           return throwError('Hubo un error al obtener los detalles de evaluación');
         })
       );
@@ -36,7 +36,7 @@ export class DetalleEvaluacionService {
       return this.http.get<detalleEvaluacion[]>(`${baserUrl}/api/detalle_evaluacion/listarporEviApro/${idEvi}/${idUsua}`)
         .pipe(
           catchError(error => {
-            // console.log('Error:', error);
+            console.log('Error:', error);
             return throwError('Hubo un error al obtener los detalles de evaluación');
           })
         );
@@ -44,7 +44,7 @@ export class DetalleEvaluacionService {
   //Metodo para eliminar
 
   eliminar(detalle: number): Observable<any> {
-    // console.log(detalle)
+    console.log(detalle)
     return this.http.put(`${baserUrl}/api/detalle_evaluacion/eliminarlogic/${detalle}`, detalle);
 
   }
@@ -54,7 +54,7 @@ export class DetalleEvaluacionService {
   }
   public getObservaciones(id_evidencia: number,id_modelo:number): Observable<detalleEvaluacion[]> {
     return this.http.get<detalleEvaluacion[]>(`${baserUrl}/api/detalle_evaluacion/observaciones/${id_evidencia}/${id_modelo}`);
-
+    
   }
-
+  
 }

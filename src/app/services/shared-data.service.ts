@@ -17,18 +17,15 @@ export class SharedDataService {
         const nuevosDatos = [...datos];
         this.datosSubject.next(nuevosDatos);
     }
-
     agregarIdCriterio(id: number) {
         id_criterio = id;
     }
-
     obtenerIdCriterio() {
         return id_criterio;
     }
-
     mostaridSubcriterio(id: number) {
         id_subcriterio = id;
-        // console.log(id_subcriterio);
+        console.log(id_subcriterio);
     }
     obtenerIdSubCriterio() {
         return id_subcriterio;

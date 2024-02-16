@@ -30,7 +30,7 @@ export class FormulaEvaluarService {
           resolve(cuantitativas);
         },
         (error: any) => {
-          // console.error('Error al listar las formulas cuantitativas', error);
+          console.error('Error al listar las formulas cuantitativas', error);
           reject(error);
         }
       );

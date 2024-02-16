@@ -13,7 +13,7 @@ import { ArchivoProjection } from '../interface/ArchivoProjection';
 })
 export class ArchivoService {
   baserrl= environment.baserUrl;
-
+  
   constructor(private http: HttpClient) { }
   cargar(file: File, descripcion: string, id_evidencia: number): Observable<HttpEvent<any>> {
     const formData: FormData = new FormData();
@@ -26,44 +26,36 @@ export class ArchivoService {
     });
     return this.http.request(req);
   }
-
-cargarArchivo(file: File, descripcion: string): Observable<any> {
+  cargarArchivo(file: File, descripcion: string): Observable<any> {
   const formData = new FormData();
   formData.append('file', file);
   formData.append('descripcion', descripcion);
   return this.http.post<any>(`${this.baserrl}/archivo/upload`, formData);
-}
+  }
   //listado de la clase archivo
-
-get():Observable<Archivo[]>{
+  get():Observable<Archivo[]>{
   return this.http.get<Archivo[]>(`${baserUrl}/archivo/listarv`);
-}
-
-getarchivoindi(id_criterio:number,id_modelo:number,id_indicador:number):Observable<Archivo[]>{
+  }
+  getarchivoindi(id_criterio:number,id_modelo:number,id_indicador:number):Observable<Archivo[]>{
   return this.http.get<Archivo[]>(`${baserUrl}/archivo/archivoindi/${id_criterio}/${id_modelo}/${id_indicador}`);
-}
-
-getDatos():Observable<ArchivoProjection[]>{
+  }
+  getDatos():Observable<ArchivoProjection[]>{
   return this.http.get<ArchivoProjection[]>(`${baserUrl}/archivo/listararchi`);
-}
-//listado de la clase archivo
+  }
+  //listado de la clase archivo
   listar(){
     return this.http.get(`${this.baserrl}/archivo/listar`);
   }
-
-
   borrar(filename:string){
     return this.http.get(`${this.baserrl}/archivo/borrar/${filename}`);
-}
-public geteviasig(user: String): Observable<Archivo[]> {
+  }
+  geteviasig(user: String): Observable<Archivo[]> {
   return this.http.get<Archivo[]>(`${baserUrl}/archivo/buscarev/${user}`);
-}
-public getarchivoActividad(idActi: number): Observable<Archivo[]> {
+  }
+  getarchivoActividad(idActi: number): Observable<Archivo[]> {
   return this.http.get<Archivo[]>(`${baserUrl}/archivo/buscararchivo/${idActi}`);
-}
-
-eliminar(archi:any): Observable<any> {
+  }
+  eliminar(archi:any): Observable<any> {
   return this.http.put(`${baserUrl}/archivo/eliminarlogic/${archi.id_archivo}`,archi);
-}
-
+  }
 }

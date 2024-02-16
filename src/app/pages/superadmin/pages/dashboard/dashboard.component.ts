@@ -4,7 +4,7 @@ import { Persona2 } from 'src/app/models/Persona2';
 import { ActividadService } from 'src/app/services/actividad.service';
 import { Actividades } from 'src/app/models/actividades';
 import { MatSelectionListChange } from '@angular/material/list';
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2';  
 
 import { CriteriosService } from 'src/app/services/criterios.service';
 import { EvidenciaService } from 'src/app/services/evidencia.service';
@@ -59,9 +59,9 @@ function colorCalendario(): string {
   }
   // Convertimos el color a un valor hexadecimal numérico
   const colorNumerico = parseInt(color.substring(1), 16);
-  const maxColorNumerico = 13421772;
+  const maxColorNumerico = 13421772; 
   if (colorNumerico > maxColorNumerico) {
-    color = colorCalendario();
+    color = colorCalendario(); 
   }
 
   return color;
@@ -79,13 +79,13 @@ const colors: { [key: string]: string } = {
   selector: 'app-dashboard2',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
-
+  
 })
 
 export class DashboardComponent2 implements OnInit {
 
   // displayedColumns: string[] = ['actividad', 'inicio', 'fin', 'encargado', 'enlace'];
-  displayedColumns: string[] = ['actividad', 'nombre', 'subcriterio','indicadores', 'inicio', 'fin', 'encargado', 'enlace'];
+  displayedColumns: string[] = ['encargado', 'fechainicio', 'fechafin', 'criterio', 'subcriterio', 'indicadores', 'evidencia', 'enlace'];
   displayedColumns5: string[] = ['enca', 'crit', 'subc', 'indic', 'descr'];
   displayedColumns6: string[] = ['enca', 'crit', 'subc', 'indic', 'descr'];
 
@@ -109,12 +109,12 @@ export class DashboardComponent2 implements OnInit {
   lastPageLabel = 'Última';
   firstPageLabel='Primera';
   previousPageLabel='Anterior';
-
+  
   rango:any= (page: number, pageSize: number, length: number) => {
     if (length == 0 || pageSize == 0) {
       return `0 de ${length}`;
     }
-
+  
     length = Math.max(length, 0);
     const startIndex = page * pageSize;
     const endIndex =
@@ -131,8 +131,8 @@ export class DashboardComponent2 implements OnInit {
   seleccionados: { [key: string]: boolean } = {};
   todosSeleccionados=false;
   //
-displayedColumns1: string[] = ['actividad', 'nombre', 'subcriterio', 'indicadores', 'inicio', 'fin', 'encargado', 'enlace'];
-displayedColumns8: string[] = ['actividad', 'nombre', 'subcriterio', 'indicadores', 'inicio', 'fin', 'encargado', 'enlace'];
+displayedColumns1: string[] = ['encargado', 'fechainicio', 'fechafin', 'criterio', 'subcriterio', 'indicadores', 'evidencia', 'enlace'];
+displayedColumns8: string[] = ['encargado', 'fechainicio', 'fechafin', 'criterio', 'subcriterio', 'indicadores', 'evidencia', 'enlace'];
 spanningColumns = ['actividad', 'inicio', 'fin', 'encargado'];
 spans: any[] = [];
 spans2: any[] = [];
@@ -207,7 +207,7 @@ avances: any[] = [];
   verValor=true;
   verSubcriterio=true;
   verCriterio=false;
-  coloresAsignados: { [key: string]: string } = {};
+  coloresAsignados: { [key: string]: string } = {}; 
 //
 @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 public barChartOptions: ChartConfiguration['options'] = {
@@ -216,7 +216,7 @@ public barChartOptions: ChartConfiguration['options'] = {
     x: {
       type: 'category',
       ticks: {
-
+       
         autoSkip: false, // Evita que las etiquetas se salten automáticamente
         maxRotation: 45, // Cambia el ángulo de rotación aquí
         minRotation: 45, // Cambia el ángulo de rotación aquí
@@ -224,7 +224,7 @@ public barChartOptions: ChartConfiguration['options'] = {
       },
     },
     y: {
-
+      
     },
   },
   plugins: {
@@ -304,7 +304,7 @@ public chartClicked({
   event?: ChartEvent;
   active?: object[];
 }): void {
-  // console.log(event, active);
+  console.log(event, active);
 }
 
 public chartHovered({
@@ -314,7 +314,7 @@ public chartHovered({
   event?: ChartEvent;
   active?: object[];
 }): void {
-  // console.log(event, active);
+  console.log(event, active);
 }
 
 //
@@ -326,7 +326,7 @@ constructor(private services: ActividadService,private paginatorIntl: MatPaginat
     this.colorScheme = {
       domain: ['#5AA454', '#E44D25', '#CFC0BB', '#7aa3e5', '#a8385d', '#aae3f5','#000080','#32CD32','#FF69B4','#FFD700'],
     };
-
+    
     this.rol = this.login.getUserRole();
     this.paginatorIntl.nextPageLabel = this.nextPageLabel;
     this.paginatorIntl.lastPageLabel = this.lastPageLabel;
@@ -340,14 +340,14 @@ constructor(private services: ActividadService,private paginatorIntl: MatPaginat
     this.abrir = !this.abrir;
   }
    onSelect(event: any) {
-    // console.log(event);
+    console.log(event);
   }
 
-
+  
   ngOnInit(): void {
     this.listarActividad();
     this.modeloMax();
-
+    
     this.services.get().subscribe((data: Actividades[]) => {
       // Envio los datos
       this.eventos = data.map(evento => ({
@@ -358,7 +358,7 @@ constructor(private services: ActividadService,private paginatorIntl: MatPaginat
       }));
       this.calendarOptions.events = this.eventos;
     });
-
+  
     //Notificaciones
     this.isLoggedIn = this.login.isLoggedIn();
     this.user = this.login.getUser();
@@ -368,7 +368,7 @@ constructor(private services: ActividadService,private paginatorIntl: MatPaginat
         this.user = this.login.getUser();
       }
     );
-
+    
     this.listarnot(this.user.id);
     //cambiar color
     const storedColor = localStorage.getItem('selectedColor');
@@ -376,7 +376,7 @@ constructor(private services: ActividadService,private paginatorIntl: MatPaginat
       this.selectedColor = storedColor;
       this.aplicarColorFondo(storedColor);
     }
-
+    
   }
   //
   cacheSpan(key: string, accessor: (d: any) => any) {
@@ -390,17 +390,17 @@ constructor(private services: ActividadService,private paginatorIntl: MatPaginat
         }
         count++;
       }
-
+  
       if (!this.spans[i]) {
         this.spans[i] = {};
       }
-
+  
       this.spans[i][key] = count;
       i += count;
     }
   }
-
-
+  
+  
   getRowSpan(col: any, index: any) {
     return this.spans[index] && this.spans[index][col];
   }
@@ -411,28 +411,28 @@ constructor(private services: ActividadService,private paginatorIntl: MatPaginat
       let count = 1;
 
       for (let j = i + 1; j < this.dataSource.length; j++) {
-        // console.log('Comparing:', currentValue, accessor(this.dataSource[j]));
-
+        console.log('Comparing:', currentValue, accessor(this.dataSource[j]));
+  
         if (currentValue !== accessor(this.dataSource[j])) {
           break;
         }
         count++;
       }
-
+  
       if (!this.spans2[i]) {
         this.spans2[i] = {};
       }
-
+  
       this.spans2[i][key] = count;
       i += count;
     }
   }
-
+  
   getRowSpan2(col: any, index: any) {
     return this.spans2[index] && this.spans2[index][col];
   }
 
-
+  
   cacheSpan3(key: string, accessor: (d: any) => any) {
     for (let i = 0; i < this.datacrite.length;) {
       let currentValue = accessor(this.datacrite[i]);
@@ -444,17 +444,17 @@ constructor(private services: ActividadService,private paginatorIntl: MatPaginat
         }
         count++;
       }
-
+  
       if (!this.spans3[i]) {
         this.spans3[i] = {};
       }
-
+  
       this.spans3[i][key] = count;
       i += count;
     }
   }
-
-
+  
+  
   getRowSpan3(col: any, index: any) {
     return this.spans3[index] && this.spans3[index][col];
   }
@@ -553,7 +553,7 @@ getRowSpan8(col: any, index: any) {
 obtenerNombreArchivo2(url: string): string {
   if (url) {
     const nombreAr = url.substring(url.lastIndexOf('/') + 1);
-    return nombreAr;
+    return nombreAr; 
   } else {
     return '';
   }
@@ -588,14 +588,14 @@ fetchAndProcessData(nombre:string) {
   this.vertitulo();
   this.mostrargrafico = true;
   this.valorescriterio(nombre);
-
+  
   if(this.titulocriterio===""){
     this.titulocriterio="ORGANIZACIÓN";
     nombre="ORGANIZACIÓN";
   }
   this.httpCriterios.getIdCriterio(nombre).subscribe(data => {
     this.id_criterio = data.id_criterio;
-
+   
   });
   this.modelservices.getlisdescrite(this.idmodel,nombre).subscribe((data: criteriosdesprojection[]) => {
     this.datacrite = data;
@@ -605,7 +605,7 @@ fetchAndProcessData(nombre:string) {
       }
     });
     // Generar la jerarquía de celdas
-    //'subcriterio', 'idind','indicadores','tipo', 'inicio',
+    //'subcriterio', 'idind','indicadores','tipo', 'inicio', 
     this.cacheSpan3('Criterio', (d) => d.criterionomj);
     this.cacheSpan3('Subcriterio', (d) => d.criterionomj + d.subcrierioj);
     this.cacheSpan3('Indicador', (d) => d.criterionomj + d.subcrierioj + d.ind_nombrej);
@@ -631,14 +631,14 @@ seleccionTodo(checked: boolean) {
 }
 
 evaluar(valor: any, id: any, peso: any): void {
-  // console.log("tipo "+valor+" id ind "+id+" peso "+peso);
+  console.log("tipo "+valor+" id ind "+id+" peso "+peso);
   const dialogRef = this.dialog.open(CalificacionComponent, {
     data: { valor, id, peso },
   });
   dialogRef.afterClosed().subscribe(result => {
-    // console.log(result);
+    console.log(result);
     if (result.event == 'success') {
-      // console.log(result);
+      console.log(result);
       this.fetchAndProcessData(this.titulocriterio);
       this.listaind();
       this.coloresPro();
@@ -728,7 +728,7 @@ getColorcelda(elementName: string, opacity: number): string {
     const red = Math.floor(Math.random() * 256);
     const green = Math.floor(Math.random() * 256);
     const blue = Math.floor(Math.random() * 256);
-
+    
     this.coloresAsignados[elementName] = `rgba(${red}, ${green}, ${blue}, ${opacity})`;
   }
 
@@ -739,7 +739,7 @@ obtenerActividades(id_modelo:number) {
   this.services.getAc(id_modelo).subscribe(
     (actividades: ActividadesProjection[]) => {
       this.listact = actividades;
-
+     
       this.avances = this.listact.map(item => ({
         name: item.nombres,
         value: item.avance
@@ -791,17 +791,17 @@ obtenerActividades(id_modelo:number) {
     }
     if (tit) {
       tit.style.color = "black";
-
+      
       tit.style.boxShadow = "";
     }
     if (tit2) {
       tit2.style.color = "black";
-
+     
       tit2.style.boxShadow = "";
     }
     if (tit3) {
       tit3.style.color = "black";
-
+     
       tit3.style.boxShadow = "";
     }
     if (let2) {
@@ -844,17 +844,17 @@ obtenerActividades(id_modelo:number) {
     }
     if (tit) {
       tit.style.color = "white";
-
+     
       tit.style.boxShadow = "";
     }
     if (tit2) {
       tit2.style.color = "white";
-
+     
       tit2.style.boxShadow = "";
     }
     if (tit3) {
       tit3.style.color = "white";
-
+     
       tit3.style.boxShadow = "";
     }
     if (let2) {
@@ -899,17 +899,17 @@ obtenerActividades(id_modelo:number) {
     }
     if (tit) {
       tit.style.color = "white";
-
+      
       tit.style.boxShadow = "0 0 10px #00b2d6, 0 0 20px #00b2d6, 0 0 40px #00b2d6, 0 0 80px #00b2d6";
     }
     if (tit2) {
       tit2.style.color = "white";
-
+      
       tit2.style.boxShadow = "0 0 10px #00b2d6, 0 0 20px #00b2d6, 0 0 40px #00b2d6, 0 0 80px #00b2d6";
     }
     if (tit3) {
       tit3.style.color = "white";
-
+      
       tit3.style.boxShadow = "0 0 10px #00b2d6, 0 0 20px #00b2d6, 0 0 40px #00b2d6, 0 0 80px #00b2d6";
     }
     if (let2) {
@@ -976,8 +976,8 @@ obtenerActividades(id_modelo:number) {
     }
   }
   //Mi codigo calendario
-
- irmodelo() {
+ 
+  irmodelo() {
     this.router.navigate(['aseguramiento/sup/modelo/modelo']);
   }
 
@@ -1024,63 +1024,75 @@ getColor(item: any): string {
       this.valorespr();
       this.coloresPro();
       this.idmodel = data.id_modelo;
-      // console.log("ID Modelo:", this.idmodel);
+      console.log("ID Modelo:", this.idmodel);
       this.listaractividades(this.idmodel);
       this.obtenerActividades(this.idmodel);
-      this.listarevaprob(this.idmodel);
-      this.listarevarech(this.idmodel);
       this.httpCriterios.getCriterios().subscribe(data => {
         this.listaCriterios = data;
         this.cargarDatos();
       });
       this.listaind();
       this.idmodel = data.id_modelo;;
-      // console.log("ID Modelo:", this.idmodel);
+      console.log("ID Modelo:", this.idmodel);
 
       //this.fetchAndProcessData("");
     });
   }
 
-listarevaprob(id_modelo:number){
-  this.eviden.geteviaprobada(id_modelo).subscribe((data: EvidenciasProjection[]) => {
-    this.dataSource3 = data;
-    // console.log("evidencia apr", JSON.stringify(this.dataSource3))
-    this.cacheSpan4('enca', (d) => d.enca);
-    this.cacheSpan4('crit', (d) => d.enca + d.crit);
-    this.cacheSpan4('subc', (d) => d.enca + d.crit+d.subc);
-    this.cacheSpan4('indic', (d) => d.enca + d.crit +d.subc+ d.indic);
-    this.cacheSpan4('descr', (d) => d.enca + d.crit +d.subc+ d.indic+d.descr);
-
-  });
-}
-
-listarevarech(id_modelo:number){
-  this.eviden.getevirechazada(id_modelo).subscribe((data: EvidenciasProjection[]) => {
-    this.dataSource4 = data;
-    // console.log("evidencia rech", JSON.stringify(this.dataSource3))
-    this.cacheSpan5('enca', (d) => d.enca);
-    this.cacheSpan5('crit', (d) => d.enca + d.crit);
-    this.cacheSpan5('subc', (d) => d.enca + d.crit+d.subc);
-    this.cacheSpan5('indic', (d) => d.enca + d.crit +d.subc+ d.indic);
-    this.cacheSpan5('descr', (d) => d.enca + d.crit +d.subc+ d.indic+d.descr);
-  });
-}
   listaractividades(id_modelo:number){
     this.services.getActividadrechazada(id_modelo).subscribe((data: ActivAprobadaProjection[]) => {
       this.dataSource1 = data;
-      // console.log("rechazadai", JSON.stringify(this.dataSource1))
-      this.cacheSpan('actividad', (d) => d.actividades);
-      this.cacheSpan('inicio', (d) => d.actividades + d.inicio);
-      this.cacheSpan('fin', (d) => d.actividades + d.inicio + d.fin);
-      this.cacheSpan('encargado', (d) => d.actividades + d.inicio + d.fin + d.encargado);
+      console.log("rechazadai", JSON.stringify(this.dataSource1))
+      this.cacheSpan('encargado', (d) => d.encargado);
+    this.cacheSpan('subcriterio', (d) => d.encargado + d.subcriterio);
+    this.cacheSpan('indicadores', (d) => d.encargado + d.subcriterio + d.indicador);
+    this.cacheSpan('evidencia', (d) => d.encargado  + d.subcriterio + d.indicador + d.evidencia);
+
     });
 
     this.services.getActividadaprobada(id_modelo).subscribe((data: ActivAprobadaProjection[]) => {
       this.dataSource = data;
-      this.cacheSpan2('actividad', (y) => y.actividades);
-      this.cacheSpan2('inicio', (y) => y.actividades + y.inicio);
-      this.cacheSpan2('fin', (y) => y.actividades + y.inicio + y.fin);
-      this.cacheSpan2('encargado', (y) => y.actividades + y.inicio + y.fin + y.encargado);
+      console.log("aprovadai", JSON.stringify(this.dataSource))
+      this.cacheSpan2('encargado', (d) => d.encargado);
+    this.cacheSpan2('subcriterio', (d) => d.encargado + d.subcriterio);
+    this.cacheSpan2('indicadores', (d) => d.encargado + d.subcriterio + d.indicador);
+    this.cacheSpan2('evidencia', (d) => d.encargado  + d.subcriterio + d.indicador + d.evidencia);
+    });
+
+    this.services.getActividadpendiente(id_modelo).subscribe((data: ActivAprobadaProjection[]) => {
+      this.dataSource8 = data;
+      console.log("pendientei", JSON.stringify(this.dataSource8))
+      this.cacheSpan8('encargado', (d) => d.encargado);
+    this.cacheSpan8('subcriterio', (d) => d.encargado + d.subcriterio);
+    this.cacheSpan8('indicadores', (d) => d.encargado + d.subcriterio + d.indicador);
+    this.cacheSpan8('evidencia', (d) => d.encargado  + d.subcriterio + d.indicador + d.evidencia);
+      
+    });
+  }
+
+  listaractividades5(id_modelo:number){
+    this.services.getActividadrechazada(id_modelo).subscribe((data: ActivAprobadaProjection[]) => {
+      this.dataSource1 = data;
+      console.log("rechazadai", JSON.stringify(this.dataSource1))
+    this.cacheSpan('inicio', (d) => d.encargado + d.inicio);
+    this.cacheSpan('fin', (d) => d.encargado + d.inicio + d.fin);
+    this.cacheSpan('criterio', (d) => d.encargado + d.inicio + d.fin + d.criterio);
+    this.cacheSpan('subcriterio', (d) => d.encargado + d.inicio + d.fin + d.criterio + d.subcriterio);
+    this.cacheSpan('indicadores', (d) => d.encargado + d.inicio + d.fin + d.criterio + d.subcriterio + d.indicador);
+    this.cacheSpan('evidencia', (d) => d.encargado + d.inicio + d.fin + d.criterio + d.subcriterio + d.indicador + d.evidencia);
+    this.cacheSpan('enlace', (d) => d.encargado + d.inicio + d.fin + d.criterio + d.subcriterio + d.indicador + d.evidencia + d.enlace);
+    });
+
+    this.services.getActividadaprobada(id_modelo).subscribe((data: ActivAprobadaProjection[]) => {
+      this.dataSource = data;
+      this.cacheSpan2('encargado', (d) => d.encargado);
+    this.cacheSpan2('inicio', (d) => d.encargado + d.inicio);
+    this.cacheSpan2('fin', (d) => d.encargado + d.inicio + d.fin);
+    this.cacheSpan2('criterio', (d) => d.encargado + d.inicio + d.fin + d.criterio);
+    this.cacheSpan2('subcriterio', (d) => d.encargado + d.inicio + d.fin + d.criterio + d.subcriterio);
+    this.cacheSpan2('indicadores', (d) => d.encargado + d.inicio + d.fin + d.criterio + d.subcriterio + d.indicador);
+    this.cacheSpan2('evidencia', (d) => d.encargado + d.inicio + d.fin + d.criterio + d.subcriterio + d.indicador + d.evidencia);
+    this.cacheSpan2('enlace', (d) => d.encargado + d.inicio + d.fin + d.criterio + d.subcriterio + d.indicador + d.evidencia + d.enlace);
     });
 
     this.services.getActividadpendiente(id_modelo).subscribe((data: ActivAprobadaProjection[]) => {
@@ -1089,6 +1101,7 @@ listarevarech(id_modelo:number){
       this.cacheSpan8('inicio', (y) => y.actividades + y.inicio);
       this.cacheSpan8('fin', (y) => y.actividades + y.inicio + y.fin);
       this.cacheSpan8('encargado', (y) => y.actividades + y.inicio + y.fin + y.encargado);
+      
     });
   }
   colores(color: string): string {
@@ -1107,7 +1120,7 @@ listarevarech(id_modelo:number){
         return 'transparent'; // O cualquier otro color por defecto
     }
   }
-
+  
   coloresPro(){
     this.indi.getIndicadorColProjection(this.idmodel).subscribe((data: IndiColProjection[]) => {
       this.indicol = data; // Calcula los totales
@@ -1120,7 +1133,7 @@ listarevarech(id_modelo:number){
       };
 
       const estadosIndicadores = data.map(indicador => indicador.color);
-
+      
       // Asigna colores a los elementos del gráfico según los estados
       this.pieChartData.labels = estadosIndicadores.map(estado=> estadoColores[estado]);
 
@@ -1141,7 +1154,7 @@ listarevarech(id_modelo:number){
         indica: totalIndicadores,
         porcentaje: total,
       });
-
+      
       this.indicol.sort((a, b) => {
         const orden = ['verde', 'amarillo', 'naranja', 'rojo','Total'];
         return orden.indexOf(a.color) - orden.indexOf(b.color);
@@ -1155,25 +1168,25 @@ listarevarech(id_modelo:number){
   valorespr(){
     this.httpCriterios.getvalores(this.idmodel).subscribe((valores: ValoresProjection[]) => {
       this.valoresp = valores;
-      // console.log("Valores de tabla"+JSON.stringify(this.valoresp))
+      console.log("Valores de tabla"+JSON.stringify(this.valoresp))
       this.barChartData.labels = this.valoresp.map(val => val.nomcriterio);
       this.barChartData.datasets[0].data = this.valoresp.map(val => val.vlObtenido);
       this.barChartData.datasets[1].data = this.valoresp.map(val => val.vlobtener);
-
+  
       this.barChartData = { ...this.barChartData };
     });
-
+    
   }
 
   valorescriterio(nombre:string){
     this.httpCriterios.getvalorescriterio(this.idmodel,nombre).subscribe((valores: ValoresProjection[]) => {
       this.valoresp2 = valores;
-
-      // console.log("Valores de tabla"+JSON.stringify(this.valoresp2))
+      
+      console.log("Valores de tabla"+JSON.stringify(this.valoresp2))
       this.barChartData2.labels = this.valoresp2.map(val => val.nomcriterio);
       this.barChartData2.datasets[0].data = this.valoresp2.map(val => val.vlObtenido);
       this.barChartData2.datasets[1].data = this.valoresp2.map(val => val.vlobtener);
-
+  
       this.barChartData2 = { ...this.barChartData2 };
     });
   }
@@ -1219,11 +1232,11 @@ listarevarech(id_modelo:number){
     this.httpCriterios.getIndicador(this.idmodel).subscribe(
       (data: IndicadorProjection[]) => {
         this.listain=data;
-        // console.log("lista in "+this.listain)
+        console.log("lista in "+this.listain)
       });
   }
   cargarDatos(): void {
-
+  
     this.httpCriterios.getIndicador(this.idmodel).subscribe(
         (data: IndicadorProjection[]) => {
           this.listaIndicadores = data;
@@ -1237,7 +1250,7 @@ listarevarech(id_modelo:number){
           name: item.nombre,
           value: (item.total / item.faltante)*100
         }));
-
+       
         this.listaIndicadores.forEach((item) => {
           this.coloresTarjetas.push(this.getRandomColor());
           this.borderStyles.push(this.getBorderColor(item.faltante-item.total));
@@ -1252,17 +1265,17 @@ listarevarech(id_modelo:number){
 
   //ir modelo
   calificar(element: any) {
-    // console.log("MODELO: "+this.idmodel+" idcriterio :"+this.id_criterio+"Criterio pres: "+element.criterionomj);
+    console.log("MODELO: "+this.idmodel+" idcriterio :"+this.id_criterio+"Criterio pres: "+element.criterionomj);
     const datos = {
       idCriterio: this.id_criterio,
       modelo: this.idmodel
     };
-
+  
     localStorage.setItem('datopasado', JSON.stringify(datos));
-
+  
     this.router.navigate(['/sup/modelo/matriz-evaluacion']);
    }
-
+  
   //color de barra
   getColorp(value: number): string {
     if (value >= 0.75) {
@@ -1277,14 +1290,14 @@ listarevarech(id_modelo:number){
     }
   }
 
-
+ 
   //para traer los datos del responsable
 getPersonaActividad(objeto:Actividad){
-  // console.log(objeto.usuario.id)
+  console.log(objeto.usuario.id)
   this.httpCriterios.getObtenerPersonaId(objeto.usuario.id).subscribe(
     data => {
       this.persona=data;
-      // console.log(this.persona);
+      console.log(this.persona);
     }
   )
 }
@@ -1304,12 +1317,12 @@ async descargarArchivosSeleccionados() {
 
   try {
     await Promise.all(downloadPromises);
-
+    
     // Quitar los checks de selección
     archivosSeleccionados.forEach(element => {
       element.isSelected = false;
     });
-
+    
     await Swal.fire('Descarga confirmacion', 'Tiene que confirmar la descarga.', 'success');
   } catch (error) {
     console.error('Error en las descargas:', error);

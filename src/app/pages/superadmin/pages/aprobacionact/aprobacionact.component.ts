@@ -149,7 +149,7 @@ verificar:boolean=false;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
-        // console.log('Notificacion guardada');
+        console.log('Notificacion guardada');
       },
       (error: any) => {
         console.error('No se pudo guardar la notificación', error);
@@ -175,10 +175,10 @@ verificar:boolean=false;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
-        // console.log('Notificacion guardada');
+        console.log('Notificacion guardada');
       },
       (error: any) => {
-        // console.error('No se pudo guardar la notificación', error);
+        console.error('No se pudo guardar la notificación', error);
       }
     );
   }
@@ -187,7 +187,7 @@ verificar:boolean=false;
     this.noti.fecha = new Date();
     this.noti.rol = 'ADMIN';
     const nombres = localStorage.getItem('nombres');
-    // console.log("Nombres usuario "+nombres );
+    console.log("Nombres usuario "+nombres );
     this.noti.mensaje =
       this.user?.persona?.primer_nombre +
       ' ' +
@@ -203,10 +203,10 @@ verificar:boolean=false;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
-        // console.log('Notificacion guardada');
+        console.log('Notificacion guardada');
       },
       (error: any) => {
-        // console.error('No se pudo guardar la notificación', error);
+        console.error('No se pudo guardar la notificación', error);
       }
     );
   }
@@ -230,10 +230,10 @@ notificaraprob() {
   this.notificationService.crear(this.noti).subscribe(
     (data: Notificacion) => {
       this.noti = data;
-      // console.log('Notificacion guardada');
+      console.log('Notificacion guardada');
     },
     (error: any) => {
-      // console.error('No se pudo guardar la notificación', error);
+      console.error('No se pudo guardar la notificación', error);
     }
   );
 }
@@ -256,10 +256,10 @@ this.noti.idactividad=0;
   this.notificationService.crear(this.noti).subscribe(
     (data: Notificacion) => {
       this.noti = data;
-      // console.log('Notificacion guardada');
+      console.log('Notificacion guardada');
     },
     (error: any) => {
-      // console.error('No se pudo guardar la notificación', error);
+      console.error('No se pudo guardar la notificación', error);
     }
   );
 }
@@ -268,7 +268,7 @@ notificaraprobadmin() {
   this.noti.fecha = new Date();
   this.noti.rol = 'ADMIN';
   const nombres = localStorage.getItem('nombres');
-  // console.log("Nombres usuario "+nombres );
+  console.log("Nombres usuario "+nombres );
   this.noti.mensaje =
     this.user?.persona?.primer_nombre +
     ' ' +
@@ -284,10 +284,10 @@ notificaraprobadmin() {
   this.notificationService.crear(this.noti).subscribe(
     (data: Notificacion) => {
       this.noti = data;
-      // console.log('Notificacion guardada');
+      console.log('Notificacion guardada');
     },
     (error: any) => {
-      // console.error('No se pudo guardar la notificación', error);
+      console.error('No se pudo guardar la notificación', error);
     }
   );
 }
@@ -310,7 +310,7 @@ notificaraprobadmin() {
         this.isLoading = false;
       });
 
-    // console.log(this.evidencias);
+    console.log(this.evidencias);
     this.mostrarBoton = true;
     this.correoEnviar = this.usuarioSeleccionado.persona.correo;
     this.toUser = this.correoEnviar;
@@ -360,26 +360,26 @@ notificaraprobadmin() {
 calificar(element:any){
   this.idevi=element.id_evidencia;
   this.evidenciaService.getevical(this.idevi,this.id_modelo).subscribe(data => {
-    // console.log("Datos ev "+JSON.stringify(data));
+    console.log("Datos ev "+JSON.stringify(data));
     const tipo:any = data.tipo;
     const id: any = data.id_in;
     const peso:any=data.peso;
   
-    // console.log("tipo "+tipo+" id ind "+id+" peso "+peso);
+    console.log("tipo "+tipo+" id ind "+id+" peso "+peso);
     
      this.evaluar(tipo,id,peso);
   });
    
 }
 evaluar(valor: any, id: any, peso: any): void {
-  // console.log("tipo "+valor+" id ind "+id+" peso "+peso);
+  console.log("tipo "+valor+" id ind "+id+" peso "+peso);
   const dialogRef = this.dialog.open(CalificacionComponent, {
     data: { valor, id, peso },
   });
   dialogRef.afterClosed().subscribe(result => {
-    // console.log(result);
+    console.log(result);
     if (result.event == 'success') {
-      // console.log(result);
+      console.log(result);
       Swal.fire({
         position: 'center',
         icon: 'success',
@@ -397,11 +397,11 @@ evaluar(valor: any, id: any, peso: any): void {
       .subscribe(
         (detalles) => {
           this.listadodetalleEval = detalles;
-          // console.log(detalles)
+          console.log(detalles)
            this.dataSource4.data = detalles;         
         },
         (error) => {
-          // console.log(error);
+          console.log(error);
         }
       );
 
@@ -430,7 +430,7 @@ Listar(){
 
     },
     (error) => {
-      // console.log(error);
+      console.log(error);
     }
   );
 }
@@ -543,7 +543,7 @@ this.detalleEvi.estado=true;
               confirmButtonText: 'OK',
             });
 
-            // console.log(error);
+            console.log(error);
           }
         );
     }else if (
@@ -588,7 +588,7 @@ this.detalleEvi.estado=true;
               confirmButtonText: 'OK',
             });
 
-            // console.log(error);
+            console.log(error);
           }
         );
     } else {
@@ -646,12 +646,12 @@ this.detalleEvi.estado=true;
           const endTime = new Date(); // Obtener hora actual después de enviar el correo
           const timeDiff = (endTime.getTime() - startTime.getTime()) / 1000; // Calcular diferencia de tiempo en segundos
           this.verificar=true;
-          /*console.log(
+          console.log(
             'Email sent successfully! Time taken:',
             timeDiff,
             'seconds'
           );
-          console.log('Email sent successfully!');*/
+          console.log('Email sent successfully!');
           this.notificarrechazo();
           this.notificarrechazoadmin();
           this.notificarrechazouser();

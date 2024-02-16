@@ -5,15 +5,13 @@ import { DashboardComponent2 } from './pages/dashboard/dashboard.component';
 import { CrearUsuariosComponent } from './pages/crear-usuarios/crear-usuarios.component';
 import { ObcervacionesComponent } from './pages/observaciones/obcervaciones.component';
 import { RoleguardGuard } from 'src/app/services/Guards/roleguard.guard';
-import { SubcriteriosComponent } from './pages/subcriterios/subcriterios.component';
-import { IndicadorComponent } from './pages/indicador/indicador.component';
-import { EvidenciasComponent } from './pages/evidencias/evidencias.component';
 import { EvidenciaAtrasadaComponent } from './pages/evidencia-atrasada/evidencia-atrasada.component';
 import { CriterioReporteComponent } from './pages/criterio-reporte/criterio-reporte.component';
 import { DashboardComponent } from '../admin/dashboard/dashboard.component';
 import { EvalucionComponent } from '../admin/evalucion/evalucion.component';
 import { AprobacionactComponent } from './pages/aprobacionact/aprobacionact.component';
 import { DetalleaprobComponent } from './pages/detalleaprob/detalleaprob.component';
+import { SeguimientoUsuariosComponent } from './seguimiento-usuarios/seguimiento-usuarios.component';
 
 const routes: Routes = [{
   path: 'dashboard',
@@ -37,26 +35,6 @@ const routes: Routes = [{
   canActivate: [RoleguardGuard],
   data: { allowedRoles: ['SUPERADMIN'] }
 },
-
-{
-  path: 'subcriterioSuper',
-  component: SubcriteriosComponent,
-  pathMatch: 'full',
-  canActivate: [SuperGuard]
-},
-{
-  path: 'indicadoreSuper',
-  component: IndicadorComponent,
-  pathMatch: 'full',
-  canActivate: [SuperGuard]
-},
-{
-  path: 'evidenciaSuper',
-  component: EvidenciasComponent,
-  pathMatch: 'full',
-  canActivate: [SuperGuard]
-},
-
 {
 
   path: 'actividad-rechazada',
@@ -105,10 +83,17 @@ const routes: Routes = [{
   data: { allowedRoles: ['SUPERADMIN'] }
 },
 {
+  path: 'seguimiento',
+  component: SeguimientoUsuariosComponent,
+  pathMatch: 'full',
+  canActivate: [RoleguardGuard],
+  data: { allowedRoles: ['SUPERADMIN'] }
+},
+{
   path: 'modelo',
   loadChildren: () => import("./modelo/modelo.module").then(m => m.ModeloModule)
 },
-{ 
+{
   path: 'ponderacion',
   loadChildren: () => import("./ponderacion/ponderacion.module").then(m => m.PonderacionModule)
 },
@@ -120,6 +105,7 @@ const routes: Routes = [{
   path: 'formula',
   loadChildren: () => import("./formula/formula.module").then(m => m.FormulaModule)
 },
+
 ];
 
 @NgModule({

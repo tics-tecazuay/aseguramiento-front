@@ -23,6 +23,7 @@ export class IndicadoresEvidenciaComponent{
   frmEvidencia: FormGroup;
   guardadoExitoso: boolean = false;
   estado = 'pendiente';
+  ocultar=false;
  
   subcriterio: Subcriterio = new Subcriterio();
   criterio: Criterio = new Criterio();

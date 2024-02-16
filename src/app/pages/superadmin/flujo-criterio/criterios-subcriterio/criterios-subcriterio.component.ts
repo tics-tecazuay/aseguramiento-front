@@ -21,26 +21,27 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 export class CriteriosSubcriterioComponent implements OnInit {
   frmSubcriterio: FormGroup;
   guardadoExitoso: boolean = false;
- //tabla
- itemsPerPageLabel = 'Subcriterios por página';
- nextPageLabel = 'Siguiente';
- lastPageLabel = 'Última';
- firstPageLabel='Primera';
- previousPageLabel='Anterior';
- rango:any= (page: number, pageSize: number, length: number) => {
-   if (length == 0 || pageSize == 0) {
-     return `0 de ${length}`;
-   }
+  ocultar = false;
+  //tabla
+  itemsPerPageLabel = 'Subcriterios por página';
+  nextPageLabel = 'Siguiente';
+  lastPageLabel = 'Última';
+  firstPageLabel = 'Primera';
+  previousPageLabel = 'Anterior';
+  rango: any = (page: number, pageSize: number, length: number) => {
+    if (length == 0 || pageSize == 0) {
+      return `0 de ${length}`;
+    }
 
-   length = Math.max(length, 0);
-   const startIndex = page * pageSize;
-   const endIndex =
-     startIndex < length
-       ? Math.min(startIndex + pageSize, length)
-       : startIndex + pageSize;
-   return `${startIndex + 1} - ${endIndex} de ${length}`;
- };
- //
+    length = Math.max(length, 0);
+    const startIndex = page * pageSize;
+    const endIndex =
+      startIndex < length
+        ? Math.min(startIndex + pageSize, length)
+        : startIndex + pageSize;
+    return `${startIndex + 1} - ${endIndex} de ${length}`;
+  };
+  //
   criterio: Criterio = new Criterio();
   subcriterios: any[] = [];
 
@@ -55,7 +56,7 @@ export class CriteriosSubcriterioComponent implements OnInit {
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
 
   constructor(
-    private subcriterioservice: SubcriteriosService,private paginatorIntl: MatPaginatorIntl,
+    private subcriterioservice: SubcriteriosService, private paginatorIntl: MatPaginatorIntl,
     private router: Router, private fb: FormBuilder
   ) {
     this.frmSubcriterio = fb.group({
@@ -64,10 +65,10 @@ export class CriteriosSubcriterioComponent implements OnInit {
     });
     this.paginatorIntl.nextPageLabel = this.nextPageLabel;
     this.paginatorIntl.lastPageLabel = this.lastPageLabel;
-    this.paginatorIntl.firstPageLabel=this.firstPageLabel;
-    this.paginatorIntl.previousPageLabel=this.previousPageLabel;
+    this.paginatorIntl.firstPageLabel = this.firstPageLabel;
+    this.paginatorIntl.previousPageLabel = this.previousPageLabel;
     this.paginatorIntl.itemsPerPageLabel = this.itemsPerPageLabel;
-    this.paginatorIntl.getRangeLabel=this.rango;
+    this.paginatorIntl.getRangeLabel = this.rango;
   }
 
   ngAfterViewInit() {
@@ -77,15 +78,13 @@ export class CriteriosSubcriterioComponent implements OnInit {
   ngOnInit() {
     const data = history.state.data;
     this.criterio = data;
-    // console.log(this.criterio);
+    console.log(this.criterio);
     if (this.criterio == undefined) {
       this.router.navigate(['user-dashboard']);
-      location.replace('#/use/user-dashboard');
+      location.replace('/use/user-dashboard');
     }
     this.listar()
   }
-
-
 
   guardar() {
     this.subcrite = this.frmSubcriterio.value;
@@ -93,7 +92,7 @@ export class CriteriosSubcriterioComponent implements OnInit {
     this.subcriterioservice.crear(this.subcrite)
       .subscribe(
         (response: any) => {
-          // console.log('Criterio creado con éxito:', response);
+          console.log('Criterio creado con éxito:', response);
           this.guardadoExitoso = true;
           this.listar();
           Swal.fire(
@@ -111,8 +110,8 @@ export class CriteriosSubcriterioComponent implements OnInit {
           )
         }
       );
-
   }
+
   eliminar(subcriterio: any) {
     Swal.fire({
       title: 'Estas seguro de eliminar el registro?',
@@ -121,13 +120,13 @@ export class CriteriosSubcriterioComponent implements OnInit {
       denyButtonText: `Eliminar`,
     }).then((result) => {
       if (!result.isConfirmed) {
-          this.subcriterioservice.eliminar(subcriterio).subscribe(
-            (response) => {
-              this.listar()
-              Swal.fire('Eliminado!', '', 'success')
+        this.subcriterioservice.eliminar(subcriterio).subscribe(
+          (response) => {
+            this.listar()
+            Swal.fire('Eliminado!', '', 'success')
 
-            }
-          );
+          }
+        );
       }
     })
 

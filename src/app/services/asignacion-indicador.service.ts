@@ -17,7 +17,7 @@ export class AsignacionIndicadorService {
     public createAsignacionIndicador(asignacionIndicador: AsignacionIndicador): Observable<any> {
         return this.http.post(`${baserUrl}/api/asignacion_indicador/crearAsignacion`, asignacionIndicador).pipe(
             catchError((error) => {
-                // console.error(error);
+                console.error(error);
                 throw error;
             })
         );
@@ -27,7 +27,7 @@ export class AsignacionIndicadorService {
     public getAsignacionIndicadorByIdModelo(idModelo: number): Observable<any> {
         return this.http.get(`${baserUrl}/api/asignacion_indicador/listarAsignacion/${idModelo}`).pipe(
             catchError((error) => {
-                // console.error(error);
+                console.error(error);
                 throw error;
             })
         );
@@ -36,7 +36,7 @@ export class AsignacionIndicadorService {
     public getasignaindi(id: number): Observable<AsignacionIndicador[]> {
         return this.http.get<AsignacionIndicador[]>(`${baserUrl}/api/asignacion_indicador/listarasig_indi/${id}`);
       }
-
+    
 
       public getasignacriterio(id_modelo: number): Observable<AsignaIndicadorProjection[]> {
         return this.http.get<AsignaIndicadorProjection[]>(`${baserUrl}/api/asignacion_indicador/asignacioncriterio/${id_modelo}`);

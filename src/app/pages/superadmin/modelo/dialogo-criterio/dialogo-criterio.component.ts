@@ -90,7 +90,7 @@ export class DialogoCriterioComponent implements OnInit {
   ngOnInit(): void {
     this.listarCriterios();
     this.listarSubcriterios();
-    // console.log(ELEMENT_SELECTED);
+    console.log(ELEMENT_SELECTED);
   }
 
   //consumir servicio de listar criterios
@@ -165,6 +165,6 @@ export class DialogoCriterioComponent implements OnInit {
 
   guardar() {
     this.sharedDataService.agregarDatos(ELEMENT_SELECTED);
-    // console.log(ELEMENT_SELECTED);
+    console.log(ELEMENT_SELECTED);
   }
 }
