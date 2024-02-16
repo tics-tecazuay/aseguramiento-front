@@ -45,10 +45,7 @@ export class SiderbarComponent implements OnInit {
   public logout() {
     localStorage.removeItem("eviden");
     this.login.logout();
-    localStorage.clear();
-    location.replace('#/use/login');
-    location.reload();
-    this.isLoggedIn = false;
+    location.replace('/use/login');
   }
 
 
@@ -79,16 +76,16 @@ export class SiderbarComponent implements OnInit {
           this.ruta = 'consulta';
         }
         else {
-          // console.log('rol: ' + this.rol);
+          console.log('rol: ' + this.rol);
         }
       } else {
 
       }
 
     }
-    // console.log('login: ' + this.isLoggedIn);
-    // console.log('aqui rol: ' + this.rol);
-    // console.log(this.user);
+    console.log('login: ' + this.isLoggedIn);
+    console.log('aqui rol: ' + this.rol);
+    console.log(this.user);
   }
 
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
- import { UsuarioRol } from 'src/app/models/UsuarioRol';
- import { PersonaService } from 'src/app/services/persona.service';
+import { UsuarioRol } from 'src/app/models/UsuarioRol';
+import { PersonaService } from 'src/app/services/persona.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import Swal from 'sweetalert2';
 import { UserService } from 'src/app/services/user.service';
@@ -9,14 +9,27 @@ import { FenixService } from 'src/app/services/fenix.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
- import { UsuariorolService } from 'src/app/services/usuariorol.service';
+import { UsuariorolService } from 'src/app/services/usuariorol.service';
 import { catchError, tap, throwError } from 'rxjs';
 import { Usuario2 } from 'src/app/models/Usuario2';
 import { Persona2 } from 'src/app/models/Persona2';
 import { CriteriosService } from 'src/app/services/criterios.service';
 import { CriteUsuarioProjection } from 'src/app/interface/CriteUsuarioProjection';
+import { ThemePalette } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { Rol } from 'src/app/models/Rol';
+import { CriRespProjection } from 'src/app/interface/CriteRespProjection';
+
 
 let ELEMENT_DATA: Fenix[] = [];
+
+export interface Task {
+  name: string;
+  completed: boolean;
+  color: ThemePalette;
+  subtasks?: Task[];
+}
 
 @Component({
   selector: 'app-crear-usuarios',
@@ -26,29 +39,32 @@ let ELEMENT_DATA: Fenix[] = [];
 export class CrearUsuariosComponent implements OnInit {
 
   usuarioGuardar = new Usuario2();
-
   fenix: Fenix = new Fenix();
-
   listaPersonas: Persona2[] = [];
   selectedRole: string | null = null;
-  listaUsuarios: any[] = [];
+  listaUsuarios: Usuario2[] = [];
   filterPost = '';
   personaSele = new Persona2();
   usuariosEdit = new UsuarioRol();
   usuariosEditGuar = new UsuarioRol();
   selectedRol: any;
+  searchTerm: string = '';
+
+  dataSource5: Usuario2[] = [];
+
+  usuariosCreados: Usuario2[] = [];
   //Cambiar texto tabla
   itemsPerPageLabel = 'Usuarios por página';
   nextPageLabel = 'Siguiente';
   lastPageLabel = 'Última';
-  firstPageLabel='Primera';
-  previousPageLabel='Anterior';
- 
-  rango:any= (page: number, pageSize: number, length: number) => {
+  firstPageLabel = 'Primera';
+  previousPageLabel = 'Anterior';
+
+  rango: any = (page: number, pageSize: number, length: number) => {
     if (length == 0 || pageSize == 0) {
       return `0 de ${length}`;
     }
-  
+
     length = Math.max(length, 0);
     const startIndex = page * pageSize;
     const endIndex =
@@ -57,30 +73,44 @@ export class CrearUsuariosComponent implements OnInit {
         : startIndex + pageSize;
     return `${startIndex + 1} - ${endIndex} de ${length}`;
   };
-  //
 
+  //
   roles = [
     { rolId: 1, rolNombre: 'ADMIN' },
     { rolId: 2, rolNombre: 'SUPERADMIN' },
     { rolId: 3, rolNombre: 'RESPONSABLE' },
     { rolId: 4, rolNombre: 'AUTORIDAD' },
   ];
+
+  rolesOrd = [
+    { rolId: 2, rolNombre: 'SUPERADMIN', selected: false },
+    { rolId: 1, rolNombre: 'ADMIN', selected: false },
+    { rolId: 3, rolNombre: 'RESPONSABLE', selected: false },
+    { rolId: 4, rolNombre: 'AUTORIDAD', selected: false },
+  ];
+
+  rolesUserBase: Rol[] = [];
+
   public usuario = {
     username: '',
     password: ''
   }
+
   public rol = 0;
-  ocultar=false;
-  idmodel!:number;
+  ocultar = false;
+  idmodel!: number;
   formulario: FormGroup;
+  user: CriRespProjection[] = [];
+  spans: any[] = [];
+
   dataSource2 = new MatTableDataSource<Usuario2>();
-  columnasUsuario: string[] = ['id', 'nombre', 'usuario', 'rol','criterio','evidencia', 'actions'];
+  columnasUsuario: string[] = ['id', 'nombre', 'usuario', 'rol','actions'];
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
   @ViewChild('modal') modal: any;
   constructor(
     private personaService: PersonaService,
     private usuariosService: UsuarioService,
-    private userService: UserService,private httpCriterios: CriteriosService,
+    private userService: UserService, private httpCriterios: CriteriosService,
     private fenix_service: FenixService,
     private formBuilder: FormBuilder,
     private paginatorIntl: MatPaginatorIntl,
@@ -89,17 +119,14 @@ export class CrearUsuariosComponent implements OnInit {
     this.formulario = this.formBuilder.group({
       username: { value: '', disabled: true },
       password: ['', Validators.required],
-      rol: ['', this.validateRol]
     });
     this.paginatorIntl.nextPageLabel = this.nextPageLabel;
     this.paginatorIntl.lastPageLabel = this.lastPageLabel;
-    this.paginatorIntl.firstPageLabel=this.firstPageLabel;
-    this.paginatorIntl.previousPageLabel=this.previousPageLabel;
+    this.paginatorIntl.firstPageLabel = this.firstPageLabel;
+    this.paginatorIntl.previousPageLabel = this.previousPageLabel;
     this.paginatorIntl.itemsPerPageLabel = this.itemsPerPageLabel;
-    this.paginatorIntl.getRangeLabel=this.rango;
+    this.paginatorIntl.getRangeLabel = this.rango;
   }
-
-
 
   ngAfterViewInit() {
     this.dataSource2.paginator = this.paginator || null;
@@ -110,44 +137,44 @@ export class CrearUsuariosComponent implements OnInit {
     this.personaService.getPersonas().subscribe(
       listaPerso => this.listaPersonas = listaPerso);
 
-this.modeloMax();
-    
+    this.modeloMax();
+
   }
 
   modeloMax() {
     this.httpCriterios.getModeMaximo().subscribe((data) => {
-      this.idmodel =data.id_modelo;
+      this.idmodel = data.id_modelo;
       this.Listado();
     });
   }
 
-  Listado() {
+  Listado3() {
     this.usuariorolservice.getusuarios().subscribe(
       (usuarios: any[]) => {
         const usuariosData = usuarios;
-        // console.log("usuarios "+JSON.stringify(usuarios))
-          usuariosData.forEach((usuario) => {
-            // console.log("usuario id "+JSON.stringify(usuario.usuario.id))
+        console.log("usuarios " + JSON.stringify(usuarios))
+        usuariosData.forEach((usuario) => {
+          console.log("usuario id " + JSON.stringify(usuario.usuario.id))
           this.usuariorolservice.getcriterios(usuario.usuario.id, this.idmodel).subscribe(
             (criterios: CriteUsuarioProjection[]) => {
               usuario.criterio = criterios.map((c) => c.criterio);
               usuario.evidencia = criterios.map((c) => c.evidencia);
-      
+
               if (usuariosData.every((u) => u.criterio && u.criterio.length > 0)) {
                 this.dataSource2.data = usuariosData;
-                // console.log("criterios v " + JSON.stringify(this.dataSource2.data));
-            }
-            
+                console.log("criterios v " + JSON.stringify(this.dataSource2.data));
+              }
+
             }
           );
         });
       }
     );
   }
-  
 
   aplicarFiltroPorRol() {
     if (this.selectedRole) {
+      console.log(this.selectedRole);
       this.dataSource2.data = this.listaUsuarios.filter((item: any) => {
         return item.rol.rolNombre === this.selectedRole;
       });
@@ -157,7 +184,6 @@ this.modeloMax();
     }
   }
 
-  
   aplicarFiltro() {
     if (this.filterPost) {
       const lowerCaseFilter = this.filterPost.toLowerCase();
@@ -190,11 +216,11 @@ this.modeloMax();
       Swal.fire('Error', 'Debe ingresar una cedula', 'error');
       return;
     }
-    
+
     this.fenix_service.getDocenteByCedula(this.fenix.cedula).subscribe(
       (result) => {
         this.dataSource = result;
-        // console.log(this.dataSource);
+        console.log(this.dataSource);
       }
     )
   }
@@ -237,7 +263,7 @@ this.modeloMax();
 
   //consumir servicio de fenix para obtener datos de la persona por primer_nombre y segundo_nombre
   public consultarPorPrimerNombreSegundoNombre() {
-    if ((this.fenix.primer_nombre == null || this.fenix.primer_nombre == '')  && (this.fenix.segundo_nombre == null || this.fenix.segundo_nombre == '')) {
+    if ((this.fenix.primer_nombre == null || this.fenix.primer_nombre == '') && (this.fenix.segundo_nombre == null || this.fenix.segundo_nombre == '')) {
       Swal.fire('Error', 'Por favor, ingrese los nombres válidos', 'error');
       return;
     }
@@ -273,6 +299,7 @@ this.modeloMax();
       }
     )
   }
+
   //metodo para obtener docentes por primer_apellido y segundo_apellido
   public consultarPorPrimerApellidoAndSegundoApellido() {
     if ((this.fenix.primer_apellido == null || this.fenix.primer_apellido == '') && (this.fenix.segundo_apellido == null || this.fenix.segundo_apellido == '')) {
@@ -285,7 +312,6 @@ this.modeloMax();
       }
     )
   }
-
 
   //crear un metodo que una los servicios de cedula, primer_nombre,primer_apellido, segundo_nombre y segundo_apellido
   public consultar() {
@@ -305,18 +331,19 @@ this.modeloMax();
     }
   }
 
-  public consultarPorNombreCompleto(){
-    if (this.fenix.primer_nombre == null && this.fenix.primer_apellido == null || this.fenix.primer_nombre == "" && this.fenix.primer_apellido == ""){
+  public consultarPorNombreCompleto() {
+    if (this.fenix.primer_nombre == null && this.fenix.primer_apellido == null || this.fenix.primer_nombre == "" && this.fenix.primer_apellido == "") {
       Swal.fire('Error', 'Debe llenar los campos', 'error');
-      return; 
+      return;
     }
-    this.fenix_service.getDocenteByNombresCompletos(this.fenix.primer_nombre,this.fenix.primer_apellido).subscribe(
+    this.fenix_service.getDocenteByNombresCompletos(this.fenix.primer_nombre, this.fenix.primer_apellido).subscribe(
       (result) => {
         this.dataSource = result;
-        // console.log(this.dataSource);
+        console.log(this.dataSource);
       }
     )
   }
+
   public consultarPrimerNombre() {
     if (this.fenix.primer_nombre == null || this.fenix.primer_nombre == '') {
       Swal.fire('Error', 'Debe ingresar un nombre', 'error');
@@ -329,8 +356,6 @@ this.modeloMax();
     )
   }
 
-
-
   public seleccionar(element: any) {
 
     this.personaSele.cedula = element.cedula;
@@ -341,11 +366,10 @@ this.modeloMax();
     this.personaSele.celular = element.celular;
     this.personaSele.correo = element.correo;
     this.personaSele.direccion = element.direccion;
-    // console.log(this.personaSele);
+    console.log(this.personaSele);
     this.usuarioGuardar.username = this.personaSele.cedula;
     this.usuarioGuardar.persona = this.personaSele;
   }
-
 
   public seleccionar2(element: any) {
     this.personaSele = element;
@@ -353,30 +377,26 @@ this.modeloMax();
     this.usuarioGuardar.persona.id_persona = this.personaSele.id_persona;
   }
 
-
-
-
   limpiarFormulario() {
     //this.usuarioGuardar = new Usuario2;
     //this.selectedRol = null;
     // this.rol=0;
   }
 
-
   registrarUsuario() {
-    // console.log(this.usuarioGuardar)
+    console.log(this.usuarioGuardar)
     this.personaService.findByCedula(this.personaSele.cedula).subscribe(
       (data2: Persona2) => {
         if (!data2) { // Si no se encuentra ningún resultado
           this.personaService.createPersona(this.personaSele).subscribe(
             (data) => {
-              // console.log(data);
+              console.log(data);
               this.usuarioGuardar.username = data.cedula;
               this.usuarioGuardar.persona = data;
               this.crearUsuario();
             },
             (error) => {
-              // console.log(error);
+              console.log(error);
               Swal.fire({
                 icon: 'error',
                 title: 'No se pudo registrar persona',
@@ -399,9 +419,8 @@ this.modeloMax();
   }
 
   crearUsuario() {
-    
-    // console.log(this.usuarioGuardar)
-    this.usuariosService.createUsuario(this.usuarioGuardar, this.rol).subscribe(
+    console.log(this.usuarioGuardar)
+    this.usuariosService.createUsuarioSup(this.usuarioGuardar, this.getRolesSeleccionados()).subscribe(
       () => {
         Swal.fire(
           'Usuario Registrado!',
@@ -414,7 +433,7 @@ this.modeloMax();
         this.formulario.markAsPristine();
       },
       (error) => {
-        // console.log(error);
+        console.log(error);
         Swal.fire({
           icon: 'error',
           title: 'No se pudo registrar usuario',
@@ -426,17 +445,17 @@ this.modeloMax();
   }
 
   guardarUsuario() {
+    // Obtener los roles seleccionados
+    const rolesSeleccionados = this.rolesOrd.filter(rol => rol.selected);
     this.usuarioGuardar.username = this.personaSele.cedula;
     this.usuarioGuardar.password = this.formulario.value.password;
-    this.rol = this.formulario.value.rol;
-    // console.log(this.usuarioGuardar.username)
-    // console.log(this.usuarioGuardar.password)
-    // console.log(this.rol)
-    if (!this.usuarioGuardar.username || !this.usuarioGuardar.password || !this.rol) {
+    console.log(this.usuarioGuardar.username)
+    console.log(this.usuarioGuardar.password)
+    // Verificar que todos los campos necesarios estén completos
+    if (!this.usuarioGuardar.username || !this.usuarioGuardar.password || rolesSeleccionados.length === 0) {
       Swal.fire('Campos Vacios', 'Por favor llene todos los campos', 'warning');
       return;
     }
-
     this.usuariosService.obtenerUsuario(this.usuarioGuardar.username).pipe(
       tap((existeUsuario: boolean) => {
         if (existeUsuario) {
@@ -446,7 +465,7 @@ this.modeloMax();
         }
       }),
       catchError((error) => {
-        // console.log(error);
+        console.log(error);
         Swal.fire({
           icon: 'error',
           title: 'Error al comprobar usuario',
@@ -458,33 +477,13 @@ this.modeloMax();
     ).subscribe();
   }
 
-
-
-
-
-
   cerrarModal() {
     this.formulario.reset();
     this.formulario.markAsPristine();
   }
 
-
-
-
-  validateRol(control: FormControl) {
-    const selectedRol = control.value;
-    if (!selectedRol || selectedRol === 0) {
-      return {
-        required: true
-      };
-    }
-    return null;
-  }
-
-
   eliminar(element: any) {
     const id = element.id;
-
     Swal.fire({
       title: 'Desea eliminarlo?',
       text: "No podrá revertirlo!",
@@ -505,23 +504,33 @@ this.modeloMax();
   }
 
   EditarUsuari(usuariossssss: any): void {
-    this.usuariosEdit = usuariossssss
-  }
+    this.usuariosEdit = usuariossssss;
 
+    // Obtener los roles del usuario base
+    this.usuariorolservice.getRolesPorUsername(this.usuariosEdit.usuario.username).subscribe(
+      (data: Rol[]) => {
+        // Almacenar los roles del usuario base en rolesUserBase
+        this.rolesUserBase = data;
+        // Iterar sobre los roles disponibles
+        this.rolesOrd.forEach(rol => {
+          // Verificar si el usuario tiene asignado el rol actual
+          // Utilizamos some() para verificar si el rol está presente en la lista de roles del usuario base
+          rol.selected = this.rolesUserBase.some((rolUsuario: Rol) => rolUsuario.rolId === rol.rolId);
+        });
+      }
+    );
+  }
 
   compareRoles(role1: any, role2: any): boolean {
     return role1 && role2 ? role1.rolNombre === role2.rolNombre : role1 === role2;
   }
 
   Actualizar(usuariosdit: UsuarioRol) {
-    if (usuariosdit.rol.rolId == 0) {
-      usuariosdit.rol = this.usuariosEdit.rol;
-    }
     if (usuariosdit.usuario.password == "") {
       usuariosdit.usuario.password = this.usuariosEdit.usuario.password
     }
     usuariosdit.usuarioRolId = this.usuariosEdit.usuarioRolId;
-    // console.log(usuariosdit)
+    console.log(usuariosdit)
     Swal.fire({
       title: '¿Desea modificar los campos?',
       showCancelButton: true,
@@ -529,8 +538,7 @@ this.modeloMax();
       denyButtonText: `NO`,
     }).then((result) => {
       if (result.isConfirmed) {
-
-        this.usuariorolservice.actualizar(usuariosdit.usuarioRolId, usuariosdit)
+        this.usuariorolservice.actualizarSup(usuariosdit.usuarioRolId, usuariosdit, this.getRolesSeleccionados())
           .subscribe((response: any) => {
             Swal.fire(
               'Usuario Modificado!',
@@ -538,14 +546,128 @@ this.modeloMax();
               'success'
             );
             this.Listado();
-            this.usuariosEdit=new UsuarioRol();
-            this.usuariosEditGuar=new UsuarioRol();
+            this.usuariosEdit = new UsuarioRol();
+            this.usuariosEditGuar = new UsuarioRol();
           });
-      } else{
+      } else {
         Swal.fire('Se ha cancelado la operación', '', 'info')
       }
     })
-
-
   }
+
+  allComplete: boolean = false;
+
+  toggleCheckbox(rol: any) {
+    rol.selected = !rol.selected;
+    this.allComplete = this.rolesOrd.every(rol => rol.selected);
+
+    // Obtener los roles seleccionados al dar clic en el checkbox
+    const rolesSeleccionados = this.getRolesSeleccionados();
+    console.log('Roles seleccionados:', rolesSeleccionados);
+    // Puedes hacer algo con los roles seleccionados aquí, como enviarlos a través de una solicitud HTTP, etc.
+  }
+
+  getRolesSeleccionados(): number[] {
+    return this.rolesOrd.filter(rol => rol.selected).map(rol => rol.rolId);
+  }
+
+  //Contador para combinar celdas
+  cacheSpan(key: string, accessor: (d: any) => any) {
+    for (let i = 0; i < this.user.length;) {
+      let currentValue = accessor(this.user[i]);
+      let count = 1;
+
+      for (let j = i + 1; j < this.user.length; j++) {
+        if (currentValue !== accessor(this.user[j])) {
+          break;
+        }
+        count++;
+      }
+
+      if (!this.spans[i]) {
+        this.spans[i] = {};
+      }
+
+      this.spans[i][key] = count;
+      i += count;
+    }
+  }
+
+  getRowSpan(col: any, index: any) {
+    return this.spans[index] && this.spans[index][col];
+  }
+
+  listaractividades(id_modelo: number) {
+    this.usuariorolservice.getusuarios().subscribe((data: Usuario2[]) => {
+      this.dataSource5 = data;
+      this.usuariorolservice.getusuarios().subscribe((data: Usuario2[]) => {
+        this.dataSource5 = data;
+
+        console.log("rechazadai", JSON.stringify(this.dataSource))
+        this.cacheSpan('encargado', (d) => d.encargado);
+        this.cacheSpan('subcriterio', (d) => d.encargado + d.subcriterio);
+        this.cacheSpan('indicadores', (d) => d.encargado + d.subcriterio + d.indicador);
+        this.cacheSpan('evidencia', (d) => d.encargado + d.subcriterio + d.indicador + d.evidencia);
+
+      });
+    });
+  }
+
+
+  Listado() {
+    this.usuariorolservice.getusuarios().subscribe((usuarios: any[]) => {
+      const usuariosData = usuarios;
+      console.log("usuarios.. " + JSON.stringify(usuarios))
+      usuariosData.forEach((usuario) => {
+        console.log("usuario id " + JSON.stringify(usuario.usuario.id))
+        this.usuariorolservice.getcriterios(usuario.usuario.id, this.idmodel).subscribe(
+          (criterios: CriteUsuarioProjection[]) => {
+            
+            console.log("usuarios:", JSON.stringify(usuarios))
+            this.cacheSpan('id', (c) => c.usuario.id);
+            this.cacheSpan('nombre', (c) =>  c.usuario.id + c.persona.primer_nombre);
+            this.cacheSpan('usuario', (c) => c.usuario.id + c.persona.primer_nombre + c.usuario.username);
+
+            usuario.criterio = criterios.map((c) => c.criterio);
+            usuario.evidencia = criterios.map((c) => c.evidencia);
+
+            if (usuariosData.every((u) => u.criterio && u.criterio.length > 0)) {
+              this.dataSource2.data = usuariosData;
+              console.log("criterios v " + JSON.stringify(this.dataSource2.data));
+            }
+
+          
+        }
+        );
+      });
+    }
+    );
+  }
+
+
+
+  Listado5() {
+    this.usuariorolservice.getusuarios().subscribe(
+      (usuarios: any[]) => {
+        const usuariosData = usuarios;
+        console.log("usuarios " + JSON.stringify(usuarios))
+        usuariosData.forEach((usuario) => {
+          console.log("usuario id " + JSON.stringify(usuario.usuario.id))
+          this.usuariorolservice.getcriterios(usuario.usuario.id, this.idmodel).subscribe(
+            (criterios: CriteUsuarioProjection[]) => {
+              usuario.criterio = criterios.map((c) => c.criterio);
+              usuario.evidencia = criterios.map((c) => c.evidencia);
+
+              if (usuariosData.every((u) => u.criterio && u.criterio.length > 0)) {
+                this.dataSource2.data = usuariosData;
+                console.log("criterios v " + JSON.stringify(this.dataSource2.data));
+              }
+
+            }
+          );
+        });
+      }
+    );
+  }
+
 }

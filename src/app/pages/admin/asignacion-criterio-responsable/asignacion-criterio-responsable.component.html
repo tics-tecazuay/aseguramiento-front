@@ -1,0 +1,122 @@
+<blockquote class="blockquote text-dark" style="margin-top: 5%">
+    <h1 style="text-transform: uppercase">
+      <strong>{{ modelo.nombre }}</strong>
+    </h1>
+  </blockquote>
+  
+  <div class="container contenedor-info">
+    <table>
+      <tr>
+        <td><b>ID:</b></td>
+        <td>{{ modelo.id_modelo }}</td>
+      </tr>
+      <tr>
+        <td><b>NOMBRE:</b></td>
+        <td>{{ modelo.nombre }}</td>
+      </tr>
+      <tr>
+        <td><b>FECHA INICIO:</b></td>
+        <td>{{ modelo.fecha_inicio | date : "dd/MM/yyyy" }}</td>
+      </tr>
+      <tr>
+        <td><b>FECHA FIN:</b></td>
+        <td>{{ modelo.fecha_fin | date : "dd/MM/yyyy" }}</td>
+      </tr>
+    </table>
+  </div>
+  
+  <div class="container">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Nombre del Criterio</th>
+          <th>Descripción del Criterio</th>
+          <th>Asignación</th>
+          <th>Ver Asignados</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let criterio of listaCriterios">
+          <td>{{ criterio.nombre }}</td>
+          <td>{{ criterio.descripcion }}</td>
+          <td>
+            <button class="custom-button" (click)="openModalAsignar(criterio.id_criterio)">
+              <mat-icon class="iconoB">account_box</mat-icon>
+            </button>
+          </td>
+          <td>
+            <button class="btn" (click)="openModalAsignados(criterio.id_criterio)">
+              Ver <i class="fa fa-eye"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MODAL DE VER ASIGNADOS-->
+
+  <div id="myModal" class="modal" (click)="closeModal()"> <!-- Aplica el evento click a todo el modal -->
+    <div class="modal-content" (click)="stopPropagation($event)"> <!-- Detiene la propagación del evento solo dentro del contenido del modal -->
+        <button class="close" (click)="closeModal()">&times;</button> <!-- Botón de cierre -->
+        <!-- Contenido del modal -->
+        <h2>RESPONSABLES ASIGNADOS</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Recorre la lista de criterios -->
+                <tr *ngFor="let AsignacionProjection of listaResponsablesasignados">
+                    <!-- Muestra el nombre del criterio -->
+                    <td>{{ AsignacionProjection.nombrescri }}</td>
+                    <!-- Botón para asignar -->
+                    <td>
+                        <button class="btn btn-danger" (click)="quitarasignacion(AsignacionProjection.enc)">
+                            <i class="fa fa-times"></i> 
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- MODAL DE ASIGNACION-->
+
+<div id="modalAsignar" class="modalAsignar" *ngIf="isAsignarModalVisible">
+  <!-- Contenido del modal de asignación -->
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <button class="close" (click)="closeAsignarModal()">&times;</button>
+  <h2>ASIGNAR RESPONSABLES</h2>
+  <table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Asignar</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Recorre la lista de criterios -->
+        <tr *ngFor="let Usuario2 of listaResponsables">
+            <!-- Muestra el nombre del criterio -->
+            <td>
+              {{ Usuario2.persona ? (Usuario2.persona.primer_nombre ? Usuario2.persona.primer_nombre : 'Sin nombre') : 'Sin nombre' }}
+              {{ Usuario2.persona ? (Usuario2.persona.primer_apellido ? Usuario2.persona.primer_apellido : '') : '' }}
+          </td>           <!-- Botón para asignar -->
+            <td>
+                <button class="btn-success" (click)="asignarCriterio(Usuario2.id)">
+                    <i class="fa fa-check"></i> Asignar
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+  <button class="close" (click)="closeAsignarModal()">&times;</button>
+</div>
+</div>
+</div>

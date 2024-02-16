@@ -1,20 +1,19 @@
 <!-- <body> -->
-  <div *ngIf="!verificar">
-    <figure class="text-center text-dark" style="margin-top: 1%; font-style: italic">
-      <blockquote class="blockquote text-dark">
-        <h1><strong> {{titulo}} </strong></h1>
-      </blockquote>
-    </figure>
-    
-    <div class="carousel-container">
-      <div>
-        <img src="./assets/LOGO_CUADRADO_SIN FONDO.png" alt="Imagen 1" />
-      </div>
+<div *ngIf="!verificar">
+  <figure class="text-center text-dark" style="margin-top: 1%; font-style: italic">
+    <blockquote class="blockquote text-dark">
+      <h1><strong> {{titulo}} </strong></h1>
+    </blockquote>
+  </figure>
+
+  <div class="carousel-container">
+    <div>
+      <img src="./assets/LOGO_CUADRADO_SIN FONDO.png" alt="Imagen 1" />
     </div>
   </div>
+</div>
 
-
-  <div *ngIf="verificar">
+<div *ngIf="verificar">
   <div class="container bg-light border border-start-0 rounded-4">
     <div class="container text-center">
       <figure class="text-center text-dark" style="margin-top: 5%; font-style: italic">
@@ -27,58 +26,50 @@
         <div class="card-body">
           <div class="table-responsive">
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-              <!-- Columnas de la tabla -->
               <ng-container matColumnDef="ID">
                 <th mat-header-cell *matHeaderCellDef [style.display]="ocultar? '' : 'none'">ID</th>
-                <td mat-cell *matCellDef="let ev" [style.display]="ocultar? '' : 'none'">{{ ev.id_evidencia }}</td>
-              </ng-container>
-            
-              <ng-container matColumnDef="Criterio">
-                <th mat-header-cell *matHeaderCellDef>CRITERIO</th>
-                <td mat-cell *matCellDef="let ev">{{ ev.criterio }}</td>
-              </ng-container>
-              <ng-container matColumnDef="Subcriterio">
-                <th mat-header-cell *matHeaderCellDef>SUBCRITERIO</th>
-                <td mat-cell *matCellDef="let ev">{{ ev.subcriterio }}</td>
-              </ng-container>
-              <ng-container matColumnDef="Indicador">
-                <th mat-header-cell *matHeaderCellDef>INDICADOR</th>
-                <td mat-cell *matCellDef="let ev">{{ ev.indicador }}</td>
-              </ng-container>
-              
-              <ng-container matColumnDef="Estado">
-                <th mat-header-cell *matHeaderCellDef>ESTADO</th>
-                <td mat-cell *matCellDef="let ev" [ngClass]="getColorEstado(ev.estado)">{{ ev.estado.toUpperCase() }}</td>
+                <td mat-cell *matCellDef="let ev" [style.display]="ocultar? '' : 'none'">{{ ev.id }}</td>
               </ng-container>
 
-              <ng-container matColumnDef="Descripción">
-                <th mat-header-cell *matHeaderCellDef>Descripción</th>
-                <td mat-cell *matCellDef="let ev">{{ ev.descripcion }}</td>
-              </ng-container>
-              <ng-container matColumnDef="observacion">
-                <th mat-header-cell *matHeaderCellDef>Observación</th>
-                <td mat-cell *matCellDef="let elemento">
-                  <div *ngFor="let observacion of elemento.observacion">
-                    {{ observacion }}
-                  </div>
+              <ng-container matColumnDef="Criterio">
+                <th mat-header-cell *matHeaderCellDef>CRITERIO</th>
+                <td mat-cell *matCellDef="let ev; let i = index" [attr.rowspan]="getRowSpan('crite', i)"
+                  [style.display]="getRowSpan('crite', i) ? '' : 'none'">
+                  {{ ev.criterio }}
                 </td>
               </ng-container>
+
+              <ng-container matColumnDef="Subcriterio">
+                <th mat-header-cell *matHeaderCellDef>SUBCRITERIO</th>
+                <td mat-cell *matCellDef="let ev; let i = index" [attr.rowspan]="getRowSpan('subcrite', i) "
+                [style.display]="getRowSpan('subcrite', i) ? '' : 'none'">
+                  {{ ev.subcriterio }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Indicador">
+                <th mat-header-cell *matHeaderCellDef>INDICADOR</th>
+                <td mat-cell *matCellDef="let ev; let i = index" [attr.rowspan]="getRowSpan('indi', i)"
+                [style.display]="getRowSpan('indi', i) ? '' : 'none'">
+                  {{ ev.indicador }}
+                </td>
+              </ng-container>
+
               <ng-container matColumnDef="Actividad">
                 <th mat-header-cell *matHeaderCellDef>Actividad</th>
                 <td mat-cell *matCellDef="let ev">
-                  <button class="btn btn-primary" role="button" (click)="verDetalles(ev)" [disabled]="botonDeshabilitado">
+                  <button class="btn btn-primary" role="button" (click)="verDetalles(ev)">
                     <div class="d-flex">
-                      <span class="badge">
-                      </span>
+                      <span class="badge"></span>
                       <i class="fa fa-folder-open"></i>
                     </div>
                   </button>
                 </td>
               </ng-container>
-            
+
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>          
+              <tr mat-row *matRowDef="let a; columns: displayedColumns"></tr>
+            </table>
             <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
           </div>
 

@@ -6,8 +6,8 @@ import { PageNotFoundComponent } from './shared/page-not-found/page-not-found.co
 
 const routes: Routes = [
 
-
-
+  
+  
   { path: '', redirectTo: 'use/login', pathMatch: 'full' },
 
   //PATHS DE ADMINISTRADOR
@@ -15,7 +15,7 @@ const routes: Routes = [
     path: 'adm',
     loadChildren: () => import("./pages/admin/admin.module").then(m => m.AdminModule)
   },
-
+  
 
   //PATHS DE SUPERADMIN
 
@@ -23,16 +23,16 @@ const routes: Routes = [
     path: 'sup',
     loadChildren: () => import("./pages/superadmin/superadmin.module").then(m => m.SuperadminModule)
   },
+  
 
-
-
-
+  
+  
   //PATHS DE RESPONSABLE
   {
     path: 'res',
     loadChildren: () => import("./pages/responsable/responsable.module").then(m => m.ResponsableModule)
   },
-
+  
 
 
 
@@ -41,7 +41,7 @@ const routes: Routes = [
     path: 'aut',
     loadChildren: () => import("./pages/autoridad/autoridad.module").then(m => m.AutoridadModule)
   },
-
+  
   //Otros Paths
   {
     path: 'use',
@@ -51,7 +51,7 @@ const routes: Routes = [
     path: 'pagenotfoud',
     component: PageNotFoundComponent
   },
-
+  
 ];
 
 @NgModule({

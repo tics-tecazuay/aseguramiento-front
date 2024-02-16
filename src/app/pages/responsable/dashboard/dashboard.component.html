@@ -1,0 +1,150 @@
+<!-- <body> -->
+  <div *ngIf="!verificar">
+    <figure class="text-center text-dark" style="margin-top: 1%; font-style: italic">
+      <blockquote class="blockquote text-dark">
+        <h1 class="titulo">{{titulo}}</h1>
+  
+      </blockquote>
+    </figure>
+  
+    <div class="carousel-container">
+      <div>
+        <img src="./assets/LOGO_CUADRADO_SIN FONDO.png" alt="Imagen 1" />
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="verificar">
+    <div class="container bg-light border border-start-0 rounded-4">
+      <div class="container text-center">
+        <figure class="text-center text-dark" style="margin-top: 5%; font-style: italic">
+          <blockquote class="blockquote text-dark">
+            <h1 class="titulo">{{titulo}}</h1>
+  
+          </blockquote>
+        </figure>
+  
+        <div class="card">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                <ng-container matColumnDef="ID">
+                  <th mat-header-cell *matHeaderCellDef [style.display]="ocultar? '' : 'none'">ID</th>
+                  <td mat-cell *matCellDef="let ev" [style.display]="ocultar? '' : 'none'">{{ ev.id }}</td>
+                </ng-container>
+  
+                <ng-container matColumnDef="Criterio">
+                  <th mat-header-cell *matHeaderCellDef>CRITERIO</th>
+                  <td mat-cell *matCellDef="let ev; let i = index" [attr.rowspan]="getRowSpan('Criterio', i)">
+                    {{ ev.criterio }}
+                  </td>
+                </ng-container>
+  
+                <ng-container matColumnDef="Subcriterio">
+                  <th mat-header-cell *matHeaderCellDef>SUBCRITERIO</th>
+                  <td mat-cell *matCellDef="let ev; let i = index" [attr.rowspan]="getRowSpan('Subcriterio', i)">
+                    {{ ev.subcriterio }}
+                  </td>
+                </ng-container>
+  
+                <ng-container matColumnDef="Indicador">
+                  <th mat-header-cell *matHeaderCellDef>INDICADOR</th>
+                  <td mat-cell *matCellDef="let ev; let i = index" [attr.rowspan]="getRowSpan('Indicador', i)">
+                    {{ ev.indicador }}
+                  </td>
+                </ng-container>
+  
+                <ng-container matColumnDef="Descripcion">
+                  <th mat-header-cell *matHeaderCellDef>EVIDENCIA</th>
+                  <td mat-cell *matCellDef="let ev; let i = index" [attr.rowspan]="getRowSpan('Descripcion', i)">
+                    {{ ev.descripcion }}
+                  </td>
+                </ng-container>
+  
+                <tr mat-header-row *matHeaderRowDef="displayedModel"></tr>
+                <tr mat-row *matRowDef="let ev; columns: displayedModel;" (click)="verDetalles(ev)"></tr>
+  
+              </table>
+  
+              <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+            </div>
+  
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+  
+  <div class="container">
+    <div class="row">
+      <!-- Calendario de actividades -->
+      <div class="col-8">
+        <div class="card" style="margin-top: 15px">
+          <div class="card-body">
+            <div class="calenda" id="letra2">
+              <h3 style="font-weight: bold">Calendario de Actividades</h3>
+              <div class="calendar-container">
+                <full-calendar [options]="calendarOptions" id="cal">
+                  <ng-template #fcToolbar>
+                    <div class="fc-toolbar">
+                      <div class="fc-left">
+                        <button class="fc-prev-button fc-button fc-button-primary">
+                          <span class="fc-icon fc-icon-chevron-left"></span>
+                        </button>
+                        <button class="fc-next-button fc-button fc-button-primary">
+                          <span class="fc-icon fc-icon-chevron-right"></span>
+                        </button>
+                        <button class="fc-today-button fc-button fc-button-primary">
+                          Hoy
+                        </button>
+                      </div>
+                      <div class="fc-center">
+                        <span class="fc-title h4"></span>
+                      </div>
+                      <div class="fc-right">
+                        <button class="fc-dayGridMonth-button fc-button fc-button-primary">
+                          Mes
+                        </button>
+                        <button class="fc-timeGridWeek-button fc-button fc-button-primary">
+                          Semana
+                        </button>
+                        <button class="fc-timeGridDay-button fc-button fc-button-primary">
+                          Día
+                        </button>
+                      </div>
+                    </div>
+                  </ng-template>
+                </full-calendar>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Gráfico pastel -->
+      <div class="col-4">
+        <div class="card" style="margin-top: 15px">
+          <div class="card-body">
+            <h3 style="font-weight: bold">Seguimiento de Actividades</h3>
+            <canvas baseChart class="chart" [data]="pieChartData" [type]="pieChartType" [options]="pieChartOptions"
+              [plugins]="pieChartPlugins"></canvas>
+          </div>
+        </div>
+        <div class="card" style="margin-top: 15px; height: 20%">
+          <div class="card-body">
+            <ul class="custom-ul">
+              <li *ngFor="let actividad of conteoActividades" class="custom-li">
+                <span class="estado">{{ actividad.estado }}:</span>
+                <span class="conteo">{{ actividad.conteo }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- </body> -->
+  
+  
+  

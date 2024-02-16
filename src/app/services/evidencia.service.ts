@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { Evidencia } from '../models/Evidencia';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { ActiDiagramaPieProjection, Evidencia } from '../models/Evidencia';
+import { HttpClient } from '@angular/common/http';
 import baserUrl from './helper';
 import { EvidenciasProjection } from '../interface/EvidenciasProjection';
 import { EvidenciaCalProjection } from '../interface/EvidenciaCalProjection';
@@ -13,46 +13,31 @@ import { EvidenciaProjection } from '../interface/EvidenciaProjection';
 })
 export class EvidenciaService {
   evidenciaObj: Evidencia[] = [];
-  private httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' })
   constructor(private http: HttpClient) { }
 
   crear(r: any): Observable<any> {
     return this.http.post<any>(`${baserUrl}/api/evidencia/crear`, r
     );
   }
-
   actualizar(id: any, crite: any): Observable<any> {
     return this.http.put(`${baserUrl}/api/evidencia/actualizar/${id}`, crite);
   }
   //Metodo para listar
-
   getEvidencias(): Observable<Evidencia[]> {
     return this.http.get<Evidencia[]>(`${baserUrl}/api/evidencia/listarv`);
   }
-
- //Metodo para listarAsigna
-
- /*getEvidenciasAdmin():Observable<Evidencia[]>{
-  return this.http.get<Evidencia[]>(`${baserUrl}/api/evidencia/listarvAsigna`);
-}*/
-
-
-getEvidenciasAdmin(id: number): Observable<Evidencia[]> {
+  getEvidenciasAdmin(id: number): Observable<Evidencia[]> {
   return this.http.get<Evidencia[]>(`${baserUrl}/api/evidencia/listarvAsigna/${id}`);
-}
-
-getEvidenciaCrite(idcriterio: number): Observable<Evidencia[]> {
+  }
+  getEvidenciaCrite(idcriterio: number): Observable<Evidencia[]> {
   return this.http.get<Evidencia[]>(`${baserUrl}/api/evidencia/evicriterio/${idcriterio}`);
-}
-
+  }
   eliminarEvidencia(evi: any): Observable<any> {
     return this.http.put(`${baserUrl}/api/evidencia/eliminarlogic/${evi.id_evidencia}`, evi);
   }
-
   getEvidenciaIndicador(id: number): Observable<Evidencia> {
     return this.http.get<Evidencia>(`${baserUrl}/api/evidencia/listarIndicador/${id}`);
   }
-
   //Listar por usuario
   public getAsignacionUsuario(user: String): Observable<Evidencia[]> {
     return this.http.get<Evidencia[]>(`${baserUrl}/api/asignacionevidencia/listarEviUsua/` + user);
@@ -63,6 +48,10 @@ getEvidenciaCrite(idcriterio: number): Observable<Evidencia[]> {
   }
   public getevilist(username: String): Observable<EvidenciaProjection[]> {
     return this.http.get<EvidenciaProjection[]>(`${baserUrl}/api/evidencia/evidenuser/${username}`);
+  }
+
+  public geteviuserpen(username: String): Observable<EvidenciaProjection[]> {
+    return this.http.get<EvidenciaProjection[]>(`${baserUrl}/api/evidencia/evidenuserpendiente/${username}`);
   }
   public getevical(id_evidencia:number,id_modelo:number): Observable<EvidenciaCalProjection> {
     return this.http.get<EvidenciaCalProjection>(`${baserUrl}/api/evidencia/evidenciacal/${id_evidencia}/${id_modelo}`);
@@ -107,5 +96,7 @@ getEvidenciaCrite(idcriterio: number): Observable<Evidencia[]> {
   public listarsolorespon(): Observable<any[]> {
     return this.http.get<any[]>(`${baserUrl}/usuarios/listarsoloResponsables`);
   }
-
+  public getPorcentajesEstadosPorResponsable(responsableId: number): Observable<ActiDiagramaPieProjection> {
+    return this.http.get<ActiDiagramaPieProjection>(`${baserUrl}/api/evidencia/porcentajeEstadosdeActividades/${responsableId}`);
+  }
 }

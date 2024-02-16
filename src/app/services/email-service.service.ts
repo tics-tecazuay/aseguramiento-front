@@ -15,7 +15,7 @@ export class EmailServiceService {
     const url = `${baserUrl}/send-email`;
     return this.http.post<any>(url, emailDTO).pipe(
       catchError(error => {
-        // console.error('Error:', error);
+        console.error('Error:', error);
         throw error;
       })
     );

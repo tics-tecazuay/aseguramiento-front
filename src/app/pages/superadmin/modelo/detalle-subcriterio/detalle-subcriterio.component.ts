@@ -15,6 +15,7 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./detalle-subcriterio.component.css']
 })
 export class DetalleSubcriterioComponent {
+  ocultar=false;
   itemsPerPageLabel = 'Subcriterios por página';
   nextPageLabel = 'Siguiente';
   lastPageLabel = 'Última';

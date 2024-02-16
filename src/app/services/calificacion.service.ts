@@ -13,7 +13,7 @@ export class CalificacionService {
   public obtenerCalificacion(): Observable<any> {
     return this.http.get(`${baserUrl}/api/cualitativa/listarv`).pipe(
       catchError((error) => {
-        // console.error(error);
+        console.error(error);
         throw error;
       }));
   }

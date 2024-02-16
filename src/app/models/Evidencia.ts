@@ -11,4 +11,14 @@ export class Evidencia {
     indicador:Indicador = new Indicador();
 }
 
+export interface ActiDiagramaPieProjection {
+    pendientes: number;
+    aprobados: number;
+    rechazados: number;
+    total: number;
+    porcentaje_pendientes: number;
+    porcentaje_aprobados: number;
+    porcentaje_rechazados: number;
+
+}
 

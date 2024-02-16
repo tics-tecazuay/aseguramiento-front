@@ -157,7 +157,7 @@ public chartHovered({
   event?: ChartEvent;
   active?: object[];
 }): void {
-  // console.log(event, active);
+  console.log(event, active);
 }
   constructor(private modelservices: ModeloService,private httpCriterios:CriteriosService,private indi:IndicadoresService) {
     //this.getButtonCriterio();
@@ -168,7 +168,7 @@ public chartHovered({
     //this.getButtonIndicadores();
     let id = localStorage.getItem("idM");
     this.id_modelo=Number(id);
-    // console.log("Id modelo aut "+this.id_modelo);
+    console.log("Id modelo aut "+this.id_modelo);
     this.nombremodelo();
     this.listaind();
     this.coloresPro();

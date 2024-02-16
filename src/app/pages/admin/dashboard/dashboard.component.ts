@@ -20,6 +20,7 @@ export class DashboardComponent implements OnInit {
   searchTerm2: string = '';
   showHint!: boolean;
   //
+  ocultar=false;
   nombremodelo: string = '';
   displayedColumns: string[] = ['enc', 'nombrescri','actividasi'];
   displayedColumns2: string[] = ['enc', 'nombrescri','actividasi'];

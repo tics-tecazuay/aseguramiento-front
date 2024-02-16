@@ -86,11 +86,11 @@ export class DialogoModeloModComponent implements OnInit {
   
   ngOnInit(): void {
     this.criterioService.getDatos().subscribe(criterios => {
-      // console.log("Criterios Unidos "+JSON.stringify(criterios));
+      console.log("Criterios Unidos "+JSON.stringify(criterios));
     });
     this.modelo = this.data.item;
     this.id_mode=this.data.item.id_modelo;
-    // console.log("modelo traido mod "+this.id_mode)
+    console.log("modelo traido mod "+this.id_mode)
     
     // this.sharedDataService.datos$.subscribe(data => {
     //   this.dataSource = VALOR;
@@ -189,10 +189,10 @@ export class DialogoModeloModComponent implements OnInit {
   }
   
   listarIndicadores(): void {
-    // console.log(this.modelo.id_modelo)
+    console.log(this.modelo.id_modelo)
     this.indicadorService.getIndicadorPorModelo(this.modelo.id_modelo).subscribe(
       (data: Indicador[]) => {
-        // console.log(data)
+        console.log(data)
         this.dataSource = data;
       },
       (error: any) => {
@@ -259,7 +259,7 @@ export class DialogoModeloModComponent implements OnInit {
             console.error('Error al eliminar asignación:', error);
             if (error instanceof HttpErrorResponse) {
               this.mensaje=(error.error+" ").toString();
-              // console.log('Mensaje del backend:', error.error); 
+              console.log('Mensaje del backend:', error.error); 
               
             }
           }
@@ -291,8 +291,8 @@ export class DialogoModeloModComponent implements OnInit {
             visible:true,
             usuario:null
           };
-          // console.log('Asignaciones indicadores:',  asignacionIndicador.indicador.id_indicador+"id "+id);
-          // console.log('Asignaciones modelo:',  asignacionIndicador.modelo.id_modelo+"id modelo "+this.modelo.id_modelo);
+          console.log('Asignaciones indicadores:',  asignacionIndicador.indicador.id_indicador+"id "+id);
+          console.log('Asignaciones modelo:',  asignacionIndicador.modelo.id_modelo+"id modelo "+this.modelo.id_modelo);
           return this.asignacionIndicadorService.createAsignacionIndicador(asignacionIndicador);
         });
   
@@ -335,7 +335,7 @@ export class DialogoModeloModComponent implements OnInit {
       data: { /* datos que se pasan al diálogo */ }
     });
     dialogRef.afterClosed().subscribe(result => {
-      // console.log('El diálogo se cerró');
+      console.log('El diálogo se cerró');
     });
   }
 
@@ -344,7 +344,7 @@ export class DialogoModeloModComponent implements OnInit {
     this.asignacionAdminService.listarAsignarResponsable().subscribe(data => {
       data.forEach((element: any) => {
         this.asignacionAdminService.deleteAsignacion_Admin(element.id_asignacion).subscribe(data => {
-          // console.log(data);
+          console.log(data);
         });
       });
     })
@@ -357,7 +357,7 @@ export class DialogoModeloModComponent implements OnInit {
         element.porc_obtenido = 0;
         element.porc_utilida_obtenida = 0;
         this.indicadorService.ponderarIndicador(element.id_indicador, element).subscribe(data => {
-          // console.log(data);
+          console.log(data);
         });
       });
     })

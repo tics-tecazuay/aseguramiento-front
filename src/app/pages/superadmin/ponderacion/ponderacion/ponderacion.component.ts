@@ -44,7 +44,7 @@ export class PonderacionComponent implements OnInit {
     this.servicePonderacion.guardarPonderacion(this.ponderacionClase)
       .subscribe(
         (data: any) => {
-          // console.log('Ponderacion creada con éxito:', data);
+          console.log('Ponderacion creada con éxito:', data);
           Swal.fire(
             'Ponderacion Registrada!',
             'success'
@@ -64,20 +64,20 @@ export class PonderacionComponent implements OnInit {
     this.servicePonderacion.listarPonderacion().subscribe(data => {
       this.dataSource = data;
     });
-    // console.log(this.dataSource+'lista');
+    console.log(this.dataSource+'lista');
   }
 
   listar() {
     this.modeloService.listarModelo().subscribe(data => {
       this.dataSource = data;
     });
-    // console.log(this.dataSource+'lista');
+    console.log(this.dataSource+'lista');
   }
 
   modificarPonderacion() {
     this.servicePonderacion.actualizar(this.ponderacionClase.id_ponderacion, this.ponderacionClase)
       .subscribe(data => {
-        // console.log('Ponderacion creada con éxito:', data);
+        console.log('Ponderacion creada con éxito:', data);
 
         this.listarPonderacion();
       })

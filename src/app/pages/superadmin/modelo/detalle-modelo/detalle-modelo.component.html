@@ -2,11 +2,9 @@
   <div class="container bg-light border border-start-0 rounded-4">
     <blockquote class="blockquote text-dark" style="margin-top: 5%">
       <h1 style="text-transform: uppercase">
-        <strong
-          ><a style="cursor: pointer" (click)="irinicio()">Modelos </a>
+        <strong><a style="cursor: pointer" (click)="irinicio()">Modelos </a>
           >
-          <a>{{ model.nombre }} </a></strong
-        >
+          <a>{{ model.nombre }} </a></strong>
       </h1>
     </blockquote>
     <div class="container contenerdor">
@@ -37,12 +35,7 @@
           <div *ngIf="model" class="d-flex align-items-center">
             <b style="padding-right: 2%">IR A PONDERACION DEL MODELO </b>
 
-            <button
-              mat-icon-button
-              (click)="irPonderacionModelo(model)"
-              *ngIf="!ocultarBoton"
-              class="boton"
-            >
+            <button mat-icon-button (click)="irPonderacionModelo(model)" *ngIf="!ocultarBoton" class="boton">
               <mat-icon class="iconoB">assignment</mat-icon>
             </button>
           </div>
@@ -50,26 +43,16 @@
       </div>
     </div>
 
-    <ng-container
-      *ngIf="mostrarPrincipal === 0; then template1; else template2"
-    ></ng-container>
+    <ng-container *ngIf="mostrarPrincipal === 0; then template1; else template2"></ng-container>
     <ng-template #template1>
       <div class="table-container">
         <table mat-table [dataSource]="dataSource" multiTemplateDataRows>
-          <ng-container
-            matColumnDef="{{ column }}"
-            *ngFor="let column of columnsToDisplay"
-          >
+          <ng-container matColumnDef="{{ column }}" *ngFor="let column of columnsToDisplay">
             <th mat-header-cell *matHeaderCellDef>{{ columnNames[column] }}</th>
             <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
           </ng-container>
           <ng-container matColumnDef="subcriterios">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              aria-label="row actions"
-              class="center-encabezado"
-            >
+            <th mat-header-cell *matHeaderCellDef aria-label="row actions" class="center-encabezado">
               Detalle Subcriterios
             </th>
             <td mat-cell *matCellDef="let element">
@@ -79,96 +62,52 @@
             </td>
           </ng-container>
           <ng-container matColumnDef="matriz">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              aria-label="row actions"
-              class="center-encabezado"
-            >
+            <th mat-header-cell *matHeaderCellDef aria-label="row actions" class="center-encabezado">
               Matriz de Evaluación
             </th>
             <td mat-cell *matCellDef="let element">
-              <button
-                mat-icon-button
-                (click)="evaluacion($event, element)"
-                class="boton"
-              >
+              <button mat-icon-button (click)="evaluacion($event, element)" class="boton">
                 <mat-icon class="iconoB">check_circle</mat-icon>
               </button>
             </td>
           </ng-container>
           <ng-container matColumnDef="ponderacion">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              aria-label="row actions"
-              class="center-encabezado"
-            >
+            <th mat-header-cell *matHeaderCellDef aria-label="row actions" class="center-encabezado">
               Ponderación
             </th>
             <td mat-cell *matCellDef="let element">
-              <button
-                mat-icon-button
-                (click)="ponderacionCriterio($event, element)"
-                class="boton"
-              >
+              <button mat-icon-button (click)="ponderacionCriterio($event, element)" class="boton">
                 <mat-icon class="iconoB">assignment</mat-icon>
               </button>
             </td>
           </ng-container>
 
           <ng-container matColumnDef="asignar">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              aria-label="row actions"
-              class="center-encabezado"
-            >
+            <th mat-header-cell *matHeaderCellDef aria-label="row actions" class="center-encabezado">
               Asignación
             </th>
             <td mat-cell *matCellDef="let element">
-              <button
-                mat-icon-button
-                (click)="asignar_criterio($event, element)"
-                class="boton"
-              >
+              <button mat-icon-button (click)="asignar_criterio($event, element)" class="boton">
                 <mat-icon class="iconoB">account_box</mat-icon>
               </button>
             </td>
           </ng-container>
 
           <ng-container matColumnDef="expandedDetail">
-            <td
-              mat-cell
-              *matCellDef="let element"
-              [attr.colspan]="columnsToDisplayWithExpand.length"
-            ></td>
+            <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length"></td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
-          <tr
-            mat-row
-            *matRowDef="let element; columns: columnsToDisplayWithExpand"
-            class="example-element-row"
-          ></tr>
-          <tr
-            mat-row
-            *matRowDef="let row; columns: ['expandedDetail']"
-            class="example-detail-row"
-          ></tr>
+          <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand" class="example-element-row"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
         </table>
-        <mat-paginator
-          [pageSizeOptions]="[5, 10, 20]"
-          showFirstLastButtons
-          aria-label="Select page of periodic elements"
-        >
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+          aria-label="Select page of periodic elements">
         </mat-paginator>
       </div>
       <!-- fin tabla  -->
       <div class="table-container">
-        <ng-container
-          *ngIf="mostrarSecundario === 1; then template2"
-        ></ng-container>
+        <ng-container *ngIf="mostrarSecundario === 1; then template2"></ng-container>
       </div>
     </ng-template>
 
@@ -178,14 +117,10 @@
           <strong>Reportes ponderacion </strong>
         </h1>
       </blockquote>
-      <table
-        mat-table
-        [dataSource]="dataSourcePonderacion"
-        class="mat-elevation-z8"
-      >
+      <table mat-table [dataSource]="dataSourcePonderacion" class="mat-elevation-z8">
         <ng-container matColumnDef="contador">
-          <th mat-header-cell *matHeaderCellDef>ID</th>
-          <td mat-cell *matCellDef="let element">
+          <th mat-header-cell *matHeaderCellDef [style.display]="ocultar ? '' : 'none'">ID</th>
+          <td mat-cell *matCellDef="let element" [style.display]="ocultar  ? '' : 'none'">
             {{ element.contador }}
           </td>
         </ng-container>

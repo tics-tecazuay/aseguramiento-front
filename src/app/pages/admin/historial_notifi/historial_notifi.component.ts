@@ -21,6 +21,7 @@ export class Historial_notifiComponent implements OnInit, AfterViewInit {
   user: any = null;
   numNotificacionesSinLeer: number = 0;
   filterPost = '';
+  idUserLogged!: number;
   
   ngAfterViewInit() {
     console.log('Paginator:', this.paginator);
@@ -46,6 +47,7 @@ export class Historial_notifiComponent implements OnInit, AfterViewInit {
       }
     );
 
+    this.idUserLogged = this.user.id;
     this.dataSource.filterPredicate = (data: Notificacion, filter: string) => {
       const searchTerms = filter.split(' '); // Divide el filtro en términos individuales
       return searchTerms.every(term =>
@@ -59,24 +61,25 @@ export class Historial_notifiComponent implements OnInit, AfterViewInit {
    }
 
   listarnot(id: any) {
-    if (this.rol == "ADMIN" || this.rol == "SUPERADMIN") {
-      console.log("rol john "+this.rol)
+    console.log("ID: " + id);
+    if (this.rol == "ADMIN") {
+      console.log("ROL: " + this.rol);
       // Cargar notificaciones del rol ADMIN
-      this.notificacionService.allnotificacionTODO(this.rol).subscribe(
+      this.notificacionService.allnotificacionTODO(this.rol,this.idUserLogged).subscribe(
         (data: Notificacion[]) => {
           this.notificaciones = data;
-          this.dataSource.data =data;
-          console.log("john"+data)
+          this.dataSource.data = data;
+          console.log("ENVIANDO" + data);
           this.numNotificacionesSinLeer = this.notificaciones.filter(n => !n.visto).length;
           this.numNotificacionesSinLeer = this.dataSource.data.filter(n => !n.visto).length;
-
+  
           // Cargar notificaciones propias por id
           this.notificacionService.getNotificaciones(id).subscribe(
             (dataPropias: Notificacion[]) => {
               this.notificaciones = this.notificaciones.concat(dataPropias);
-              this.dataSource.data =this.dataSource.data.concat(dataPropias);
+              this.dataSource.data = this.dataSource.data.concat(dataPropias);
               this.numNotificacionesSinLeer += dataPropias.filter(n => !n.visto).length;
-
+  
             },
             (errorPropias: any) => {
               console.error('No se pudieron listar las notificaciones propias');
@@ -87,20 +90,22 @@ export class Historial_notifiComponent implements OnInit, AfterViewInit {
           console.error('No se pudieron listar las notificaciones');
         }
       );
-    } else {
-      this.notificacionService.getNotificaciones(id).subscribe(
+    } else if (this.rol == "SUPERADMIN") {
+      // Si el rol es SUPERADMIN, cargar todas las notificaciones
+      this.notificacionService.todonotificaciones().subscribe(
         (data: Notificacion[]) => {
           this.notificaciones = data;
-          this.dataSource.data=data
+          this.dataSource.data = data;
           this.numNotificacionesSinLeer = this.notificaciones.filter(n => !n.visto).length;
-       this.numNotificacionesSinLeer= this.dataSource.data.filter(n => !n.visto).length;
+          this.numNotificacionesSinLeer = this.dataSource.data.filter(n => !n.visto).length;
         },
         (error: any) => {
-          console.error('No se pudieron listar las notificaciones');
+          console.error('No se pudieron listar todas las notificaciones');
         }
       );
-    }
+    } 
   }
+  
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }

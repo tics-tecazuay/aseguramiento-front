@@ -24,7 +24,8 @@ export class CuanlitativaComponent implements OnInit {
   lastPageLabel = 'Última';
   firstPageLabel='Primera';
   previousPageLabel='Anterior';
-
+  ocultar=false;
+  
   rango:any= (page: number, pageSize: number, length: number) => {
     if (length == 0 || pageSize == 0) {
       return `0 de ${length}`;
@@ -84,11 +85,11 @@ export class CuanlitativaComponent implements OnInit {
 
   guardarCuali(cualiNu: Cualitativa) {
     this.cuali = this.frmCualitativa.value;
-    // console.log(cualiNu)
+    console.log(cualiNu)
     this.service.crearCuali(cualiNu).
       subscribe(
         (reponse) => {
-          // console.log('Formula Cualitativa creado con éxito:', reponse);
+          console.log('Formula Cualitativa creado con éxito:', reponse);
           this.cuali = new Cualitativa();
           this.listarCuali();
           this.guardadoExitoso = true;
@@ -118,7 +119,7 @@ export class CuanlitativaComponent implements OnInit {
         (data: any) => {
           this.listaCualitativa = data;
           this.dataSource.data= this.listaCualitativa
-          // console.log(this.listaCualitativa)
+          console.log(this.listaCualitativa)
         },
         (error: any) => {
           console.error('Error al listar las formulas cualitativas', error);
@@ -144,7 +145,7 @@ export class CuanlitativaComponent implements OnInit {
   }
 
   actualizarCuali() {
-    // console.log(this.cuali);
+    console.log(this.cuali);
     this.service.actualizarCuali(this.cuali)
       .subscribe(response => {
         this.cuali = new Cualitativa();

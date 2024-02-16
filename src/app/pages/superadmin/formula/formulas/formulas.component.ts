@@ -19,6 +19,8 @@ export class FormulasComponent implements OnInit {
   lastPageLabel = 'Última';
   firstPageLabel='Primera';
   previousPageLabel='Anterior';
+  ocultar=false;
+  
   rango:any= (page: number, pageSize: number, length: number) => {
     if (length == 0 || pageSize == 0) {
       return `0 de ${length}`;
@@ -72,29 +74,29 @@ export class FormulasComponent implements OnInit {
 
   guardar() {
     this.formu = this.frmFormula.value;
-    // console.log(this.formu)
+    console.log(this.formu)
     this.service.crear(this.formu).
       subscribe(
         (reponse) => {
-          // console.log('Formula creada con éxito:', reponse);
+          console.log('Formula creada con éxito:', reponse);
           this.guardadoExitoso = true;
           this.listar();
 
         },
         (error) => {
-          // console.error('Error al crear la formula:', error);
+          console.error('Error al crear la formula:', error);
         }
       )
   }
 
   eliminar(formula: Formulas) {
-    // console.log(formula);
+    console.log(formula);
     this.service.eliminar(formula).
       subscribe((reponse) => {
         this.listar();
       },
         (error: any) => {
-          // console.error('Error al listar los criterios al eliminar:', error);
+          console.error('Error al listar los criterios al eliminar:', error);
         })
   }
 

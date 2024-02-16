@@ -47,7 +47,7 @@ export class DialogoModeloComponent implements OnInit {
     this.sharedDataService.datos$.subscribe(data => {
       this.dataSource = VALOR;
       this.dataSource = data;
-      // console.log(this.dataSource);
+      console.log(this.dataSource);
     });
 
     this.isLoggedIn = this.login.isLoggedIn();
@@ -59,11 +59,11 @@ export class DialogoModeloComponent implements OnInit {
 
       }
     );
-    // console.log(this.user);
+    console.log(this.user);
     this.modelo_service.getModeMaximo().subscribe(data => {
       this.idmax = data.id_modelo;
       
-      // console.log("id maximo traido"+this.idmax);
+      console.log("id maximo traido"+this.idmax);
     });
     
   }
@@ -84,13 +84,13 @@ export class DialogoModeloComponent implements OnInit {
 
     this.modelo_service.createModelo(this.modelo).subscribe(
       response => {
-        // console.log(response);
+        console.log(response);
         this.dataSource.forEach((element: any) => {
           this.asignacionIndicador.indicador = element;
           this.asignacionIndicador.modelo = response;
           this.asignacionIndicadorService.createAsignacionIndicador(this.asignacionIndicador).subscribe(
             (result) => {
-              // console.log(result);
+              console.log(result);
               this.reiniciarIndicador();
               this.bloquearModelo(response.id_modelo);
               this.sharedDataService.agregarDatos([]);
@@ -139,7 +139,7 @@ export class DialogoModeloComponent implements OnInit {
       data: { /* datos que se pasan al diálogo */ }
     });
     dialogRef.afterClosed().subscribe(result => {
-      // console.log('El diálogo se cerró');
+      console.log('El diálogo se cerró');
     });
   }
 
@@ -148,7 +148,7 @@ export class DialogoModeloComponent implements OnInit {
     this.asignacionAdminService.listarAsignarResponsable().subscribe(data => {
       data.forEach((element: any) => {
         this.asignacionAdminService.deleteAsignacion_Admin(element.id_asignacion).subscribe(data => {
-          // console.log(data);
+          console.log(data);
         });
       });
     })
@@ -158,7 +158,7 @@ export class DialogoModeloComponent implements OnInit {
     this.copiando = true;
     this.secondFormGroup.get('secondCtrl')?.clearValidators();
     this.secondFormGroup.get('secondCtrl')?.updateValueAndValidity();
-    // console.log("id copiado "+this.idmax);
+    console.log("id copiado "+this.idmax);
     // if (this.modelo.fecha_inicio == null || this.modelo.fecha_fin == null || this.modelo.fecha_final_act == null || this.modelo.nombre == null || this.dataSource.length == 0) {
     //   Swal.fire('Error', `Debe llenar todos los campos`, 'error');
     //   return;
@@ -171,11 +171,11 @@ export class DialogoModeloComponent implements OnInit {
   
     this.modelo_service.createModelo(this.modelo).subscribe(
       nuevoModelo => {
-        // console.log("Guardado datos del nuevo modelo: " + JSON.stringify(nuevoModelo));
+        console.log("Guardado datos del nuevo modelo: " + JSON.stringify(nuevoModelo));
   
         this.asignacionIndicadorService.getasignaindi(this.idmax).subscribe(
           asignaciones => {
-            // console.log('Asignaciones de indicadores del último modelo:', JSON.stringify(asignaciones));
+            console.log('Asignaciones de indicadores del último modelo:', JSON.stringify(asignaciones));
   
             const asignacionObservables = asignaciones.map(asignacion => {
               const nuevaAsignacion: AsignacionIndicador = {
@@ -188,7 +188,7 @@ export class DialogoModeloComponent implements OnInit {
   
             forkJoin(asignacionObservables).subscribe(
               resultados => {
-                // console.log("Todas las asignaciones creadas:", resultados);
+                console.log("Todas las asignaciones creadas:", resultados);
                 this.copiando = false;
                 this.dialogRef.close();
                 Swal.fire('Éxito', 'El modelo se ha copiado correctamente', 'success');
@@ -284,7 +284,7 @@ export class DialogoModeloComponent implements OnInit {
         element.porc_obtenido = 0;
         element.porc_utilida_obtenida = 0;
         this.indicadorService.ponderarIndicador(element.id_indicador, element).subscribe(data => {
-          // console.log(data);
+          console.log(data);
         });
       });
     })
@@ -294,7 +294,7 @@ export class DialogoModeloComponent implements OnInit {
     this.modelo_service.listarModeloExcepto(id).subscribe(data => {
       data.forEach((element: any) => {
         this.modelo_service.eliminarlogic(element.id_modelo).subscribe(data => {
-          // console.log(data);
+          console.log(data);
         });
       });
     });

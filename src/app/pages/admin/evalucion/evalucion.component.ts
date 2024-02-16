@@ -10,7 +10,6 @@ import { Asigna_Evi } from 'src/app/models/Asignacion-Evidencia';
 import { Criterio } from 'src/app/models/Criterio';
 import { Evidencia } from 'src/app/models/Evidencia';
 import { Fenix } from 'src/app/models/Fenix';
-import { Modelo } from 'src/app/models/Modelo';
 import { Notificacion } from 'src/app/models/Notificacion';
 import { Persona2 } from 'src/app/models/Persona2';
 import { Usuario2 } from 'src/app/models/Usuario2';
@@ -32,28 +31,29 @@ let ELEMENT_DATA: Fenix[] = [];
   styleUrls: ['./evalucion.component.css']
 })
 export class EvalucionComponent implements OnInit {
-  columnas: string[] = ['id', 'nombre', 'rol', 'usuario','evidencia', 'actions'];
-  columnasEvidencia: string[] = ['subcriterio', 'indicador', 'descripcion', 'idevi','actions'];
-  columnasEvidenciaAsignacion: string[] = ['usuario','criterio','subcriterio', 'evidencia',  'idasigna', 'ideviden','descripcion','inicio','fin', 'actions'];
+  columnas: string[] = ['id', 'nombre', 'rol', 'usuario', 'evidencia', 'actions'];
+  columnasEvidencia: string[] = ['subcriterio', 'indicador', 'descripcion', 'idevi', 'actions'];
+  columnasEvidenciaAsignacion: string[] = ['usuario', 'criterio', 'subcriterio', 'evidencia', 'idasigna', 'ideviden', 'descripcion', 'inicio', 'fin', 'actions'];
   rowspanArray: number[] = [];
-  id_mod!:number;
+  id_mod!: number;
   spans2: any[] = [];
-  idasigna!:number;
+  idasigna!: number;
   asignar: Asigna_Evi = new Asigna_Evi();
   asignar2: Asigna_Evi = new Asigna_Evi();
-  titulocrite!:string;
+  titulocrite!: string;
+  idUsuarioAsignador!: number;
   public mostrarBotonEditarFecha: boolean = false;
   //Cambiar texto tabla
   itemsPerPageLabel = 'Datos por página';
   nextPageLabel = 'Siguiente';
   lastPageLabel = 'Última';
-  firstPageLabel='Primera';
-  previousPageLabel='Anterior';
-  rango:any= (page: number, pageSize: number, length: number) => {
+  firstPageLabel = 'Primera';
+  previousPageLabel = 'Anterior';
+  rango: any = (page: number, pageSize: number, length: number) => {
     if (length == 0 || pageSize == 0) {
       return `0 de ${length}`;
     }
-  
+
     length = Math.max(length, 0);
     const startIndex = page * pageSize;
     const endIndex =
@@ -65,17 +65,16 @@ export class EvalucionComponent implements OnInit {
   //
   usuarioGuardar = new Usuario2();
   dataSource2 = new MatTableDataSource<ResponsableProjection>();
-  dataSource3 :any[] = [];
+  dataSource3: any[] = [];
   spans: any[] = [];
-  dataSource4 :any[] = [];
+  dataSource4: any[] = [];
   fenix: Fenix = new Fenix();
   listaPersonas: Persona2[] = [];
   listaUsuarios: ResponsableProjection[] = [];
-  listaUsuariosResponsables: ResponsableProjection[] = [];
   listaEvidencias: AsigEvidProjection[] = [];
-  selectedCriterio: number=0;
+  selectedCriterio: number = 0;
   listaAsignaEvidencias: AsignaProjection[] = [];
-  listacriterios:Criterio[] = [];
+  listacriterios: Criterio[] = [];
   filterPost = '';
   personaSele = new Persona2();
   evidenciaSele = new Evidencia();
@@ -96,37 +95,37 @@ export class EvalucionComponent implements OnInit {
   isLoggedIn = false;
   user: any = null;
   //
-  noti=new Notificacion();
-  idusuario:any=null;
-  nombre:any=null;
-  inicio:any;
-  fin:any;
-  nombreasignado:any=null;
-  verSubcriterio=false;
-  verIndicador=true;
-  verDescripcion=true;
-  ocultar=false;
+  noti = new Notificacion();
+  idusuario: any = null;
+  nombre: any = null;
+  inicio: any;
+  fin: any;
+  nombreasignado: any = null;
+  verSubcriterio = false;
+  verIndicador = true;
+  verDescripcion = true;
+  ocultar = false;
   rowSpanValue: number = 0;
-  vernomIndicador=true;
+  vernomIndicador = true;
   ngAfterViewInit() {
-     // Usuarios
-     this.dataSource2.paginator = this.paginator|| null
-     // Evidencias
+    // Usuarios
+    this.dataSource2.paginator = this.paginator || null
+    // Evidencias
     // this.dataSource3.paginator = this.paginator2|| null
-     // Asignaciones
+    // Asignaciones
     // this.dataSource4.paginator = this.paginator3|| null
     this.Listado();
   }
 
   constructor(
     private personaService: PersonaService, private usuariosService: UsuarioService,
-    private fenix_service: FenixService, private criteservice:CriteriosService,
+    private fenix_service: FenixService, private criteservice: CriteriosService,
     private responsableService: AsignacionResponsableService,
     private evidenciaService: EvidenciaService,
     private asignarEvidenciaService: AsignaEvidenciaService,
     private formBuilder: FormBuilder,
     public login: LoginService, private paginatorIntl: MatPaginatorIntl,
-    private notificationService:NotificacionService
+    private notificationService: NotificacionService
   ) {
     this.formulario = this.formBuilder.group({
       username: { value: '', disabled: true },
@@ -134,12 +133,10 @@ export class EvalucionComponent implements OnInit {
     });
     this.paginatorIntl.nextPageLabel = this.nextPageLabel;
     this.paginatorIntl.lastPageLabel = this.lastPageLabel;
-    this.paginatorIntl.firstPageLabel=this.firstPageLabel;
-    this.paginatorIntl.previousPageLabel=this.previousPageLabel;
+    this.paginatorIntl.firstPageLabel = this.firstPageLabel;
+    this.paginatorIntl.previousPageLabel = this.previousPageLabel;
     this.paginatorIntl.itemsPerPageLabel = this.itemsPerPageLabel;
-    this.paginatorIntl.getRangeLabel=this.rango;
-    this.dataSource2.data = this.listaUsuarios;
-    
+    this.paginatorIntl.getRangeLabel = this.rango;
   }
 
   ngOnInit(): void {
@@ -152,18 +149,19 @@ export class EvalucionComponent implements OnInit {
 
       }
     );
-this.criterioSeleccionado();
-this.criteservice.getCriterios().subscribe(
-  data => {
-    this.listacriterios=data;
-  }
-);
+
+    this.criterioSeleccionado();
+    this.criteservice.getCriterios().subscribe(
+      data => {
+        this.listacriterios = data;
+      }
+    );
+    this.idUsuarioAsignador = this.user.id;
     this.personaService.getPersonas().subscribe(
       listaPerso => this.listaPersonas = listaPerso);
-
+    this.modeloMax();
     this.Listado();
     this.ListarAsignacion();
-    this.modeloMax();
   }
 
   aplicar() {
@@ -173,7 +171,7 @@ this.criteservice.getCriterios().subscribe(
     this.dataSource3.forEach(element => {
       element.Colores = this.generarColor2();
     });
-   
+
   }
   generarColor(): string {
     const r = Math.floor(Math.random() * 256);
@@ -187,19 +185,20 @@ this.criteservice.getCriterios().subscribe(
     const b = Math.floor(Math.random() * 256);
     return `rgba(${r}, ${g}, ${b}, 0.3)`;
   }
-  
- 
+
+
   calcularRowSpanValue(index: number): void {
     this.rowSpanValue = this.getRowSpan2('descripcion', index);
   }
   modeloMax() {
     this.criteservice.getModeMaximo().subscribe((data) => {
-      this.id_mod =data.id_modelo;
-    this.inicio=data.fecha_inicio;
-  this.fin=data.fecha_fin;})
-    }
+      this.id_mod = data.id_modelo;
+      this.inicio = data.fecha_inicio;
+      this.fin = data.fecha_fin;
+    })
+  }
 
-  
+
   cacheSpan2(key: string, accessor: (d: any) => any) {
     for (let i = 0; i < this.dataSource3.length;) {
       let currentValue = accessor(this.dataSource3[i]);
@@ -211,28 +210,28 @@ this.criteservice.getCriterios().subscribe(
         }
         count++;
       }
-  
+
       if (!this.spans[i]) {
         this.spans[i] = {};
       }
-  
+
       this.spans[i][key] = count;
       i += count;
     }
   }
-  
-  
+
+
   getRowSpan2(col: any, index: any) {
     return this.spans[index] && this.spans[index][col];
   }
   notificaruser() {
     this.noti.fecha = new Date();
     this.noti.rol = "";
-    this.noti.mensaje = this.user?.persona?.primer_nombre+" "+this.user?.persona?.primer_apellido+" te ha asignado la evidencia " + this.nombreasignado;
+    this.noti.mensaje = this.user?.persona?.primer_nombre + " " + this.user?.persona?.primer_apellido + " te ha asignado la evidencia " + this.nombreasignado;
     this.noti.visto = false;
-    this.noti.usuario =  this.idusuario;
-    this.noti.url="/res/evidenasignada";
-    this.noti.idactividad=0;
+    this.noti.usuario = this.idusuario;
+    this.noti.url = "/res/evidenasignada";
+    this.noti.idactividad = 0;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
@@ -243,16 +242,16 @@ this.criteservice.getCriterios().subscribe(
       }
     );
   }
-  
+
   notificaradmin() {
     this.noti.fecha = new Date();
     this.noti.rol = "ADMIN";
-    this.noti.mensaje = this.user?.persona?.primer_nombre+" "+this.user?.persona?.primer_apellido+" ha asignado la evidencia " + this.nombreasignado
-    +" a "+this.nombre;
+    this.noti.mensaje = this.user?.persona?.primer_nombre + " " + this.user?.persona?.primer_apellido + " ha asignado la evidencia " + this.nombreasignado
+      + " a " + this.nombre;
     this.noti.visto = false;
-    this.noti.usuario =  0;
-    this.noti.url="/adm/detalleAprobarRechazar";
-    this.noti.idactividad=0;
+    this.noti.usuario = 0;
+    this.noti.url = "/adm/detalleAprobarRechazar";
+    this.noti.idactividad = 0;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
@@ -266,12 +265,12 @@ this.criteservice.getCriterios().subscribe(
   notificarsuperadmin() {
     this.noti.fecha = new Date();
     this.noti.rol = "SUPERADMIN";
-    this.noti.mensaje = this.user?.persona?.primer_nombre+" "+this.user?.persona?.primer_apellido+" ha asignado la evidencia " + this.nombreasignado
-    +" a "+this.nombre;
+    this.noti.mensaje = this.user?.persona?.primer_nombre + " " + this.user?.persona?.primer_apellido + " ha asignado la evidencia " + this.nombreasignado
+      + " a " + this.nombre;
     this.noti.visto = false;
-    this.noti.usuario =  0;
-    this.noti.url="/sup/aprobaciones";
-    this.noti.idactividad=0;
+    this.noti.usuario = 0;
+    this.noti.url = "/sup/aprobaciones";
+    this.noti.idactividad = 0;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
@@ -285,12 +284,12 @@ this.criteservice.getCriterios().subscribe(
   notificarelimadmin() {
     this.noti.fecha = new Date();
     this.noti.rol = "ADMIN";
-    this.noti.mensaje = this.user?.persona?.primer_nombre+" "+this.user?.persona?.primer_apellido+" ha eliminado la asignacion de la evidencia " + this.nombreasignado
-    +" a "+this.nombre;
+    this.noti.mensaje = this.user?.persona?.primer_nombre + " " + this.user?.persona?.primer_apellido + " ha eliminado la asignacion de la evidencia " + this.nombreasignado
+      + " a " + this.nombre;
     this.noti.visto = false;
-    this.noti.usuario =  0;
-    this.noti.url="/adm/detalleAprobarRechazar";
-    this.noti.idactividad=0;
+    this.noti.usuario = 0;
+    this.noti.url = "/adm/detalleAprobarRechazar";
+    this.noti.idactividad = 0;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
@@ -304,12 +303,12 @@ this.criteservice.getCriterios().subscribe(
   notificarelsupern() {
     this.noti.fecha = new Date();
     this.noti.rol = "SUPERADMIN";
-    this.noti.mensaje = this.user?.persona?.primer_nombre+" "+this.user?.persona?.primer_apellido+" ha eliminado la asignacion de la evidencia " + this.nombreasignado
-    +" a "+this.nombre;
+    this.noti.mensaje = this.user?.persona?.primer_nombre + " " + this.user?.persona?.primer_apellido + " ha eliminado la asignacion de la evidencia " + this.nombreasignado
+      + " a " + this.nombre;
     this.noti.visto = false;
-    this.noti.usuario =  0;
-    this.noti.url="/sup/aprobaciones";
-    this.noti.idactividad=0;
+    this.noti.usuario = 0;
+    this.noti.url = "/sup/aprobaciones";
+    this.noti.idactividad = 0;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
@@ -333,19 +332,19 @@ this.criteservice.getCriterios().subscribe(
 
 
   //consumir servicio de fenix para obtener datos de la persona por cedula
-  public consultarPorNombreCompleto(){
-    if (this.fenix.primer_nombre == null && this.fenix.primer_apellido == null || this.fenix.primer_nombre == "" && this.fenix.primer_apellido == ""){
+  public consultarPorNombreCompleto() {
+    if (this.fenix.primer_nombre == null && this.fenix.primer_apellido == null || this.fenix.primer_nombre == "" && this.fenix.primer_apellido == "") {
       Swal.fire('Error', 'Debe llenar los campos', 'error');
-      return; 
+      return;
     }
-    this.fenix_service.getDocenteByNombresCompletos(this.fenix.primer_nombre,this.fenix.primer_apellido).subscribe(
+    this.fenix_service.getDocenteByNombresCompletos(this.fenix.primer_nombre, this.fenix.primer_apellido).subscribe(
       (result) => {
         this.dataSource = result;
         console.log(this.dataSource);
       }
     )
   }
-  
+
   public consultarPorCedula() {
     if (this.fenix.cedula == null || this.fenix.cedula == '') {
       Swal.fire('Error', 'Debe ingresar una cedula', 'error');
@@ -415,7 +414,7 @@ this.criteservice.getCriterios().subscribe(
       return;
     }
   }
-  
+
   public seleccionar(element: any) {
     this.personaSele.cedula = element.cedula;
     this.personaSele.primer_apellido = element.primer_apellido;
@@ -432,11 +431,12 @@ this.criteservice.getCriterios().subscribe(
 
   public seleccionarUsuario(elemento: any) {
     this.usuarioSele.id = elemento.id;
+    console.log("id traido "+this.usuarioSele.id)
     this.usuarioSele.username = elemento.usua;
     this.usuarioSele.persona = elemento.nombres;
-    this.nombre=elemento.nombres;
+    this.nombre = elemento.nombres;
   }
-
+  
   public AsignaUsuario(element: any) {
     if (this.asignar.fecha_inicio == null || this.asignar.fecha_fin == null) {
       Swal.fire('Error', `Debe llenar todos los campos`, 'error');
@@ -448,24 +448,25 @@ this.criteservice.getCriterios().subscribe(
       return;
     }
     this.asignacion.evidencia.id_evidencia = element.idev;
-    this.nombreasignado=element.descripc;
+    this.nombreasignado = element.descripc;
+    this.asignacion.id_modelo = this.id_mod;
+    this.asignacion.fecha_inicio = this.asignar.fecha_inicio;
+    this.asignacion.fecha_fin = this.asignar.fecha_fin;
     this.asignacion.usuario.id = this.usuarioSele.id;
-    this.asignacion.id_modelo=this.id_mod;
-    this.asignacion.fecha_inicio=this.asignar.fecha_inicio;
-    this.asignacion.fecha_fin=this.asignar.fecha_fin;
+    this.asignacion.id_usuario_asignador = this.idUsuarioAsignador;
     console.log(this.asignacion)
     this.asignarEvidenciaService.createAsigna(this.asignacion)
       .subscribe(
         (response) => {
-          this.idusuario=this.usuarioSele.id;
-          console.log("Nombre asignado "+this.nombreasignado+ " Nombre "+this.nombre+" id: "+this.idusuario);
+          this.idusuario = this.usuarioSele.id;
+          console.log("Nombre asignado " + this.nombreasignado + " Nombre " + this.nombre + " id: " + this.idusuario);
           this.notificaradmin();
           this.notificarsuperadmin();
           this.notificaruser();
           this.listar();
           this.Listado();
           this.ListarAsignacion();
-          
+
           Swal.fire(
             'Exitoso',
             'Se ha completado la asignación con exito',
@@ -490,27 +491,26 @@ this.criteservice.getCriterios().subscribe(
     return fechaFin < fechaActual;
   }
 
-
   public editarFecha(elemento: any): void {
     // Aquí puedes implementar la lógica para editar la fecha
     // Puedes mostrar un cuadro de diálogo o redirigir a una página de edición de fecha.
   }
-  
+
   showSubcriterio() {
     this.verSubcriterio = !this.verSubcriterio;
   }
-  
+
   showIndicador() {
     this.verIndicador = !this.verIndicador;
   }
 
   listar() {
-    
+
     this.evidenciaService.getevitab(this.selectedCriterio).subscribe(
-      (listaEvi:AsigEvidProjection[]) => {
+      (listaEvi: AsigEvidProjection[]) => {
         this.listaEvidencias = listaEvi; // Asignar la lista directamente
         this.dataSource3 = this.listaEvidencias;
-       
+
         setTimeout(() => {
           this.aplicar();
         }, 0);
@@ -525,41 +525,41 @@ this.criteservice.getCriterios().subscribe(
     this.mostrarbotonDetalle = false;
   }
 
- ListarAsignacion() {
-  this.dataSource4 = [];
-    this.spans2 =[];
-  this.asignarEvidenciaService.getAsignacion().subscribe(
-    (listaAsig:AsignaProjection[]) => {
-      this.listaAsignaEvidencias = listaAsig;
-      this.dataSource4 = this.listaAsignaEvidencias;
-      console.log("DAtos as "+JSON.stringify(this.dataSource4));
-      //'idasigna', 'criterio','subcriterio', 'evidencia', 'usuario', 'descripcion', 'actions'
-      this.cacheSpan('usuario', (d) => d.respon);
-  this.cacheSpan('criterio', (d) => d.respon+d.crite);
-  this.cacheSpan('subcriterio', (d) => d.respon+d.crite + d.subcrite);
-  this.cacheSpan('evidencia', (d) => d.respon+d.crite + d.subcrite+d.indi);
-  this.cacheSpan('idasigna', (d) => d.respon+d.crite + d.subcrite+d.indi+d.idevid);
-  this.cacheSpan('ideviden', (d) => d.respon+d.crite + d.subcrite+d.indi+d.idevid+d.ideviden);
-  this.cacheSpan('descripcion', (d) =>d.respon+ d.crite + d.subcrite+d.indi+d.idevid+d.ideviden+d.descev);
-  })
-}
+  ListarAsignacion() {
+    this.dataSource4 = [];
+    this.spans2 = [];
+    this.asignarEvidenciaService.getAsignacion().subscribe(
+      (listaAsig: AsignaProjection[]) => {
+        this.listaAsignaEvidencias = listaAsig;
+        this.dataSource4 = this.listaAsignaEvidencias;
+        console.log("Datos as " + JSON.stringify(this.dataSource4));
+        //'idasigna', 'criterio','subcriterio', 'evidencia', 'usuario', 'descripcion', 'actions'
+        this.cacheSpan('usuario', (d) => d.respon);
+        this.cacheSpan('criterio', (d) => d.respon + d.crite);
+        this.cacheSpan('subcriterio', (d) => d.respon + d.crite + d.subcrite);
+        this.cacheSpan('evidencia', (d) => d.respon + d.crite + d.subcrite + d.indi);
+        this.cacheSpan('idasigna', (d) => d.respon + d.crite + d.subcrite + d.indi + d.idevid);
+        this.cacheSpan('ideviden', (d) => d.respon + d.crite + d.subcrite + d.indi + d.idevid + d.ideviden);
+        this.cacheSpan('descripcion', (d) => d.respon + d.crite + d.subcrite + d.indi + d.idevid + d.ideviden + d.descev);
+      })
+  }
 
   cacheSpan(key: string, accessor: (d: any) => any) {
     for (let i = 0; i < this.dataSource4.length;) {
       let currentValue = accessor(this.dataSource4[i]);
       let count = 1;
-  
+
       for (let j = i + 1; j < this.dataSource4.length; j++) {
         if (currentValue !== accessor(this.dataSource4[j])) {
           break;
         }
         count++;
       }
-  
+
       if (!this.spans2[i]) {
         this.spans2[i] = {};
       }
-  
+
       this.spans2[i][key] = count;
       i += count;
     }
@@ -571,10 +571,12 @@ this.criteservice.getCriterios().subscribe(
 
   Listado() {
     this.responsableService.getResponsables().subscribe(
-      listaUsua => {
-        this.listaUsuariosResponsables = listaUsua;
-        this.dataSource2.data = this.listaUsuariosResponsables;
-        console.log(this.listaUsuariosResponsables);
+      (listaUsua: ResponsableProjection[]) => {
+        this.listaUsuarios = listaUsua;
+        this.dataSource2.data = this.listaUsuarios;
+        this.dataSource2.connect(); // Añadir esta línea
+        console.log(this.listaUsuarios);
+        console.log(this.dataSource2.data);
       }
     );
   }
@@ -629,9 +631,8 @@ this.criteservice.getCriterios().subscribe(
   }
 
   crearUsuario() {
-    
     console.log(this.usuarioGuardar)
-    this.usuariosService.createUsuario(this.usuarioGuardar, this.rol).subscribe(
+    this.usuariosService.createUsuarioAdm(this.usuarioGuardar, this.rol,this.idUsuarioAsignador ,this.id_mod).subscribe(
       () => {
         Swal.fire(
           'Usuario Registrado!',
@@ -688,16 +689,6 @@ this.criteservice.getCriterios().subscribe(
     ).subscribe();
   }
 
-
-
-
-
-
-
-
-
-
-
   eliminar(element: any) {
     const id = element.id;
 
@@ -709,7 +700,7 @@ this.criteservice.getCriterios().subscribe(
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Eliminar',
-      cancelButtonText:'Cancelar',
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
         this.usuariosService.eliminarUsuarioLogic(id).subscribe((response) => {
@@ -721,18 +712,18 @@ this.criteservice.getCriterios().subscribe(
     });
   }
 
-  EditarAsigna(element: any){
-    this.idasigna= element.idevid;
-    this.asignar2.fecha_inicio=element.ini;
-    this.asignar2.fecha_fin=element.fini;
+  EditarAsigna(element: any) {
+    this.idasigna = element.idevid;
+    this.asignar2.fecha_inicio = element.ini;
+    this.asignar2.fecha_fin = element.fini;
   }
 
-  Actualizarfecha(){
+  Actualizarfecha() {
     if (this.asignar2.fecha_inicio == null || this.asignar2.fecha_fin == null) {
       Swal.fire('Error', `Debe llenar todos los campos`, 'error');
       return;
     }
-  
+
     if (this.asignar2.fecha_inicio >= this.asignar2.fecha_fin) {
       Swal.fire('Error', `La fecha de inicio no puede ser mayor a la fecha fin`, 'error');
       return;
@@ -745,25 +736,25 @@ this.criteservice.getCriterios().subscribe(
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Guardar',
-      cancelButtonText:'Cancelar',
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.asigedit.id_asignacion_evidencia=this.idasigna;
-        this.asigedit.fecha_inicio=this.asignar2.fecha_inicio;
-        this.asigedit.fecha_fin=this.asignar2.fecha_fin;
-        console.log("Datos actualizar "+JSON.stringify(this.asigedit));
-    this.asignarEvidenciaService.editarAsigna(this.asigedit).subscribe((response) => {
-      this.ListarAsignacion();
-    });
+        this.asigedit.id_asignacion_evidencia = this.idasigna;
+        this.asigedit.fecha_inicio = this.asignar2.fecha_inicio;
+        this.asigedit.fecha_fin = this.asignar2.fecha_fin;
+        console.log("Datos actualizar " + JSON.stringify(this.asigedit));
+        this.asignarEvidenciaService.editarAsigna(this.asigedit).subscribe((response) => {
+          this.ListarAsignacion();
+        });
 
-    Swal.fire('Actualizado!', 'Se cambiaron las fechas de las asignaciones.', 'success');
-  }
-});
+        Swal.fire('Actualizado!', 'Se cambiaron las fechas de las asignaciones.', 'success');
+      }
+    });
   }
 
   eliminarAsignacion(element: any) {
     const id = element.idevid;
-   
+
     Swal.fire({
       title: 'Desea eliminarlo la asignación?',
       text: "No podrá revertirlo!",
@@ -772,11 +763,11 @@ this.criteservice.getCriterios().subscribe(
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Eliminar!',
-      cancelButtonText:'Cancelar',
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
         this.notificarelimadmin();
-          this.notificarelsupern();
+        this.notificarelsupern();
         this.asignarEvidenciaService.eliminarAsignaLogic(id).subscribe((response) => {
           this.nombreasignado = element.descev;
           this.ListarAsignacion();
@@ -788,7 +779,7 @@ this.criteservice.getCriterios().subscribe(
   }
 
   Actualizar(usuariosdit: Usuario2) {
-    usuariosdit.id=this.usuariosEdit.id;
+    usuariosdit.id = this.usuariosEdit.id;
     Swal.fire({
       title: '¿Desea modificar los campos?',
       showCancelButton: true,
@@ -798,19 +789,19 @@ this.criteservice.getCriterios().subscribe(
       if (result.isConfirmed) {
 
         this.usuariosService.actualizar(usuariosdit.id, usuariosdit)
-        .subscribe((response: any) => {
-          Swal.fire(
-            'Usuario Modificado!',
-            'El usuario ha sido modificado éxitosamente',
-            'success'
-          );
-          this.Listado();
-          this.usuariosEdit=new Usuario2();
-          this.usuariosEditGuar=new Usuario2();
-        });
-    } else{
-      Swal.fire('Se ha cancelado la operación', '', 'info')
-    }
+          .subscribe((response: any) => {
+            Swal.fire(
+              'Usuario Modificado!',
+              'El usuario ha sido modificado éxitosamente',
+              'success'
+            );
+            this.Listado();
+            this.usuariosEdit = new Usuario2();
+            this.usuariosEditGuar = new Usuario2();
+          });
+      } else {
+        Swal.fire('Se ha cancelado la operación', '', 'info')
+      }
     })
 
 
@@ -818,28 +809,28 @@ this.criteservice.getCriterios().subscribe(
 
   criterioSeleccionado() {
     this.dataSource3 = [];
-    this.spans =[];
-    if (this.selectedCriterio!=0) {
+    this.spans = [];
+    if (this.selectedCriterio != 0) {
       const criterioSeleccionado = this.listacriterios.find(criterio => criterio.id_criterio === this.selectedCriterio);
-      this.titulocrite = "Evidencias del criterio "+criterioSeleccionado?.nombre || '';
+      this.titulocrite = "Evidencias del criterio " + criterioSeleccionado?.nombre || '';
       this.evidenciaService.getevitab(this.selectedCriterio).subscribe(
-        (listaEvi:AsigEvidProjection[]) => {
+        (listaEvi: AsigEvidProjection[]) => {
           this.listaEvidencias = listaEvi;
           this.dataSource3 = this.listaEvidencias;
           this.cacheSpan2('subcriterio', (d) => d.nombsub);
           this.cacheSpan2('indicador', (d) => d.nombsub + d.nombind);
           this.cacheSpan2('descripcion', (d) => d.nombsub + d.nombind + d.descripc);
-          this.cacheSpan2('idevi', (d) => d.nombsub + d.nombind +d.descripc+ d.idev);
-            console.log("lista evidencias"+this.listaEvidencias);
-            setTimeout(() => {
-              this.aplicar();
-            }, 0);
-          
-          console.log("evidenica lisra"+JSON.stringify(this.dataSource3))
+          this.cacheSpan2('idevi', (d) => d.nombsub + d.nombind + d.descripc + d.idev);
+          console.log("lista evidencias" + this.listaEvidencias);
+          setTimeout(() => {
+            this.aplicar();
+          }, 0);
+
+          console.log("evidenica lisra" + JSON.stringify(this.dataSource3))
         }
       );
-  } else {
-    this.titulocrite = "Debe seleccionar un criterio para ver sus evidencias";
+    } else {
+      this.titulocrite = "Debe seleccionar un criterio para ver sus evidencias";
+    }
   }
-}
 }

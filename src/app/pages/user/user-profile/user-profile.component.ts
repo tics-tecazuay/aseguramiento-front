@@ -25,7 +25,7 @@ export class UserProfileComponent implements OnInit {
   constructor(public login: LoginService,
     private usuariosService: UsuarioService,
     private personaService: PersonaService
-  ) {
+  ) { 
     this.usuarioForm = new FormGroup({
       correo: new FormControl('', [Validators.required, Validators.email]),
       celular: new FormControl('', [Validators.required, Validators.pattern(/^\d{10}$/)]),
@@ -60,9 +60,9 @@ export class UserProfileComponent implements OnInit {
   }
 
   Actualizar(usuariosdit: Usuario2) {
-    // console.log(usuariosdit)
+    console.log(usuariosdit)
     usuariosdit.id = this.user.id;
-    // console.log(usuariosdit)
+    console.log(usuariosdit)
     this.user.password = usuariosdit.password;
     Swal.fire({
       title: 'Esta seguro de cambiar su contraseña?',
@@ -83,7 +83,7 @@ export class UserProfileComponent implements OnInit {
               if (result.isConfirmed) {
 
                 this.login.logout();
-                location.replace('./#/use/login');
+                location.replace('/use/login');
               }
             })
           });
@@ -111,10 +111,10 @@ export class UserProfileComponent implements OnInit {
 
   Actualizardatos(usuariosdit: Usuario2) {
     const persona: Persona2 = this.usuarioForm.value;
-    // console.log(persona);
+    console.log(persona);
     persona.id_persona = usuariosdit?.persona?.id_persona;
-    // console.log(persona.id_persona);
-    // console.log(this.idprueba);
+    console.log(persona.id_persona);
+    console.log(this.idprueba);
     Swal.fire({
       title: 'Esta seguro de modificar sus datos?',
       showCancelButton: true,
@@ -127,7 +127,7 @@ export class UserProfileComponent implements OnInit {
           if (existencia == true) {
             // La persona no existe, realizar la creación
             this.personaService.createPersona(persona).subscribe((response: any) => {
-              // console.log(response);
+              console.log(response);
               this.login.getCurrentUser().subscribe((user: any) => {
                 Swal.fire(
                   'Operación exitosa!',
@@ -139,12 +139,12 @@ export class UserProfileComponent implements OnInit {
               });
             });
             this.personaService.actualizarPersonaIdEnUsuario(this.idprueba, this.idpruebapersona).subscribe((usuarioResponse: any) => {
-              // console.log(usuarioResponse);
+              console.log(usuarioResponse);
             });
           } else {
             // La persona ya existe, realizar la actualización
             this.personaService.actualizar(persona.id_persona, persona).subscribe((response: any) => {
-              // console.log(response);
+              console.log(response);
               this.login.getCurrentUser().subscribe((user: any) => {
                 Swal.fire(
                   'Operación exitosa!',

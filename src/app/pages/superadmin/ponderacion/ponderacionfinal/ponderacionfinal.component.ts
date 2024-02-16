@@ -25,7 +25,7 @@ export class PonderacionfinalComponent implements  OnInit  {
     {}
   ngOnInit(): void {
     this.listarPonderacion();
-    // console.log(this.listarPonderacion()+'ponde');
+    console.log(this.listarPonderacion()+'ponde');
   }
 
   listarPonderacion() {

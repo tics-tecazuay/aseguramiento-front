@@ -329,3 +329,9 @@ table {
   background-color: #044c9b;
   color: white;
 }
+
+.centro {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

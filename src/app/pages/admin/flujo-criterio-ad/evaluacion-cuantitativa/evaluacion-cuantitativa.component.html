@@ -1,0 +1,254 @@
+<body>
+  <div class="container bg-light border border-start-0 rounded-4">
+    <h3 style="text-transform: uppercase; cursor: pointer">
+      <a (click)="verCriterios()">LISTADO CRITERIOS </a>
+      >
+      <a (click)="verSubcriterios()">{{ criterio.nombre }} </a>
+      >
+      <a (click)="verIndicadores()">{{ subcriterio.nombre }} </a>
+      >
+      <a>{{ indicador.nombre }}</a>
+    </h3>
+    <blockquote class="blockquote text-dark" style="margin-top: 2%">
+      <h1>
+        <strong>Evaluación Cuantitativa del Indicador: {{ indicador.nombre }}</strong>
+      </h1>
+    </blockquote>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="button-group w-100 d-flex">
+          <blockquote class="blockquote text-dark">
+            <p>Configuración de la fórmula</p>
+          </blockquote>
+          <i class="fa fa-info-circle" style="font-size: 1em; cursor: pointer" (click)="info()"></i>
+        </div>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-11">
+              <div class="input-group">
+                <span class="input-group-text rounded-4" style="width: 15%; margin-right: 0.5%">Fórmula
+                </span>
+
+                <textarea placeholder="Seleccione los operadores y varables necesarias.
+            Ejm: variable1+variable2*(variable3/5.5)" class="form-control rounded-4" aria-label="With textarea"
+                  [(ngModel)]="formula" name="formula" disabled></textarea>
+              </div>
+              <div class="input-group" style="padding-top: 1%">
+                <span class="input-group-text rounded-4" style="width: 15%; margin-right: 0.5%">Descripcion</span>
+                <textarea class="form-control rounded-4" aria-label="With textarea" [(ngModel)]="descripcion"
+                  name="descripcion"></textarea>
+              </div>
+            </div>
+            <div class="col">
+              <div>
+                <button class="btn btn-danger rounded-4" style="width: 100%; margin: 1%"
+                  (click)="borrarUltimoCaracter()">
+                  <i class="fa fa-eraser" style="font-size: 1.5em"></i>
+                </button>
+              </div>
+              <div>
+                <button class="btn btn-info rounded-4" style="width: 100%; margin-bottom: 1%; margin-top: 1%"
+                  (click)="test()">
+                  <i class="fas fa-check" style="font-size: 1.5em"></i>
+
+                </button>
+              </div>
+              <div>
+                <button class="btn btn-primary rounded-4" style="width: 100%; margin: 1%" (click)="guardarFormula()">
+                  <i class="fa fa-save" style="font-size: 1.5em"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <br />
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col">
+              <div class="button-group w-100 d-flex">
+                <blockquote class="blockquote text-dark">
+                  <p>Operadores</p>
+                </blockquote>
+                <i class="fa fa-info-circle" style="font-size: 1em; cursor: pointer" (click)="infooperadores()"></i>
+              </div>
+              <div class="container bg-light border border-start-0 rounded-4">
+                <br />
+                <div class="button-group w-100 d-flex" style="margin: 1%">
+                  <button type="button" class="btn btn-outline-dark flex-fill mx-1" (click)="agregarOperador('+')">
+                    +
+                  </button>
+                  <button type="button" class="btn btn-outline-dark flex-fill mx-1" (click)="agregarOperador('-')">
+                    -
+                  </button>
+                </div>
+                <div class="button-group w-100 d-flex" style="margin: 1%">
+                  <button type="button" class="btn btn-outline-dark flex-fill mx-1" (click)="agregarOperador('/')">
+                    /
+                  </button>
+                  <button type="button" class="btn btn-outline-dark flex-fill mx-1" (click)="agregarOperador('*')">
+                    *
+                  </button>
+                </div>
+                <div class="button-group w-100 d-flex" style="margin: 1%">
+                  <button type="button" class="btn btn-outline-dark flex-fill mx-1" (click)="agregarParentesis('(')">
+                    (
+                  </button>
+                  <button type="button" class="btn btn-outline-dark flex-fill mx-1" (click)="agregarParentesis(')')">
+                    )
+                  </button>
+                </div>
+                <br />
+                <p>- Valores Numéricos:</p>
+
+                <div class="button-group w-100 d-flex" style="margin: 1%">
+                  <div class="d-flex mx-1">
+                    <input placeholder="Ingrese" class="form-control" type="number" id="descripcion" name="descripcion"
+                      style="padding: 5px" #descripcionInput />
+                    <button type="button" class="btn btn-primary" (click)="agregarDescripcion(descripcionInput.value)">
+                      Agregar
+                    </button>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-9">
+              <div class="button-group w-100 d-flex">
+                <blockquote class="blockquote text-dark">
+                  <p>Variables Cuantitativas</p>
+                </blockquote>
+                <i class="fa fa-info-circle" style="font-size: 1em; cursor: pointer" (click)="infocuantitativas()"></i>
+              </div>
+              <div class="container bg-light border border-start-0 rounded-4">
+                <div class="form-group">
+                  <input type="text" class="form-control" name="filterPost3" placeholder="Buscar..."
+                    [(ngModel)]="filterPost" (input)="aplicarFiltro()" />
+                </div>
+                <button type="button w-100" class="btn btn-primary" data-bs-toggle="modal"
+                  data-bs-target="#materiaModal" style="margin: 5px" (click)="listarCaunti()">
+                  Agregar Variable
+                </button>
+                <!-- <button type="button w-100" class="btn btn-primary" style="margin: 5px" (click)="irCuantitativas()">
+                  Crear Variable
+                </button> -->
+                <div class="mat-elevation table-responsive" style="margin-bottom: 5%">
+                  <table mat-table [dataSource]="dataSource">
+                    <ng-container matColumnDef="abreviatura">
+                      <th mat-header-cell *matHeaderCellDef>ABREVIATURA</th>
+                      <td mat-cell *matCellDef="let elemento">
+                        {{ elemento.cuantitativa?.abreviatura }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="descripcion">
+                      <th mat-header-cell *matHeaderCellDef>DESCRIPCIÓN</th>
+                      <td mat-cell *matCellDef="let elemento">
+                        {{ elemento.cuantitativa?.descripcion }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="actions">
+                      <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
+                      <td mat-cell *matCellDef="let element">
+                        <button class="btn btn-danger" style="background-color: red" (click)="eliminarevacuant(element)"
+                          style="margin-right: 5%">
+                          <i class="fas fa-user-times"></i>
+                        </button>
+                        <button class="btn btn-primary" role="button" data-dismiss="modal" data-bs-dismiss="modal"
+                          (click)="agregarValor(element)">
+                          <div class="d-flex">
+                            <i class="fa fa-check"></i>
+                          </div>
+                        </button>
+                        <button type="button" class="btn btn-warning"
+                          (click)="generarReportePDFevaluacion(element, element)" style="margin-right: 5%">
+                          <i class="fas fa-file-pdf"></i>
+                        </button>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="columnasUsuario"></tr>
+                    <tr mat-row *matRowDef="let fila; columns: columnasUsuario"></tr>
+                  </table>
+                  <mat-paginator #paginator [pageSizeOptions]="[5, 10]" showFirstLastButtons
+                    aria-label="Select page of periodic elements" itemsPerPageLabel="Items por página:"
+                    nextPageLabel="Siguiente" previousPageLabel="Anterior">
+                  </mat-paginator>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" id="materiaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header bg-blue">
+                <h3 class="modal-title">
+                  <i class="fa fa-info-circle"></i> Variables Cuantitativas
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="formulario">
+                  <div class="form-group">
+                    <input type="text" class="form-control" name="filterPost3" placeholder="Buscar..."
+                      [(ngModel)]="filterPostmodal" (input)="aplicarFiltromodal()" />
+                  </div>
+                  <div class="mat-elevation-z8 table-responsive" style="margin-bottom: 5%">
+                    <table mat-table [dataSource]="dataSourcemodal">
+                      <ng-container matColumnDef="id_cuantitativa">
+                        <th mat-header-cell *matHeaderCellDef [style.display]="ocultar ? '' : 'none'">ID</th>
+                        <td mat-cell *matCellDef="let elemento" [style.display]="ocultar  ? '' : 'none'">
+                          {{ elemento.id_cuantitativa }}
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="abreviatura">
+                        <th mat-header-cell *matHeaderCellDef>ABREVIATURA</th>
+                        <td mat-cell *matCellDef="let elemento">
+                          {{ elemento.abreviatura }}
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="descripcion">
+                        <th mat-header-cell *matHeaderCellDef>DESCRIPCIÓN</th>
+                        <td mat-cell *matCellDef="let elemento">
+                          {{ elemento.descripcion }}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
+                        <td mat-cell *matCellDef="let element">
+                          <button class="btn btn-primary" role="button" data-dismiss="modal" data-bs-dismiss="modal"
+                            (click)="agregarVariable(element)">
+                            <div class="d-flex">
+                              <i class="fa fa-check"></i>
+                            </div>
+                          </button>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="columnasmodal"></tr>
+                      <tr mat-row *matRowDef="let fila; columns: columnasmodal"></tr>
+                    </table>
+                    <mat-paginator #paginatormodal [pageSizeOptions]="[5]" showFirstLastButtons
+                      aria-label="Select page of periodic elements" itemsPerPageLabel="Items por página:"
+                      nextPageLabel="Siguiente" previousPageLabel="Anterior">
+                    </mat-paginator>
+                  </div>
+                </form>
+                <div class="modal-footer">
+                  <button type="button" form="formulario" class="btn btn-warning" data-bs-dismiss="modal">
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

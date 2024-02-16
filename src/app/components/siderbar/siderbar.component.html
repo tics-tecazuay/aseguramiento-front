@@ -2,15 +2,15 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4 fixed-sidebar" *ngIf="isLoggedIn" style="position: fixed;">
   <!-- Brand Logo -->
   <a class="brand-link" style="height: 65px; align-items: center; justify-content: center;">
-    <img src="assets/uista.png" alt="AdminLTE Logo" class="brand-image" style="opacity: .95;">
+    <img src="../../../assets/uista.png" alt="AdminLTE Logo" class="brand-image" style="opacity: .95;">
     <span class="brand-text font-weight-light">{{rol}}</span>
   </a>
-
+    
   <!-- Sidebar -->
   <div class="sidebar scrollable-sidebar" style="height: 100%;">
-
+  
     <!-- Sidebar Menu -->
-
+  
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" >
           <!-- Add icons to the links using the .nav-icon class
@@ -30,24 +30,22 @@
               <a [routerLink]="submenus.url" class="nav-link" style="cursor:pointer; margin-left: 7%;">
                 <i class="far fa-circle nav-icon"></i>
                 <p class="ml-2">{{submenus.titulo}}</p>
-
+  
               </a>
             </li>
-
+             
           </ul>
         </li>
         <li class="nav-item">
           <a class="nav-link" style="cursor:pointer" (click)="logout()">
-
+              
             <p class="ml-2">
               <i class="nav-icon fas fa-sign-out-alt"></i>
               Salir
             </p>
           </a>
         </li>
-
+          
       </ul>
     </nav>
     <!-- /.sidebar-menu -->
-  </div>
-</aside>

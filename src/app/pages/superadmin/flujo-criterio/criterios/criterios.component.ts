@@ -21,6 +21,7 @@ export class CriteriosComponent implements OnInit {
   frmCriterio: FormGroup;
   guardadoExitoso: boolean = false;
   miModal!: ElementRef;
+  ocultar=false;
   //tabla
   itemsPerPageLabel = 'Criterios por página';
   nextPageLabel = 'Siguiente';
@@ -31,7 +32,7 @@ export class CriteriosComponent implements OnInit {
     if (length == 0 || pageSize == 0) {
       return `0 de ${length}`;
     }
-
+  
     length = Math.max(length, 0);
     const startIndex = page * pageSize;
     const endIndex =
@@ -43,7 +44,7 @@ export class CriteriosComponent implements OnInit {
   //
   public crite = new Criterio();
   criterios: CriterioSubcriteriosProjection[] = [];
-
+  
 
   filterPost = '';
   dataSource = new MatTableDataSource<CriterioSubcriteriosProjection>();
@@ -74,14 +75,14 @@ export class CriteriosComponent implements OnInit {
   ngOnInit(): void {
     this.listar();
   }
-
-
+  
+ 
   guardar() {
     this.crite = this.frmCriterio.value;
     this.criterioservice.crear(this.crite)
       .subscribe(
         (response) => {
-          // console.log('Criterio creado con éxito:', response);
+          console.log('Criterio creado con éxito:', response);
           this.guardadoExitoso = true;
           this.listar();
           Swal.fire(
@@ -217,7 +218,7 @@ export class CriteriosComponent implements OnInit {
       }
     };
     pdfMake.createPdf(docDefinition).open();
-
+    
   }
-
+  
 }

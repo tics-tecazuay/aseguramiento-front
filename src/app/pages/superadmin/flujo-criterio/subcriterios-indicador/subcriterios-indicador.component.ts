@@ -22,6 +22,7 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 export class SubcriteriosIndicadorComponent {
   frmIndicador: FormGroup;
   guardadoExitoso: boolean = false;
+  ocultar=false;
   //tabla
   itemsPerPageLabel = 'Indicadores por página';
   nextPageLabel = 'Siguiente';
@@ -32,7 +33,7 @@ export class SubcriteriosIndicadorComponent {
     if (length == 0 || pageSize == 0) {
       return `0 de ${length}`;
     }
-
+  
     length = Math.max(length, 0);
     const startIndex = page * pageSize;
     const endIndex =
@@ -75,7 +76,7 @@ export class SubcriteriosIndicadorComponent {
     this.paginatorIntl.itemsPerPageLabel = this.itemsPerPageLabel;
     this.paginatorIntl.getRangeLabel=this.rango;
   }
-
+ 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator || null;
 
@@ -85,12 +86,12 @@ export class SubcriteriosIndicadorComponent {
     this.criterio = history.state.criterio;
     if (this.subcriterio == undefined) {
       this.router.navigate(['user-dashboard']);
-      location.replace('#/use/user-dashboard');
+      location.replace('/use/user-dashboard');
     }
     this.listar()
   }
 
-
+  
 
   guardar() {
     this.indic = this.frmIndicador.value;
@@ -98,7 +99,7 @@ export class SubcriteriosIndicadorComponent {
     this.indicadorservice.crear(this.indic)
       .subscribe(
         (response: any) => {
-          // console.log('Subcriterio creado con éxito:', response);
+          console.log('Subcriterio creado con éxito:', response);
           this.guardadoExitoso = true;
           this.listar();
           Swal.fire(
@@ -191,7 +192,7 @@ export class SubcriteriosIndicadorComponent {
   verCriterios() {
     this.router.navigate(['/sup/flujo-criterio/criterioSuper']);
   }
-
+  
   aplicarFiltro() {
     if (this.filterPost) {
       const lowerCaseFilter = this.filterPost.toLowerCase();
@@ -208,7 +209,7 @@ export class SubcriteriosIndicadorComponent {
       const tipoIndicador = indicador.tipo === 'cualitativo' ? 'Cualitativo' : 'Cuantitativo';
       return [indicador.id_indicador, indicador.nombre, indicador.peso, indicador.estandar, tipoIndicador];
     });
-
+  
     const docDefinition: any = {
       content: [
         { text: `Reporte del evidencia`, style: 'header' },
@@ -247,6 +248,6 @@ export class SubcriteriosIndicadorComponent {
     };
     pdfMake.createPdf(docDefinition).open();
   }
-
+  
 
 }

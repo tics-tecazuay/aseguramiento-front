@@ -176,10 +176,10 @@ llenardatos(){
   this.idmodelo = history.state.modelo;
   let id=history.state.criterio.idcriterio;
   this.nombre=history.state.criterio.nombrecriterio;
-  // console.log("nombrec"+history.state.criterio.nombrecriterio);
+  console.log("nombrec"+history.state.criterio.nombrecriterio);
   this.modelserv.getliscritemod(id, this.idmodelo.id_modelo).subscribe((data: criteriosdesprojection[]) => {
     this.datacrite = data;
-    // console.log("Datos mios "+"id mod "+this.idmodelo.id_modelo+"id crite "+this.idcriterio.id_criterio+" "+JSON.stringify(data));
+    console.log("Datos mios "+"id mod "+this.idmodelo.id_modelo+"id crite "+this.idcriterio.id_criterio+" "+JSON.stringify(data));
     
     this.cacheSpan3('Indicador', (d) => d.ind_nombrej);
     this.cacheSpan3('DescIn', (d) => d.criterionomj+d.ides);
@@ -209,7 +209,7 @@ llenardatos(){
           data.forEach(indicador => {
             this.archi.getarchivoindi(idcriterio, idmodelo, indicador.id_indicador).subscribe(
               arch => {
-                // console.log("Archivos: " + JSON.stringify(arch));
+                console.log("Archivos: " + JSON.stringify(arch));
                 const enlaces = arch.map(archivo => archivo.enlace); // Obtener solo los enlaces
             
             // Asociar los enlaces a los elementos correspondientes en dataSource.data
@@ -228,7 +228,7 @@ llenardatos(){
     }else{
    // this.idcriterio = history.state.criterio;
    let id=history.state.criterio.idcriterio;
-  //  console.log("idcrit "+id);
+   console.log("idcrit "+id);
     this.idmodelo = history.state.modelo;
 
     this.indicadorService.listarIndicadorPorCriterioModelo(id, this.idmodelo.id_modelo).subscribe(data => {
@@ -238,7 +238,7 @@ llenardatos(){
         data.forEach(indicador => {
           this.archi.getarchivoindi(id, this.idmodelo.id_modelo, indicador.id_indicador).subscribe(
             arch => {
-              // console.log("Archivos: " + JSON.stringify(arch));
+              console.log("Archivos: " + JSON.stringify(arch));
               const enlaces = arch.map(archivo => archivo.enlace); // Obtener solo los enlaces
           
           // Asociar los enlaces a los elementos correspondientes en dataSource.data
@@ -265,9 +265,9 @@ llenardatos(){
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      // console.log(result);
+      console.log(result);
       if (result.event == 'success') {
-        // console.log(result);
+        console.log(result);
         this.llenardatos();
         Swal.fire({
           position: 'center',

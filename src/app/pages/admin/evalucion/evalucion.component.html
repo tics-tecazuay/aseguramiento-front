@@ -1,14 +1,15 @@
 <body>
     <div class="container bg-light border border-start-0 rounded-4">
-      <figure
-        class="text-center text-dark"
-        style="margin-top: 5%; font-style: italic"
-      >
-        <blockquote class="blockquote text-dark">
-          <h1><strong> BUSCAR USUARIOS</strong></h1>
-        </blockquote>
-      </figure>
+      <blockquote class="blockquote text-dark" style="margin-top: 5%">
+        <h1><strong>  BUSCAR USUARIOS</strong></h1>
+      </blockquote>
       <div class="container">
+        <div class="row" style="margin-bottom: 2.5%">
+          <div class="col"></div>
+          <div class="col"></div>
+          <div class="col"></div>
+        </div>
+        <div class="row">
         <div class="col col-lg-3">
           <form class="example-form">
             <mat-form-field class="example-full-width">
@@ -20,6 +21,10 @@
                 name="cedula"
               />
             </mat-form-field>
+          </form>
+        </div>
+        <div class="col col-lg-3">
+          <form class="example-form">
             <mat-form-field class="example-full-width">
               <mat-label>Primer Nombre:</mat-label>
               <input
@@ -29,6 +34,10 @@
                 name="primer_nombre"
               />
             </mat-form-field>
+          </form>
+        </div>
+        <div class="col col-lg-3">
+          <form class="example-form">
             <mat-form-field class="example-full-width">
               <mat-label>Primer Apellido:</mat-label>
               <input
@@ -38,14 +47,18 @@
                 name="primer_apellido"
               />
             </mat-form-field>
-            
+          </form>
+        </div>
+        <div class="col col-lg-3">
+          <form class="example-form">
             <button mat-raised-button color="primary" (click)="consultar()">
               Buscar
               <mat-icon>search</mat-icon>
             </button>
           </form>
         </div>
-        <div class="row" style="margin-bottom: 5%">
+      </div>
+        <div class="row" style="margin-bottom: 2.5%">
           <div class="col"></div>
           <div class="col"></div>
           <div class="col"></div>
@@ -308,7 +321,7 @@
               </ng-container>
              
               <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
+                <th mat-header-cell *matHeaderCellDef>Acciones</th>
                 <td mat-cell *matCellDef="let elemento">
                   <!---->
                   <button

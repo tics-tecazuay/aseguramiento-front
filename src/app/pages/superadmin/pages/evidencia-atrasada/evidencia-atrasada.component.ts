@@ -1,10 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
+import { EvidenciaReApPeAtr } from 'src/app/interface/AsigEvidProjection';
 import { Actividad } from 'src/app/models/Actividad';
 import { Notificacion } from 'src/app/models/Notificacion';
 import { Observacion } from 'src/app/models/Observacion';
+import { AsignaEvidenciaService } from 'src/app/services/asigna-evidencia.service';
 import { CriteriosService } from 'src/app/services/criterios.service';
 import { LoginService } from 'src/app/services/login.service';
 import { NotificacionService } from 'src/app/services/notificacion.service';
+import { MatTableDataSource } from '@angular/material/table';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -16,17 +20,59 @@ export class EvidenciaAtrasadaComponent implements OnInit {
 
   searchText = '';
   @ViewChild('datosModalRef') datosModalRef: any;
-  actividad: any[] = [];
+  evidencia: EvidenciaReApPeAtr[] = [];
+  evidencia2: EvidenciaReApPeAtr[] = [];
+  evidencia3: EvidenciaReApPeAtr[] = [];
+  evidencia4: EvidenciaReApPeAtr[] = [];
   observaciones: Observacion[] = [];
   notifi: Notificacion = new Notificacion;
   isLoggedIn = false;
   user: any = null;
   rol: any = null;
+  dataSource = new MatTableDataSource<EvidenciaReApPeAtr>();
+  displayedColumns: string[] = ['responsable', 'nombre_criterio', 'nombre_subcriterio', 'nombre_indicador', 'evidencia', 'fecha_fin', 'fecha_inicio', 'estado'];
+  searchTerm1: string = '';
+  //tabla
+  itemsPerPageLabel = 'Criterios por página';
+  nextPageLabel = 'Siguiente';
+  lastPageLabel = 'Última';
+  firstPageLabel='Primera';
+  previousPageLabel='Anterior';
+  rango:any= (page: number, pageSize: number, length: number) => {
+    if (length == 0 || pageSize == 0) {
+      return `0 de ${length}`;
+    }
+  
+    length = Math.max(length, 0);
+    const startIndex = page * pageSize;
+    const endIndex =
+      startIndex < length
+        ? Math.min(startIndex + pageSize, length)
+        : startIndex + pageSize;
+    return `${startIndex + 1} - ${endIndex} de ${length}`;
+  };
 
-  constructor(public login: LoginService, private service: CriteriosService, private notificacion: NotificacionService) { }
+  @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
+
+  constructor(public login: LoginService, private service: CriteriosService, private notificacion: NotificacionService,
+    private serv: AsignaEvidenciaService, private paginatorIntl: MatPaginatorIntl) {
+
+    this.paginatorIntl.nextPageLabel = this.nextPageLabel;
+    this.paginatorIntl.lastPageLabel = this.lastPageLabel;
+    this.paginatorIntl.itemsPerPageLabel = this.itemsPerPageLabel;
+    this.paginatorIntl.previousPageLabel = this.previousPageLabel;
+    this.paginatorIntl.itemsPerPageLabel = this.itemsPerPageLabel;
+    this.paginatorIntl.getRangeLabel = this.rango;
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator || null;
+  }
 
   ngOnInit(): void {
-    this.getListarEvide();
+    this.getListarEvideRe();
+    this.getListarEvideAp();
+    this.getListarEvidePen();
 
     this.isLoggedIn = this.login.isLoggedIn();
     this.user = this.login.getUser();
@@ -39,11 +85,30 @@ export class EvidenciaAtrasadaComponent implements OnInit {
     this.rol = this.login.getUserRole();
   }
 
-  getListarEvide() {
-    this.service.getEvidenciaAtrasFecha().subscribe(
+  getListarEvideRe() {
+    this.serv.getEvidenciaRe().subscribe(
       data => {
-        this.actividad = data;
-        // console.log("actividades atrasadas"+JSON.stringify(this.actividad));
+        this.evidencia = data;
+        this.dataSource.data = this.evidencia;
+        console.log("evidencias rechazadas" + JSON.stringify(this.evidencia));
+      }
+    )
+  }
+
+  getListarEvideAp() {
+    this.serv.getEvidenciaAp().subscribe(
+      data => {
+        this.evidencia2 = data;
+        console.log("evidencias aprobadas" + JSON.stringify(this.evidencia2));
+      }
+    )
+  }
+
+  getListarEvidePen() {
+    this.serv.getEvidenciaPen().subscribe(
+      data => {
+        this.evidencia3 = data;
+        console.log("evidencias aprobadas" + JSON.stringify(this.evidencia3));
       }
     )
   }
@@ -52,7 +117,7 @@ export class EvidenciaAtrasadaComponent implements OnInit {
     this.service.getObservacionByActi(acti.id_actividad).subscribe(
       data => {
         this.observaciones = data;
-        // console.log(this.observaciones);
+        console.log(this.observaciones);
       }
     )
   }
@@ -65,8 +130,8 @@ export class EvidenciaAtrasadaComponent implements OnInit {
       "mensaje": noti.mensaje,
       "visto": true,
       "usuario": this.user.id,
-      "url":"",
-      "idactividad":0
+      "url": "",
+      "idactividad": 0
     }
     this.notificacion.crear(this.notifi).subscribe
       (data => {
@@ -80,6 +145,19 @@ export class EvidenciaAtrasadaComponent implements OnInit {
           background: "#63B68B",
         })
       })
+  }
+
+  getColorEstado(estado: string): string {
+    switch (estado.toLowerCase()) {
+      case 'pendiente':
+        return 'estado-pendiente';
+      case 'aprobada':
+        return 'estado-aprobada';
+      case 'rechazada':
+        return 'estado-rechazada';
+      default:
+        return '';
+    }
   }
 
 }

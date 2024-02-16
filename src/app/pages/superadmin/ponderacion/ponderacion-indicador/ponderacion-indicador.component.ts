@@ -34,7 +34,7 @@ itemsPerPageLabel = 'Items por página';
   firstPageLabel = 'Primera';
   previousPageLabel = 'Anterior';
 
-
+  
   rango: any = (page: number, pageSize: number, length: number) => {
     if (length == 0 || pageSize == 0) {
       return `0 de ${length}`;
@@ -66,7 +66,7 @@ itemsPerPageLabel = 'Items por página';
     this.paginatorIntl.itemsPerPageLabel = this.itemsPerPageLabel;
     this.paginatorIntl.getRangeLabel = this.rango;
    }
-
+  
   ngOnInit(): void {
   this.listarPonderacion();
   this.recibeModelo();
@@ -82,29 +82,29 @@ itemsPerPageLabel = 'Items por página';
     });
   }
 
+ 
+
+ 
 
 
 
-
-
-
-
+ 
   recibeModelo () {
     let id = localStorage.getItem("id");
     this.modeloService.getModeloById(Number(id)).subscribe(data => {
       this.model = data;
   })
-
+ 
   }
 
   recibeIndicador() {
     let id = localStorage.getItem("id");
     this.modeloService.getModeloById(Number(id)).subscribe(data => {
       this.model = data;
-
+     
       this.indicadorservice.getIndicadorById(Number(id)).subscribe(data => {
         this.indicadorClase = data;
-        // console.log('Criterio  id :',this.indicadorClase);
+        console.log('Criterio  id :',this.indicadorClase);
       this.asignacionIndicadorService.getAsignacionIndicadorByIdModelo(Number(id)).subscribe(info => {
         this.indicadorservice.getIndicadors().subscribe(result => {
           this.dataSource = [];
@@ -123,26 +123,26 @@ itemsPerPageLabel = 'Items por página';
                 indicador.color = 'verde'; // Agregar una propiedad "color" al indicador y asignarle el valor 'rojo'
               }
               return indicador.id_indicador === asignacion.indicador.id_indicador && indicador.subcriterio?.id_subcriterio === this.sharedDataService.obtenerIdSubCriterio();
-
-
+              
+               
             });
-
+            
           });
           this.GraficaPastel();
-
-
+         
+       
         });
-
+       
       });
-
+      
   });
-
+ 
     });
   }
 
   GraficaPastel() {
 
-
+  
 
     this.chart = new Chart("pastel", {
       type: 'pie',
@@ -165,12 +165,12 @@ itemsPerPageLabel = 'Items por página';
         aspectRatio: 2.5
       }
     });
-
-
-
+    
+    
+    
   }
 
 
-
+ 
 
 }

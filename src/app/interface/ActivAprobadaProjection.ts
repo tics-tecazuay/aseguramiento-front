@@ -8,4 +8,6 @@ export interface ActivAprobadaProjection{
     inicio: string;
     fin: string;
     enlace: string;
+    evidencia: string;
+
 }

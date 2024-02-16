@@ -43,6 +43,7 @@ interface f {
   ],
 })
 export class DetalleModeloComponent implements OnInit {
+  ocultar=false;
   itemsPerPageLabel = 'Criterios por página';
   nextPageLabel = 'Siguiente';
   lastPageLabel = 'Última';
@@ -125,7 +126,7 @@ idmodelo: number = 0;
   ngOnInit(): void {
     this.model = history.state.modelo;
     this.idmodelo=this.model.id_modelo
-    // console.log("Modelo a ver"+this.model.id_modelo)
+    console.log("Modelo a ver"+this.model.id_modelo)
     this.recibeModelo();
     localStorage.removeItem("datopasado");
   }
@@ -146,10 +147,10 @@ idmodelo: number = 0;
         this.ponderacionService.getEliminar(element.contador,element.fechapo).subscribe(
           () => {
             this.recibeModelo();
-            // console.log('Registro eliminado exitosamente.');
+            console.log('Registro eliminado exitosamente.');
           },
           (error) => {
-            // console.error('Error al eliminar el registro:', error);
+            console.error('Error al eliminar el registro:', error);
           }
         );
       }
@@ -187,7 +188,7 @@ idmodelo: number = 0;
           this.dataSource.data = [];
           this.asignacion = info;
           this.dataSource.data = info;
-        // console.log("datos "+JSON.stringify(this.dataSource.data))
+        console.log("datos "+JSON.stringify(this.dataSource.data))
       });
   }
 
@@ -232,7 +233,7 @@ idmodelo: number = 0;
   asignar_criterio(event: Event, criterio: any) {
     event.stopPropagation();
     const id_modelo = localStorage.getItem('id');
-    // console.log("Id modelo a asignar"+id_modelo+" id criterio "+criterio.idcriterio+" nombre "+criterio.nombrecriterio);
+    console.log("Id modelo a asignar"+id_modelo+" id criterio "+criterio.idcriterio+" nombre "+criterio.nombrecriterio);
     const dialogRef = this.dialog.open(AsignarCriterioComponent, {
       width: '45%',
       data: { id: criterio.idcriterio,modelo:id_modelo,nombre:criterio.nombrecriterio }
@@ -249,5 +250,7 @@ idmodelo: number = 0;
         });
       }
     });
+
+    
   }
 }

@@ -36,7 +36,7 @@ export class ActiviadDetalleIndicadorComponent implements OnInit {
   subcriterio: Subcriterio = new Subcriterio();
   ngOnInit() {
     const data = history.state.data;
-    // console.log(data); // aquí tendrías el objeto `indicador` de la fila seleccionada.
+    console.log(data); // aquí tendrías el objeto `indicador` de la fila seleccionada.
     this.subcriterio = history.state.data;
     this.recibeIndicador();
   }
@@ -85,7 +85,7 @@ export class ActiviadDetalleIndicadorComponent implements OnInit {
             });
           });
           this.colresIndicador();
-          // console.log(this.dataSource);
+          console.log(this.dataSource);
         });
       });
     });

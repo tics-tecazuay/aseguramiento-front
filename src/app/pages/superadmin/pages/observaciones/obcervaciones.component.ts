@@ -100,10 +100,10 @@ mecorreo(coreo:any){
 this.toUser=coreo;
 }
   listar() {
-    // console.log(this.arch)
+    console.log(this.arch)
     this.subiarchivo.getDatos().subscribe(
       (data: any) => {
-        // console.log(data);
+        console.log(data);
         this.arch = data;
         //recorro y asigno las filas
         this.cacheSpan('uploadedBy', (y) => y.resp);
@@ -121,9 +121,9 @@ this.toUser=coreo;
     
     this.serviceper.getPersonas().subscribe(
       (data: any) => {
-        // console.log(JSON.stringify(data));
+        console.log(JSON.stringify(data));
         this.personas = data;
-        // console.log("lista "+this.personas);
+        console.log("lista "+this.personas);
         
       },
       (error) => {
@@ -133,12 +133,12 @@ this.toUser=coreo;
   }
 
 notificar(id:any){
-  // console.log("este es el id "+id);
+  console.log("este es el id "+id);
 }
   enviar() {
     this.emailService.sendEmail([this.toUser], this.subject, this.message).subscribe(
       response => {
-        // console.log('Email sent successfully!');
+        console.log('Email sent successfully!');
         // mostrar mensaje con swal
         swal.fire({
           icon: 'success',

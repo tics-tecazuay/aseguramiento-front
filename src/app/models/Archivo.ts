@@ -1,3 +1,4 @@
+import { Asigna_Evi } from "./Asignacion-Evidencia";
 import { Actividades } from "./actividades";
 
 
@@ -6,7 +7,7 @@ export class Archivo {
   enlace: string = "";
   nombre: string = "";
   descripcion: string = "";
- actividad:Actividades|null=null;
+  actividad:Asigna_Evi|null=null;
 
   visible: string = "";
  // indicador:Indicador | null = null;

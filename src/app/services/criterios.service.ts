@@ -12,6 +12,10 @@ import { IndicadorProjection } from '../interface/IndicadorProjection';
 import { ValoresProjection } from '../interface/ValoresProjection';
 import { IdCriterioProjection } from '../interface/IdCriterioProjection';
 import { CorreoProjection } from '../interface/CorreoProjection';
+import { CriterioByAdmin } from '../interface/CriteUsuarioProjection';
+import { CriRespProjection } from '../interface/CriteRespProjection';
+import { id } from '@swimlane/ngx-charts';
+
 
 @Injectable({
   providedIn: 'root'
@@ -110,6 +114,10 @@ export class CriteriosService {
     return this.http.get<CriterioSubcriteriosProjection[]>(`${baserUrl}/api/criterio/datosCriterios`);
   }
 
+  obtenerDatosCriteriosAdmin(id:number): Observable<CriterioSubcriteriosProjection[]> {
+    return this.http.get<CriterioSubcriteriosProjection[]>(`${baserUrl}/api/criterio/listCriAdmin/`+id);
+  }
+
   getCriterioPorEvidencia(idEvidencia: number): Observable<Criterio[]> {
     return this.http.get<Criterio[]>(`${baserUrl}/api/criterio/obtenerNombreCriterioPorEvidencia/${idEvidencia}`);
   }
@@ -118,6 +126,9 @@ export class CriteriosService {
     return this.http.get<proyeccionCriterio[]>(`${baserUrl}/api/criterio/obtenerNombreCriterioPorEvidenciaproyeccion/${idEvidencia}`);
   }
 
+  getcriresponsable(id_modelo: number,id:number): Observable<CriRespProjection[]> {
+    return this.http.get<CriRespProjection[]>(`${baserUrl}/api/criterio/listcriresp/${id}/${id_modelo}`);
+  }
   getvalores(id_modelo: number): Observable<ValoresProjection[]> {
     return this.http.get<ValoresProjection[]>(`${baserUrl}/api/criterio/listarvalores/${id_modelo}`);
   }
@@ -135,4 +146,13 @@ export class CriteriosService {
   getIdCriterio(nombre: string): Observable<IdCriterioProjection> {
     return this.http.get<IdCriterioProjection>(`${baserUrl}/api/criterio/idcriterio/${nombre}`);
   }
+
+  getCriterioAdm(modelId: number, userId: number): Observable<CriterioByAdmin[]>{
+    return this.http.get<CriterioByAdmin[]>(`${baserUrl}/api/criterio/listCriAdmin/${modelId}/${userId}`);
+  }  
+///@GetMapping criteriosporusuarioymodelo/{usuarioId}/{modeloId}
+  getListaCriteriosAsignados(idModelo: number, usuarioId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${baserUrl}/api/criterio/criteriosporusuarioymodelo/${usuarioId}/${idModelo}`);
+  }
+
 }

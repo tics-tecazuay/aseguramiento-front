@@ -48,7 +48,7 @@ export class InicioModeloComponent implements OnInit {
   listar() {
     this.modeloService.getModelosVista().subscribe(data => {
       this.datasource = data;
-      // console.log(data)
+      console.log(data)
     });
 
 
@@ -63,8 +63,8 @@ export class InicioModeloComponent implements OnInit {
 
   }
   openDialogMod(item: any) {
-    // console.log(item);
-    // console.log("---------------------------------")
+    console.log(item);
+    console.log("---------------------------------")
     const dialogRef = this.dialog.open(DialogoModeloModComponent, {
       width: '50%',
       data: { item } // Envía el parámetro 'item' al diálogo

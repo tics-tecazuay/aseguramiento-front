@@ -101,7 +101,7 @@ export class ActividadCriterioDetalle implements OnInit {
   spans3: any[] = [];
   id_criterio!:number;
   rowSpanValue: number = 0;
-  coloresAsignados: { [key: string]: string } = {};
+  coloresAsignados: { [key: string]: string } = {}; 
   seleccionados: { [key: string]: boolean } = {};
   todosSeleccionados=false;
   rol: string ='';
@@ -114,7 +114,7 @@ public barChartOptions: ChartConfiguration['options'] = {
     x: {
       type: 'category',
       ticks: {
-
+       
         autoSkip: false, // Evita que las etiquetas se salten automáticamente
         maxRotation: 45, // Cambia el ángulo de rotación aquí
         minRotation: 45, // Cambia el ángulo de rotación aquí
@@ -122,7 +122,7 @@ public barChartOptions: ChartConfiguration['options'] = {
       },
     },
     y: {
-
+      
     },
   },
   plugins: {
@@ -194,7 +194,7 @@ public chartClicked({
   event?: ChartEvent;
   active?: object[];
 }): void {
-  // console.log(event, active);
+  console.log(event, active);
 }
 
 public chartHovered({
@@ -204,7 +204,7 @@ public chartHovered({
   event?: ChartEvent;
   active?: object[];
 }): void {
-  // console.log(event, active);
+  console.log(event, active);
 }
   constructor(
     public login: LoginService,private paginatorIntl: MatPaginatorIntl,
@@ -227,10 +227,10 @@ public chartHovered({
   ngOnInit(): void {
     this.isLoggedIn = this.login.isLoggedIn();
          this.user = this.login.getUser();
-        // console.log(" el usuario es "+this.user.id+" rol"+this.rol);
+        console.log(" el usuario es "+this.user.id+" rol"+this.rol);
 
-
-
+   
+   
     let id = localStorage.getItem("id");
     this.id_modelo=Number(id);
     this.recibeModelo();
@@ -238,7 +238,7 @@ public chartHovered({
       this.dataSource.paginator = this.paginator;
     }
   }
-
+  
   recibeModelo() {
     this.modeloService.getModeloById(Number(this.id_modelo)).subscribe(data => {
       this.model = data;
@@ -271,7 +271,7 @@ public chartHovered({
           if(data.length!=0){
             this.consul=true;
           }
-          // console.log("lista in "+this.listain)
+          console.log("lista in "+this.listain)
         });
     }else{
     this.criterioService.getIndicador(this.id_modelo).subscribe(
@@ -281,7 +281,7 @@ public chartHovered({
           this.coloresTarjetas.push(this.getRandomColor());
           this.borderStyles.push(this.getBorderColor(item.faltante-item.total));
         });
-        // console.log("lista in "+this.listain)
+        console.log("lista in "+this.listain)
       });
     }
   }
@@ -291,7 +291,7 @@ public chartHovered({
     //llevar modelo
 
     localStorage.setItem("id", modelo.id_modelo.toString());
-    // console.log(modelo.id_modelo)
+    console.log(modelo.id_modelo)
     this.model = modelo;
     this.router.navigate(['/sup/ponderacion/ponderacion-modelo']);
 
@@ -304,7 +304,7 @@ public chartHovered({
   }
 
   mostrar(element: any) {
-    // console.log(element);
+    console.log(element);
     this.sharedDataService.agregarIdCriterio(element.id_criterio);
     this.router.navigate(['/res/criterio-subcriterio']);
   }
@@ -346,7 +346,7 @@ public chartHovered({
     }
     this.criterioService.getIdCriterio(nombre).subscribe(data => {
       this.id_criterio = data.id_criterio;
-      // console.log("id crti: "+this.id_criterio);
+      console.log("id crti: "+this.id_criterio);
     });
     this.modeloService.getlisdescrite(this.id_modelo,nombre).subscribe((data: criteriosdesprojection[]) => {
       this.datacrite = data;
@@ -394,7 +394,7 @@ public chartHovered({
     const b = Math.floor(Math.random() * 256);
     return `rgba(${r}, ${g}, ${b}, 0.3)`;
   }
-
+  
   generarColor3(): string {
     const r = Math.floor(Math.random() * 256);
     const g = Math.floor(Math.random() * 256);
@@ -414,17 +414,17 @@ public chartHovered({
         }
         count++;
       }
-
+  
       if (!this.spans3[i]) {
         this.spans3[i] = {};
       }
-
+  
       this.spans3[i][key] = count;
       i += count;
     }
   }
-
-
+  
+  
   getRowSpan3(col: any, index: any) {
     return this.spans3[index] && this.spans3[index][col];
   }
@@ -433,22 +433,22 @@ public chartHovered({
   showValor() {
     this.verValor = !this.verValor;
   }
-
+  
   showUtilidad() {
     this.verUtilidad = !this.verUtilidad;
   }
-
+  
   showObtenido() {
     this.verObtenido = !this.verObtenido;
   }
-
+  
   showCriterio() {
     this.verCriterio = !this.verCriterio;
   }
   showSubcriterio() {
     this.verSubcriterio = !this.verSubcriterio;
   }
-
+  
   showIndicador() {
     this.verIndicador = !this.verIndicador;
   }
@@ -458,16 +458,16 @@ public chartHovered({
   showEvidencia() {
     this.verEvidencia = !this.verEvidencia;
   }
-
+  
   getColorcelda(elementName: string, opacity: number): string {
     if (!this.coloresAsignados[elementName]) {
       const red = Math.floor(Math.random() * 256);
       const green = Math.floor(Math.random() * 256);
       const blue = Math.floor(Math.random() * 256);
-
+      
       this.coloresAsignados[elementName] = `rgba(${red}, ${green}, ${blue}, ${opacity})`;
     }
-
+  
     return this.coloresAsignados[elementName];
   }
 
@@ -503,14 +503,14 @@ public chartHovered({
           'amarillo':'>50',
           'verde':'>75',
         };
-
+  
         const estadosIndicadores = data.map(indicador => indicador.color);
-
+        
         // Asigna colores a los elementos del gráfico según los estados
         this.pieChartData.labels = estadosIndicadores.map(estado=> estadoColores[estado]);
-
+  
        // this.pieChartData.labels = data.map(indicador => indicador.color);
-
+  
         if(this.pieChartOptions?.elements?.arc?.backgroundColor !=undefined){
         this.pieChartOptions.elements.arc.backgroundColor = this.indicol.map(
           indicador => colors[indicador.color]
@@ -519,14 +519,14 @@ public chartHovered({
         const totalIndicadores = this.indicol.reduce((total, element) => total + element.indica, 0);
         const totalPorcentaje = this.indicol.reduce((total, element) => total + element.porcentaje, 0);
         const total=Math.round(totalPorcentaje);
-
+  
         // Agrega la fila de totales al final del arreglo
         this.indicol.push({
           color: 'Total',
           indica: totalIndicadores,
           porcentaje: total,
         });
-
+        
         this.indicol.sort((a, b) => {
           const orden = ['verde', 'amarillo', 'naranja', 'rojo','Total'];
           return orden.indexOf(a.color) - orden.indexOf(b.color);
@@ -562,7 +562,7 @@ public chartHovered({
         indica: totalIndicadores,
         porcentaje: total,
       });
-
+      
       this.indicol.sort((a, b) => {
         const orden = ['verde', 'amarillo', 'naranja', 'rojo','Total'];
         return orden.indexOf(a.color) - orden.indexOf(b.color);
@@ -579,7 +579,7 @@ public chartHovered({
       this.barChartData.labels = this.valoresp.map(val => val.nomcriterio);
       this.barChartData.datasets[0].data = this.valoresp.map(val => val.vlObtenido);
       this.barChartData.datasets[1].data = this.valoresp.map(val => val.vlobtener);
-
+  
       this.barChartData = { ...this.barChartData };
     });
   }

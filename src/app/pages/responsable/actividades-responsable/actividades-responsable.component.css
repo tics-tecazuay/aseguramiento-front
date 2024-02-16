@@ -1,14 +1,41 @@
 .estado-pendiente {
-    background-color: yellow; 
-    color:blue;
-  }
-  
-  .estado-aprobada {
-    background-color: green;
-    color:white;
-  }
-  
-  .estado-rechazada {
-    background-color: red;
-    color:white;
-  }
+  background-color: yellow; 
+  color:blue;
+}
+
+.estado-aprobada {
+  background-color: green;
+  color:white;
+}
+
+.estado-rechazada {
+  background-color: red;
+  color:white;
+}
+
+.disabled-button {
+  opacity: 0.5; /* Cambia la opacidad del botón */
+  cursor: not-allowed; /* Cambia el cursor cuando pasa sobre el botón */
+}
+
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.error-message {
+  color: white; /* Color del texto */
+  background-color: #e74c3c; /* Color de fondo */
+  padding: 8px; /* Espaciado interno */
+  border-radius: 5px; /* Bordes redondeados */
+  margin-top: 5px;
+  text-align: center; /* Alineación del texto */
+}
+

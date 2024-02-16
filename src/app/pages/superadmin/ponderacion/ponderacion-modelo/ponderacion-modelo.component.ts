@@ -174,7 +174,7 @@ export class PonderacionModeloComponent implements OnInit {
             this.coloresTabla();
 
           });
-          // console.log("Data source: 1"+JSON.stringify(this.dataSource.data));
+          console.log("Data source: 1"+JSON.stringify(this.dataSource.data));
           this.createChart();
 
           this.GraficaPastel();
@@ -232,7 +232,7 @@ export class PonderacionModeloComponent implements OnInit {
       dataParaGuardar.push(fila);
       this.datos = dataParaGuardar;
     });
-    // console.log("Datos a guardar" + dataParaGuardar);
+    console.log("Datos a guardar" + dataParaGuardar);
     this.servicePonderacion.guardarPonderacionLista(dataParaGuardar).subscribe(
       (response: any) => {
         Swal.fire({
@@ -288,9 +288,9 @@ export class PonderacionModeloComponent implements OnInit {
       const promedioCriterio = promediosPorCriterio[criterio] / indicadoresCount;
       promediosPorCriterio[criterio] = promedioCriterio;
     });
-    // console.log(promediosPorCriterio);
+    console.log(promediosPorCriterio);
 
-    // console.log(conteoIndicadoresPorCriterio);
+    console.log(conteoIndicadoresPorCriterio);
   }
 
 
@@ -450,7 +450,7 @@ export class PonderacionModeloComponent implements OnInit {
     this.servicePonderacion.guardarPonderacion(ponderacionClase)
       .subscribe(
         (data: any) => {
-          // console.log('Ponderacion creada con éxito:', data);
+          console.log('Ponderacion creada con éxito:', data);
           Swal.fire(
             'Ponderacion Registrada!',
             'success'
@@ -505,7 +505,7 @@ export class PonderacionModeloComponent implements OnInit {
 
   calcularTSumaPesos(): void {
     this.sumaTotalPesos = this.dataSource.data.reduce((suma: any, indicador: any) => suma + indicador.peso, 0);
-    // console.log(this.sumaTotalPesos + ' : el total es')
+    console.log(this.sumaTotalPesos + ' : el total es')
   }
 
   //Calcular las uttilidades
@@ -513,7 +513,7 @@ export class PonderacionModeloComponent implements OnInit {
 
   calcularUtilidad(): void {
     this.sumaUtilidad = this.dataSource.data.reduce((suma: any, indicador: any) => suma + indicador.porc_utilida_obtenida, 0);
-    // console.log(this.sumaUtilidad + ' : el total es')
+    console.log(this.sumaUtilidad + ' : el total es')
   }
 
   getRowSpanCriterio(nombreCriterio: string): number {

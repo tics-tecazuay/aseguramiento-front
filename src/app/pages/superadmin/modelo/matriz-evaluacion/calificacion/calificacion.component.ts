@@ -68,7 +68,7 @@ export class CalificacionComponent implements OnInit {
       this.evaluarCuantitativaService.listarEvaluarCuantitativaPorIndicador(this.data.id).subscribe(
         (data) => {
           this.dataSource = data;
-          // console.log(data);
+          console.log(data);
         });
     }
   }
@@ -76,7 +76,7 @@ export class CalificacionComponent implements OnInit {
   seleccionar(valor: any) {
     this.dato = valor.valor;
     this.cualitativa = valor;
-    // console.log(this.cualitativa);
+    console.log(this.cualitativa);
   }
 
   guardar() {
@@ -90,7 +90,7 @@ export class CalificacionComponent implements OnInit {
       this.evaluarCualitativa.cualitativa = this.cualitativa;
       this.evaluarCualitativaService.createEvaluarCualitativa(this.evaluarCualitativa).subscribe({
         next: (data) => {
-          // console.log(data);
+          console.log(data);
           this.indicadorServie.ponderarIndicador(this.data.id, this.indicador).subscribe({
             next: (data) => {
               this.dialogRef.close({ event: 'success' });
@@ -99,12 +99,12 @@ export class CalificacionComponent implements OnInit {
         }
       });
     } else if (this.data.valor === 'cuantitativa') {
-      // this.comparar();
+      this.comparar();
     }
   }
 
   async comparar() {
-    // console.log(this.igualar, "igualar");
+    console.log(this.igualar, "igualar");
     this.dataSource.forEach(async (element: any) => {
       this.evaluarCuantitativaService.actualizar(element.id_evaluar_cuantitativa, element).subscribe({
         next: async (data) => {
@@ -116,7 +116,7 @@ export class CalificacionComponent implements OnInit {
     this.indicador.id_indicador = this.data.id;
     this.indicador.valor_obtenido = parseFloat(y.toFixed(2));
     if (this.igualar == 1) {
-      // console.log("entro");
+      console.log("entro");
       let resp = parseFloat(((y * 100) / x).toFixed(2));
       if (resp > 100) {
         resp = 100;

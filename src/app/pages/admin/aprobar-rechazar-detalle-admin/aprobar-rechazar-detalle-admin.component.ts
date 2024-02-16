@@ -17,6 +17,7 @@ import { Observacion2 } from 'src/app/models/Observaciones2';
 import { CriteriosService } from 'src/app/services/criterios.service';
 import { Actividades } from 'src/app/models/actividades';
 import { Usuario2 } from 'src/app/models/Usuario2';
+import { Asigna_Evi } from 'src/app/models/Asignacion-Evidencia';
 
 @Component({
   selector: 'app-aprobar-rechazar-detalle-admin',
@@ -24,9 +25,9 @@ import { Usuario2 } from 'src/app/models/Usuario2';
   styleUrls: ['./aprobar-rechazar-detalle-admin.component.css'],
 })
 export class AprobarRechazarDetalleAdminComponent implements OnInit {
+  ocultar=false;
   columnas: string[] = [
-    'idactividad',
-    'nombre',
+    'idasignacion_evidencia',
     'descripcion',
     'fechainicio',
     'fechafin',
@@ -57,11 +58,11 @@ export class AprobarRechazarDetalleAdminComponent implements OnInit {
   isSending = false;
   spinnerValue = 0;
   spinnerInterval: any;
-  maxTime: number = 30;
+  maxTime: number = 30; 
   mostrarbotonDetalle = false;
   evidencia: Evidencia = new Evidencia();
   evidencia2: Evidencia = new Evidencia();
-  dataSource = new MatTableDataSource<Actividades>();
+  dataSource = new MatTableDataSource<Asigna_Evi>();
   dataSource2 = new MatTableDataSource<Archivo>();
   dataSource3 = new MatTableDataSource<Observacion2>();
 
@@ -78,7 +79,7 @@ export class AprobarRechazarDetalleAdminComponent implements OnInit {
   fechaActual: Date = new Date();
   fechaFormateada: string = this.fechaActual.toLocaleDateString('es-ES');
   estadoEvi = '';
-  listadoActividad: Actividades[] = [];
+  listadoActividad: Asigna_Evi[] = [];
   archivoSe: Archivo[] = [];
   nombreActividad = '';
   isLoggedIn = false;
@@ -93,8 +94,8 @@ export class AprobarRechazarDetalleAdminComponent implements OnInit {
   observacion = '';
   idEviden = '';
   id_modelo!:number;
-  actividadSeleccionada: Actividades = new Actividades();
-  public actividad = new Actividades();
+  actividadSeleccionada: Asigna_Evi = new Asigna_Evi();
+  public actividad = new Asigna_Evi();
   listadoObservaciones: Observacion2[] = [];
 evid!:number;
 compa!:number;
@@ -122,13 +123,13 @@ compa!:number;
     });
     const idEvidencia = localStorage.getItem("eviden");
     this.id_ev=Number(idEvidencia);
-    // console.log("traido ev "+idEvidencia);
+    console.log("traido ev "+idEvidencia);
     if(this.compa!=this.id_ev){
       this.compa=this.id_ev;
       this.modeloMax();
     }
     this.modeloMax();
-
+    
   }
   modeloMax() {
     this.criteriosService.getModeMaximo().subscribe((data) => {
@@ -140,17 +141,17 @@ compa!:number;
   inicio(){
     this.isLoadingPage = true;
     if (this.id_ev!=0) {
-
-      // console.log("evid "+this.id_ev);
+      
+      console.log("evid "+this.id_ev);
       this.criteriosService.getCorreo(this.id_modelo,this.id_ev).subscribe((data) => {
         this.correoEnviar = data.correo;
         this.toUser = this.correoEnviar;
         this.listar();
         this.isLoadingPage = false;
       });
-
+     
     }else{
-
+     
     const data = history.state.data;
     const usuarioResponsable = history.state.usuarioEnviar;
     this.evidencia = data;
@@ -158,20 +159,20 @@ compa!:number;
     this.usuarioCorreo = usuarioResponsable;
     this.correoEnviar = this.usuarioCorreo.persona.correo;
     this.toUser = this.correoEnviar;
-
+  
     if (this.evidencia == undefined) {
       this.router.navigate(['user-dashboard']);
-      location.replace('#/use/user-dashboard');
+      location.replace('/use/user-dashboard');
     }
 
     if (this.usuarioCorreo == undefined) {
       this.router.navigate(['user-dashboard']);
-      location.replace('#/use/user-dashboard');
+      location.replace('/use/user-dashboard');
     }
     this.listar();
   }
   }
-
+  
   //
   seleccionarArchivo(element: any) {
     this.archivoSeleccionado = element.nombre;
@@ -197,7 +198,7 @@ compa!:number;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
-        // console.log('Notificacion guardada');
+        console.log('Notificacion guardada');
       },
       (error: any) => {
         console.error('No se pudo guardar la notificación', error);
@@ -223,7 +224,7 @@ compa!:number;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
-        // console.log('Notificacion guardada');
+        console.log('Notificacion guardada');
       },
       (error: any) => {
         console.error('No se pudo guardar la notificación', error);
@@ -250,7 +251,7 @@ compa!:number;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
-        // console.log('Notificacion guardada');
+        console.log('Notificacion guardada');
       },
       (error: any) => {
         console.error('No se pudo guardar la notificación', error);
@@ -276,7 +277,7 @@ compa!:number;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
-        // console.log('Notificacion guardada');
+        console.log('Notificacion guardada');
       },
       (error: any) => {
         console.error('No se pudo guardar la notificación', error);
@@ -303,7 +304,7 @@ compa!:number;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
-        // console.log('Notificacion guardada');
+        console.log('Notificacion guardada');
       },
       (error: any) => {
         console.error('No se pudo guardar la notificación', error);
@@ -330,7 +331,7 @@ compa!:number;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
-        // console.log('Notificacion guardada');
+        console.log('Notificacion guardada');
       },
       (error: any) => {
         console.error('No se pudo guardar la notificación', error);
@@ -356,7 +357,7 @@ compa!:number;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
-        // console.log('Notificacion guardada');
+        console.log('Notificacion guardada');
       },
       (error: any) => {
         console.error('No se pudo guardar la notificación', error);
@@ -382,7 +383,7 @@ compa!:number;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
-        // console.log('Notificacion guardada');
+        console.log('Notificacion guardada');
       },
       (error: any) => {
         console.error('No se pudo guardar la notificación', error);
@@ -409,58 +410,58 @@ compa!:number;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
-        // console.log('Notificacion guardada');
+        console.log('Notificacion guardada');
       },
       (error: any) => {
         console.error('No se pudo guardar la notificación', error);
       }
     );
   }
+  
   guardarap(){
     if(this.estadoEvi=='Rechazada'){
       this.Guardar();
    this.verificar=false;
     } else if(this.estadoEvi=='Aprobada'){
       this.Guardar();
-
+      
     } else {
       Swal.fire(
         'La evidencia fue rechazada',
         'Debe enviar el correo con la observación',
         'warning'
       );
-
+      
     }
   }
+
   listar(): void {
-    // console.log("evid a listar"+this.id_ev);
+    console.log("evid a listar"+this.id_ev);
     this.services.getEviAsig(this.id_ev).subscribe((data) => {
       this.listadoActividad = data;
-      // console.log(this.listadoActividad);
+      console.log(this.listadoActividad);
       this.dataSource.data = this.listadoActividad;
 
       const index = 0;
       if (index >= 0 && index < this.dataSource.data.length) {
-        const idActividad = this.dataSource.data[index].id_actividad;
-        // console.log('idActividad:', idActividad);
-
+        const idActividad = this.dataSource.data[index].id_asignacion_evidencia;
+        console.log('idActividad:', idActividad);
+       
       } else {
-        // console.log('Índice fuera de rango');
+        console.log('Índice fuera de rango');
       }
     });
   }
 
 
-
-
   seleccionarTareaDetalle(element: any) {
-    const idActividad = element.id_actividad
+    const idActividad = element.id_asignacion_evidencia
     this.noRegistros = null;
-
+ 
     this.services.getObservacionByActi(idActividad).subscribe((data) => {
       this.listadoObservaciones = data;
-
-
+     
+      
       if(data.length>0)
       {
         this.dataSource3.data=this.listadoObservaciones;
@@ -476,14 +477,14 @@ compa!:number;
 }
 
 
-
+  
 
   listarArchivo(element: any) {
-    this.archivo.getarchivoActividad(element.id_actividad).subscribe((data) => {
+    this.archivo.getarchivoActividad(element.id_asignacion_evidencia).subscribe((data) => {
       this.archivoSe = data;
       this.dataSource2.data = this.archivoSe;
     });
-    this.nombreActividad = element.nombre;
+    this.nombreActividad = element.evidencia.id_asignacion_evidencia;
   }
 
   goBack() {
@@ -520,7 +521,7 @@ compa!:number;
 
     this.mostrar = !this.mostrar;
 
-
+    
     this.disableEvaluar = true;
   }
 
@@ -529,31 +530,28 @@ compa!:number;
     return nombreArchivo;
   }
 
-
-
-
   Guardar() {
     if (this.aprobado) {
-      this.actividadSeleccionada.estado = this.estadoEvi;
-      this.actividadSeleccionada.usuario = null;
-      // console.log(this.actividadSeleccionada);
+      this.actividadSeleccionada.evidencia.estado = this.estadoEvi;
+      this.actividadSeleccionada.usuario2 = null;
+      console.log(this.actividadSeleccionada);
 
       if (this.actividadSeleccionada) {
         this.services
           .update(
-            this.actividadSeleccionada.id_actividad,
+            this.actividadSeleccionada.id_asignacion_evidencia,
             this.actividadSeleccionada
           )
           .subscribe((response) => {
             this.listar();
           });
       } else {
-        // console.log('id_actividad es undefined');
+        console.log('id_actividad es undefined');
       }
 
       this.observaciones.observacion = this.observacion;
-      this.observaciones.actividad.id_actividad =
-        this.actividadSeleccionada.id_actividad;
+      this.observaciones.actividad.id_asignacion_evidencia =
+        this.actividadSeleccionada.id_asignacion_evidencia;
       this.observaciones.usuario = this.user.id;
       this.services
         .createObservacion(this.observaciones)
@@ -567,8 +565,8 @@ compa!:number;
     } else if (
       this.observaciones.observacion == '' ||
       this.observaciones.observacion == null ||
-      this.actividadSeleccionada.estado == '' ||
-      this.actividadSeleccionada.estado == null
+      this.actividadSeleccionada.evidencia.estado == '' ||
+      this.actividadSeleccionada.evidencia.estado == null
     ) {
       Swal.fire({
         title: 'Alerta',
@@ -576,26 +574,26 @@ compa!:number;
         icon: 'warning',
       });
     } else {
-      this.actividadSeleccionada.estado = this.estadoEvi;
-      this.actividadSeleccionada.usuario = null;
-      // console.log(this.actividadSeleccionada);
+      this.actividadSeleccionada.evidencia.estado = this.estadoEvi;
+      this.actividadSeleccionada.usuario2 = null;
+      console.log(this.actividadSeleccionada);
 
       if (this.actividadSeleccionada) {
         this.services
           .update(
-            this.actividadSeleccionada.id_actividad,
+            this.actividadSeleccionada.id_asignacion_evidencia,
             this.actividadSeleccionada
           )
           .subscribe((response) => {
             this.listar();
           });
       } else {
-        // console.log('id_actividad es undefined');
+        console.log('id_actividad es undefined');
       }
 
       this.observaciones.observacion = this.observacion;
-      this.observaciones.actividad.id_actividad =
-        this.actividadSeleccionada.id_actividad;
+      this.observaciones.actividad.id_asignacion_evidencia =
+        this.actividadSeleccionada.id_asignacion_evidencia;
       this.observaciones.usuario = this.user.id;
       this.services
         .createObservacion(this.observaciones)
@@ -642,10 +640,10 @@ compa!:number;
   }
 
   enviar() {
-
+    
     const startTime = new Date();
     this.isSending = true;
-
+    
     this.spinnerInterval = setInterval(() => {
       const endTime = new Date();
       const timeDiff = (endTime.getTime() - startTime.getTime()) / 1000;
@@ -666,12 +664,12 @@ compa!:number;
           this.notificarrechazo();
           this.notificarrechazoadmin();
           this.notificarrechazouser();
-          /*console.log(
+          console.log(
             'Email sent successfully! Time taken:',
             timeDiff,
             'seconds'
           );
-          console.log('Email sent successfully!');*/
+          console.log('Email sent successfully!');
           this.verificar=true;
           Swal.fire({
             title: 'El correo se ha enviado con éxito',
@@ -715,7 +713,7 @@ compa!:number;
   }
 
 
-
+  
   Limpiar() {
     this.message = '';
     this.subject = '';

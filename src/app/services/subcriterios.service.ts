@@ -13,7 +13,6 @@ import { SubcriterioIndicadoresProjectionFull } from '../interface/SubcriterioIn
 export class SubcriteriosService {
 
   constructor(private http: HttpClient) { }
-
   getSubcriterios(): Observable<Subcriterio[]> {
     return this.http.get<Subcriterio[]>(`${baserUrl}/api/subcriterio/listar`);
   }
@@ -23,13 +22,13 @@ export class SubcriteriosService {
   crear(r: Subcriterio): Observable<Subcriterio> {
     return this.http.post<Subcriterio>(`${baserUrl}/api/subcriterio/crear`, r).pipe(
       catchError((error) => {
-        // console.error(error);
+        console.error(error);
         throw error;
       })
     );
   }
 
-  public listarSubcriterio(): Observable<Subcriterio[]> {
+  listarSubcriterio(): Observable<Subcriterio[]> {
     return this.http
       .get(`${baserUrl}/api/subcriterio/listar`)
       .pipe(map((response) => response as Subcriterio[]));
@@ -42,20 +41,12 @@ export class SubcriteriosService {
   eliminar(crite: any): Observable<any> {
     return this.http.put(`${baserUrl}/api/subcriterio/eliminar/${crite.id_subcriterio}`, crite);
   }
-
   //listar subcriterios por criterio
-  public listarSubcriterioPorCriterio(id: any): Observable<Subcriterio[]> {
+  listarSubcriterioPorCriterio(id: any): Observable<Subcriterio[]> {
     return this.http
       .get(`${baserUrl}/api/subcriterio/listarPorCriterio/${id}`)
       .pipe(map((response) => response as Subcriterio[]));
   }
-
-  public geSubcritebyId(id: any): Observable<Subcriterio[]> {
-    return this.http
-      .get(`${baserUrl}/api/subcriterio/buscar/${id}`)
-      .pipe(map((response) => response as Subcriterio[]));
-  }
-
   obtenerDatosCriterios(id_criterio: any): Observable<SubcriterioIndicadoresProjection[]> {
     return this.http.get<SubcriterioIndicadoresProjection[]>(`${baserUrl}/api/subcriterio/datosSubcriterios/${id_criterio}`);
   }

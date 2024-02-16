@@ -8,7 +8,7 @@ import { usuario } from '../models/Usuario';
 import { Usuario2 } from '../models/Usuario2';
 import { ResponsableProjection } from '../interface/ResponsableProjection';
 import { AsignacionProjection } from '../interface/AsignacionProjection';
-
+ 
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +24,13 @@ export class AsignacionResponsableService {
   }
  //Listar responsables
  public getResponsables(): Observable<ResponsableProjection[]> {
-  return this.httpClient.get(`${baserUrl}/usuarios/responsables`).
+  return this.httpClient.get(`${baserUrl}/usuarios/responsablesGeneral`).
     pipe(map((response) => response as ResponsableProjection[]));
+}
+
+//BUSCAR DE RESPONSABLES POR ADMIN
+public getlistadeResponsablesByAdmin(idAdministrador: number): Observable<ResponsableProjection[]> {
+  return this.httpClient.get<ResponsableProjection[]>(`${baserUrl}/api/asignacion_responsable/listadeResponsablesByAdmin/${idAdministrador}`);
 }
 
  //LISTAR RESPONSABLEAdmin
@@ -33,7 +38,6 @@ export class AsignacionResponsableService {
   return this.httpClient.get(`${baserUrl}/usuarios/listarResponsableAdmin`).
     pipe(map((response) => response as Usuario2[]));
 }
-
 
   //LISTAR CRITERIOS
   public listarCriterios(): Observable<Criterio[]> {
@@ -57,7 +61,7 @@ export class AsignacionResponsableService {
   }
   //EDITAR ASIGNACION
   public updateAsigna(asigna: asigna_R) {
-    // console.log(asigna.id_asignacion);
+    console.log(asigna.id_asignacion);
     return this.httpClient.put<asigna_R>(`${baserUrl}/api/asignacion_admin/actualizar/` + asigna.id_asignacion, asigna);
   }
 
@@ -66,8 +70,16 @@ export class AsignacionResponsableService {
     return this.httpClient.delete<asigna_R>(`${baserUrl}/api/asignacion_admin/eliminar/` + asigna.id_asignacion);
   }
 
+  //ELIMINAR ASIGNACION RESPONSABLE
+  public deleteAsignacionResponsableAdmin(id_usuarioResponsable: number) {
+    return this.httpClient.put<any>(`${baserUrl}/api/asignacion_responsable/eliminarlogic/` + id_usuarioResponsable, {}	);
+  }
+
   //BUSCAR POR ID
   public getAsignacionId(id: number): Observable<asigna_R> {
     return this.httpClient.get<asigna_R>(`${baserUrl}/api/asignacion_admin/buscar/` + id);
   }
+
+ 
+  
 }

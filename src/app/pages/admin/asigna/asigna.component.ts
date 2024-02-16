@@ -52,7 +52,7 @@ export class AsignaComponent implements OnInit {
     this.asignaService.listarUsuario().
       subscribe(data => {
         this.usuarioResponsable = data;
-        // console.log(this.usuarioResponsable);
+        console.log(this.usuarioResponsable);
       })
   }
 
@@ -60,7 +60,7 @@ export class AsignaComponent implements OnInit {
     this.asignaService.listarCriterios().
       subscribe(data => {
         this.criterios = data;
-        // console.log(this.criterios);
+        console.log(this.criterios);
       })
   }
 
@@ -68,7 +68,7 @@ export class AsignaComponent implements OnInit {
     this.asignaService.listarAsignarResponsable().
       subscribe(data => {
         this.asignaciones = data;
-        // console.log(this.asignaciones);
+        console.log(this.asignaciones);
       })
   }
 
@@ -83,7 +83,7 @@ export class AsignaComponent implements OnInit {
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
-        // console.log('Notificacion guardada');
+        console.log('Notificacion guardada');
       },
       (error: any) => {
         console.error('No se pudo guardar la notificación', error);
@@ -120,7 +120,7 @@ export class AsignaComponent implements OnInit {
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
-        // console.log('Notificacion guardada');
+        console.log('Notificacion guardada');
       },
       (error: any) => {
         console.error('No se pudo guardar la notificación', error);
@@ -129,7 +129,7 @@ export class AsignaComponent implements OnInit {
   }
 
   guardar(asigna: asigna_R) {
-    // console.log(asigna.criterio);
+    console.log(asigna.criterio);
     if (asigna.usuario != null || asigna.usuario != undefined ||
       asigna.criterio != null || asigna.criterio != undefined) {
       this.asignaService.createAsigna(asigna).
@@ -150,7 +150,7 @@ export class AsignaComponent implements OnInit {
           this.notificar();
           this.notificaruser();
           this.notificaradmin();
-          // console.log("hhh" + asigna);
+          console.log("hhh" + asigna);
         })
     }else{
       Swal.fire('Llene todos los campos', '', 'warning')
@@ -160,7 +160,7 @@ export class AsignaComponent implements OnInit {
 
   editar(asigna: asigna_R): void {
     localStorage.setItem("id_asig", asigna.id_asignacion.toString());
-    // console.log(asigna.id_asignacion)
+    console.log(asigna.id_asignacion)
     this.asignaN = asigna;
     this.Editar();
     //this.router.navigate(['admin/editProduc']);
@@ -169,14 +169,14 @@ export class AsignaComponent implements OnInit {
   Editar() {
 
     let id = localStorage.getItem("id_asig");
-    // console.log(id);
+    console.log(id);
     this.asignaService.getAsignacionId(Number(id))
       .subscribe(data => {
         this.asignaN = data;
         this.idusuario=data.usuario.id;
           this.nombreasignado=data.usuario.username;
           this.nombre=data.criterio.nombre;
-        // console.log(this.asignaN)
+        console.log(this.asignaN)
       })
       this.listaAsignaciones();
       this.notificar();
@@ -185,7 +185,7 @@ export class AsignaComponent implements OnInit {
   }
 
   Actualizar(asignaNu: asigna_R) {
-    // console.log(asignaNu)
+    console.log(asignaNu)
     Swal.fire({
       title: '¿Desea modificar los campos?',
       showDenyButton: true,

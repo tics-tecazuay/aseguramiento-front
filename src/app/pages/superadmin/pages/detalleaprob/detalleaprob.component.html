@@ -48,35 +48,34 @@
           >
             <table mat-table [dataSource]="dataSource">
               <ng-container matColumnDef="idactividad">
-                <th mat-header-cell *matHeaderCellDef>ID</th>
-                <td mat-cell *matCellDef="let elemento">
+                <th mat-header-cell *matHeaderCellDef [style.display]="ocultar? '' : 'none'">ID</th>
+            <td mat-cell *matCellDef="let elemento; let i = index" [style.display]="ocultar? '' : 'none'">
                   {{ elemento.id_actividad }}
                 </td>
               </ng-container>
-
               <ng-container matColumnDef="nombre">
-                <th mat-header-cell *matHeaderCellDef>NOMBRE</th>
-                <td mat-cell *matCellDef="let elemento">
+                <th mat-header-cell *matHeaderCellDef [style.display]="ocultar? '' : 'none'">NOMBRE</th>
+            <td mat-cell *matCellDef="let elemento; let i = index" [style.display]="ocultar? '' : 'none'">
                   {{ elemento.nombre }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="descripcion">
-                <th mat-header-cell *matHeaderCellDef>DESCRIPCIÓN</th>
-                <td mat-cell *matCellDef="let elemento">
+                <th mat-header-cell *matHeaderCellDef [style.display]="ocultar? '' : 'none'">DESCRIPCION</th>
+            <td mat-cell *matCellDef="let elemento; let i = index" [style.display]="ocultar? '' : 'none'">
                   {{ elemento.descripcion }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="fechainicio">
                 <th mat-header-cell *matHeaderCellDef>FECHA DE INICIO</th>
                 <td mat-cell *matCellDef="let elemento">
-                  {{ elemento.fecha_inicio }}
+                  {{ elemento.fecha_inicio | date:'dd/MM/yyyy' }}
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="fechafin">
                 <th mat-header-cell *matHeaderCellDef>FECHA FINAL</th>
                 <td mat-cell *matCellDef="let elemento">
-                  {{ elemento.fecha_fin }}
+                  {{ elemento.fecha_fin | date:'dd/MM/yyyy' }}
                 </td>
               </ng-container>
 

@@ -19,14 +19,14 @@ export class EncabezadoEvaluarService {
   crear(r: Encabezado_Evaluar): Observable<Encabezado_Evaluar> {
     return this.http.post<Encabezado_Evaluar>(`${baserUrl}/api/encabezado_evaluar/crear`, r).pipe(
       catchError((error) => {
-        // console.error(error);
+        console.error(error);
         throw error;
       })
     );
   }
 
   actualizar( crite: Encabezado_Evaluar): Observable<any> {
-    // console.log(crite)
+    console.log(crite)
     return this.http.put(`${baserUrl}/api/encabezado_evaluar/actualizar/${crite.id_encabezado_evaluar}`, crite);
   }
 

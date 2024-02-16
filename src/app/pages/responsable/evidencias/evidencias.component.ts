@@ -2,20 +2,15 @@ import { Archivo } from './../../../models/Archivo';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ArchivoService } from 'src/app/services/archivo.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import Swal from 'sweetalert2';
-import { ActividadService } from 'src/app/services/actividad.service';
-import { Evidencia } from 'src/app/models/Evidencia';
-import { EvidenciaService } from 'src/app/services/evidencia.service';
-import { Indicador } from 'src/app/models/Indicador';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Actividades } from 'src/app/models/actividades';
 import { LoginService } from 'src/app/services/login.service';
 import { Notificacion } from 'src/app/models/Notificacion';
 import { NotificacionService } from 'src/app/services/notificacion.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { Asigna_Evi } from 'src/app/models/Asignacion-Evidencia';
 
 @Component({
   selector: 'app-evidencias',
@@ -55,7 +50,7 @@ export class EvidenciasResponComponent implements OnInit {
 idevidencia!:number;
 ocultar=true;
  ngAfterViewInit() {
-  // console.log('Paginator:', this.paginator);
+  console.log('Paginator:', this.paginator);
   if (this.paginator) {
     this.dataSource.paginator = this.paginator;
   }
@@ -78,7 +73,7 @@ ocultar=true;
     }
   }
   @ViewChild('fileInput') fileInput!: ElementRef;
-  activ: Actividades = new Actividades();
+  activ: Asigna_Evi = new Asigna_Evi();
   archi: Archivo = new Archivo();
   estad='';
   veri=true;
@@ -87,23 +82,23 @@ ocultar=true;
     this.activ = data;
     if(this.activ?.evidencia?.id_evidencia!=null){
     this.idevidencia=this.activ.evidencia.id_evidencia;
-    this.estad=this.activ.estado;
+    //this.estad=this.activ.estado;
     if(this.estad=='Aprobada'){
       this.veri=false;
     }
-    // console.log("acti recibido "+this.idevidencia+" estado "+this.estad);
+    console.log("acti recibido "+this.idevidencia+" estado "+this.estad);
   }
-
+    
     if (this.activ == undefined) {
       this.router.navigate(['user-dashboard']);
-      location.replace('#/use/user-dashboard');
+      location.replace('/use/user-dashboard');
     }
 
     const datos = history.state.data;
     this.archi = data;
     if (this.archi == undefined) {
       this.router.navigate(['user-dashboard']);
-      location.replace('#/use/user-dashboard');
+      location.replace('/use/user-dashboard');
     }
     this.isLoggedIn = this.login.isLoggedIn();
     this.user = this.login.getUser();
@@ -124,8 +119,8 @@ ocultar=true;
 
   listar(): void {
     this.archivo.geteviasig(this.user.username).subscribe(data => {
-      this.aRCHI = data.filter(archivo => archivo.actividad?.id_actividad === this.activ.id_actividad);
-      this.dataSource.data = data.filter(archivo => archivo.actividad?.id_actividad === this.activ.id_actividad);
+      this.aRCHI = data.filter(archivo => archivo.actividad?.id_asignacion_evidencia === this.activ.id_asignacion_evidencia);
+      this.dataSource.data = data.filter(archivo => archivo.actividad?.id_asignacion_evidencia === this.activ.id_asignacion_evidencia);
    });
   }
 
@@ -133,7 +128,7 @@ ocultar=true;
     this.noti.fecha = new Date();
     this.noti.rol = "SUPERADMIN";
     this.noti.mensaje = this.user.persona.primer_nombre+" "+this.user.persona.primer_apellido+" ha subido un archivo "
-    +"para la actividad "+ this.activ.nombre;
+    +"para la actividad "+ this.activ.evidencia.descripcion;
 
     this.noti.visto = false;
     this.noti.usuario =  0;
@@ -142,7 +137,7 @@ ocultar=true;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
-        // console.log('Notificacion guardada');
+        console.log('Notificacion guardada');
       },
       (error: any) => {
         console.error('No se pudo guardar la notificación', error);
@@ -154,7 +149,7 @@ ocultar=true;
     this.noti.fecha = new Date();
     this.noti.rol = "ADMIN";
     this.noti.mensaje = this.user.persona.primer_nombre+" "+this.user.persona.primer_apellido+" ha subido un archivo "
-    +"para la actividad "+ this.activ.nombre;
+    +"para la actividad "+ this.activ.evidencia.descripcion;
     this.noti.visto = false;
     this.noti.usuario =  0;
     this.noti.url="/adm/detalleAprobarRechazar";
@@ -162,10 +157,10 @@ ocultar=true;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
-        // console.log('Notificacion guardada');
+        console.log('Notificacion guardada');
       },
       (error: any) => {
-        // console.error('No se pudo guardar la notificación', error);
+        console.error('No se pudo guardar la notificación', error);
       }
     );
   }
@@ -188,7 +183,7 @@ ocultar=true;
     }).then((result) => {
       if (result.isConfirmed) {
         this.eliminar(nom);
-        // console.log(id);
+        console.log(id);
         this.eliminarlog(id);
         Swal.fire("Eliminado", nom + " ha sido eliminado correctamente.", "success");
       }
@@ -197,9 +192,9 @@ ocultar=true;
 
 
   onUpload(): void {
-    this.archivo.cargar(this.filearchivo, this.descripcion, this.activ.id_actividad).subscribe(
+    this.archivo.cargar(this.filearchivo, this.descripcion, this.activ.id_asignacion_evidencia).subscribe(
       event => {
-        // console.log('Archivo subido:');
+        console.log('Archivo subido:');
         // Lógica adicional después de subir el archivo
         Swal.fire({
           title: '¡Éxito!',
@@ -244,7 +239,7 @@ ocultar=true;
         return JSON.stringify(item).toLowerCase().includes(lowerCaseFilter);
       });
     } else {
-
+ 
       // Restaurar los datos originales si no hay filtro aplicado
       this.listar();
       }

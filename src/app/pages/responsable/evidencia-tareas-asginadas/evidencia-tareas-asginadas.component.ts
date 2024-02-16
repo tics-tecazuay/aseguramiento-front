@@ -21,7 +21,7 @@ import { detalleEvaluacion } from 'src/app/models/DetalleEvaluacion';
 })
 export class EvidenciaTareasAsginadasComponent {
   // Propiedades y métodos anteriores
-  evidencias: EvidenciaProjection[] = []; // Declaración de la propiedad
+  evidencias: EvidenciaProjection[] = []; 
   isLoggedIn: boolean;
   user: any;
  verificar=false;
@@ -29,7 +29,7 @@ export class EvidenciaTareasAsginadasComponent {
  ocultar=false;
   botonDeshabilitado: boolean | undefined;
   dataSource = new MatTableDataSource<EvidenciaProjection>();
-  displayedColumns: string[] = ['ID', 'Criterio', 'Subcriterio', 'Indicador', 'Estado', 'Descripción','observacion', 'Actividad'];
+  displayedColumns: string[] = ['ID', 'Criterio', 'Subcriterio', 'Indicador', 'Actividad'];
   id_modelo!:number;
   constructor(private detaeva: DetalleEvaluacionService,
     private login: LoginService,private httpCriterios: CriteriosService,
@@ -47,7 +47,7 @@ export class EvidenciaTareasAsginadasComponent {
       if (length == 0 || pageSize == 0) {
         return `0 de ${length}`;
       }
-
+    
       length = Math.max(length, 0);
       const startIndex = page * pageSize;
       const endIndex =
@@ -65,58 +65,90 @@ export class EvidenciaTareasAsginadasComponent {
     }
   }*/
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  
 
-
-
+ 
 
   ngOnInit(): void {
     this.login.loginStatusSubjec.asObservable().subscribe(
       data => {
         this.isLoggedIn = this.login.isLoggedIn();
         this.user = this.login.getUser();
-
+       
       }
     );
      this.Inicio();
-    localStorage.removeItem("eviden");
+    localStorage.removeItem("eviden");   
   }
 
   Inicio(){
     this.httpCriterios.getModeMaximo().subscribe((data) => {
       this.id_modelo =data.id_modelo;
-      // console.log("ID modelo"+this.id_modelo);
+      console.log("ID modelo"+this.id_modelo);
       this.Listado();
-    });
+    });  
   }
 
-  Listado() {
+  spans: any[] = [];
+
+  cacheSpan(key: string, accessor: (d: any) => any) {
+    for (let i = 0; i < this.evidencias.length;) {
+      let currentValue = accessor(this.evidencias[i]);
+      let count = 1;
+
+      for (let j = i + 1; j < this.evidencias.length; j++) {
+        if (currentValue !== accessor(this.evidencias[j])) {
+          break;
+        }
+        count++;
+      }
+  
+      if (!this.spans[i]) {
+        this.spans[i] = {};
+      }
+  
+      this.spans[i][key] = count;
+      i += count;
+    }
+  }
+  
+  
+  getRowSpan(col: any, index: any) {
+    return this.spans[index] && this.spans[index][col];
+  }
+
+  Listado(): void {
     this.evidenciaService.getevilist(this.user.username).subscribe((data: any[]) => {
       if (data.length != 0) {
         this.verificar = true;
-        this.titulo = "EVIDENCIAS ASIGNADAS";
-        const evidata: any[] = data;
-        this.evidencias = evidata;
+        this.titulo = 'ACTIVIDADES ASIGNADAS';
+        this.evidencias = data;
 
-        evidata.forEach(evidencia => {
+        this.cacheSpan('crite', (d) => d.criterio);
+        this.cacheSpan('subcrite', (d) => d.criterio + d.subcriterio);
+        this.cacheSpan('indi', (d) =>  d.criterio + d.subcriterio + d.indicador);
+
+        data.forEach(evidencia => {
           this.detaeva.getObservaciones(evidencia.id_evidencia, this.id_modelo).subscribe(
             (observac: detalleEvaluacion[]) => {
-              evidencia.observacion = observac.map((c) =>c.observacion);
+              evidencia.observacion = observac.map((c) => c.observacion);
             }
           );
         });
 
         this.dataSource.data = this.evidencias;
-        this.dataSource.paginator = this.paginator;
       } else {
-        this.titulo = "NO TIENES EVIDENCIAS ASIGNADAS";
+        this.titulo = 'NO TIENES ACTIVIDADES ASIGNADAS';
       }
     });
   }
 
+  
+  
   verDetalles(evidencia: any) {
     this.router.navigate(['/res/ActividadesResponsable'], { state: { data: evidencia.id_evidencia } });
   }
-
+    
   getColorEstado(estado: string): string {
     switch (estado.toLowerCase()) {
       case 'pendiente':
@@ -129,7 +161,7 @@ export class EvidenciaTareasAsginadasComponent {
         return '';
     }
   }
-
+  
 
   verificarFechaLimite() {
     this.modeloService.getModeMaximo().subscribe(data => {

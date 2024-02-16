@@ -127,26 +127,26 @@ export class AprobarRechazarAdminComponent implements OnInit {
   calificar(element:any){
     this.idevi=element.id_evidencia;
     this.evidenciaService.getevical(this.idevi,this.id_modelo).subscribe(data => {
-      // console.log("Datos ev "+JSON.stringify(data));
+      console.log("Datos ev "+JSON.stringify(data));
       const tipo:any = data.tipo;
       const id: any = data.id_in;
       const peso:any=data.peso;
     
-      // console.log("tipo "+tipo+" id ind "+id+" peso "+peso);
+      console.log("tipo "+tipo+" id ind "+id+" peso "+peso);
       
        this.evaluar(tipo,id,peso);
     });  
   }
 
   evaluar(valor: any, id: any, peso: any): void {
-    // console.log("tipo "+valor+" id ind "+id+" peso "+peso);
+    console.log("tipo "+valor+" id ind "+id+" peso "+peso);
     const dialogRef = this.dialog.open(CalificacionComponent, {
       data: { valor, id, peso },
     });
     dialogRef.afterClosed().subscribe(result => {
-      // console.log(result);
+      console.log(result);
       if (result.event == 'success') {
-        // console.log(result);
+        console.log(result);
         Swal.fire({
           position: 'center',
           icon: 'success',
@@ -182,7 +182,7 @@ export class AprobarRechazarAdminComponent implements OnInit {
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
-        // console.log('Notificacion guardada');
+        console.log('Notificacion guardada');
       },
       (error: any) => {
         console.error('No se pudo guardar la notificación', error);
@@ -208,7 +208,7 @@ this.noti.idactividad=0;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
-        // console.log('Notificacion guardada');
+        console.log('Notificacion guardada');
       },
       (error: any) => {
         console.error('No se pudo guardar la notificación', error);
@@ -220,7 +220,7 @@ this.noti.idactividad=0;
     this.noti.fecha = new Date();
     this.noti.rol = 'ADMIN';
     const nombres = localStorage.getItem('nombres');
-    // console.log("Nombres usuario "+nombres );
+    console.log("Nombres usuario "+nombres );
     this.noti.mensaje =
       this.user.persona.primer_nombre +
       ' ' +
@@ -236,7 +236,7 @@ this.noti.idactividad=0;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
         this.noti = data;
-        // console.log('Notificacion guardada');
+        console.log('Notificacion guardada');
       },
       (error: any) => {
         console.error('No se pudo guardar la notificación', error);
@@ -263,7 +263,7 @@ notificaraprob() {
   this.notificationService.crear(this.noti).subscribe(
     (data: Notificacion) => {
       this.noti = data;
-      // console.log('Notificacion guardada');
+      console.log('Notificacion guardada');
     },
     (error: any) => {
       console.error('No se pudo guardar la notificación', error);
@@ -289,7 +289,7 @@ this.noti.idactividad=0;
   this.notificationService.crear(this.noti).subscribe(
     (data: Notificacion) => {
       this.noti = data;
-      // console.log('Notificacion guardada');
+      console.log('Notificacion guardada');
     },
     (error: any) => {
       console.error('No se pudo guardar la notificación', error);
@@ -301,7 +301,7 @@ notificaraprobadmin() {
   this.noti.fecha = new Date();
   this.noti.rol = 'ADMIN';
   const nombres = localStorage.getItem('nombres');
-  // console.log("Nombres usuario "+nombres );
+  console.log("Nombres usuario "+nombres );
   this.noti.mensaje =
     this.user.persona.primer_nombre +
     ' ' +
@@ -317,7 +317,7 @@ this.noti.idactividad=0;
   this.notificationService.crear(this.noti).subscribe(
     (data: Notificacion) => {
       this.noti = data;
-      // console.log('Notificacion guardada');
+      console.log('Notificacion guardada');
     },
     (error: any) => {
       console.error('No se pudo guardar la notificación', error);
@@ -343,7 +343,7 @@ this.noti.idactividad=0;
         this.isLoading = false;
       });
 
-    // console.log(this.evidencias);
+    console.log(this.evidencias);
     this.mostrarBoton = true;
     this.correoEnviar = this.usuarioSeleccionado.persona.correo;
     this.toUser = this.correoEnviar;
@@ -362,7 +362,7 @@ this.noti.idactividad=0;
   }
 
   verDetalles(evidencia: any) {
-    // console.log("id ev "+evidencia.id_evidencia);
+    console.log("id ev "+evidencia.id_evidencia);
     this.router.navigate(['/adm/detalleAprobarRechazar'], {
       state: { data: evidencia, usuarioEnviar: this.usuarioSeleccionado },
     });
@@ -382,11 +382,11 @@ this.noti.idactividad=0;
       .subscribe(
         (detalles) => {
           this.listadodetalleEval = detalles;
-          // console.log(detalles)
+          console.log(detalles)
            this.dataSource4.data = detalles;         
         },
         (error) => {
-          // console.log(error);
+          console.log(error);
         }
       );
 
@@ -409,7 +409,7 @@ Listar(){
        }
     },
     (error) => {
-      // console.log(error);
+      console.log(error);
     }
   );
 }
@@ -449,7 +449,7 @@ enviarNotificacion(notificacion: any) {
   this.notificationService.crear(notificacion).subscribe(
     (data: any) => {
       this.verificar=true;
-      // console.log('Notificación enviada con éxito');
+      console.log('Notificación enviada con éxito');
       // Realiza cualquier otra acción necesaria después de enviar la notificación
     },
     (error: any) => {
@@ -491,7 +491,7 @@ enviarNotificacion(notificacion: any) {
 
   Aprobado(descripcion:any) {
     this.descripcionSeleccionada = descripcion.descripcion;
-    // console.log("id Evidencia "+descripcion.id_evidencia);
+    console.log("id Evidencia "+descripcion.id_evidencia);
    this.aprobado = true;
     this.verificar=true;
     Swal.fire({
@@ -569,7 +569,7 @@ this.detalleEvi.estado=true;
               confirmButtonText: 'OK',
             });
 
-            // console.log(error);
+            console.log(error);
           }
         );
     }else if (
@@ -614,7 +614,7 @@ this.detalleEvi.estado=true;
               confirmButtonText: 'OK',
             });
 
-            // console.log(error);
+            console.log(error);
           }
         );
     } else {

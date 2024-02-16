@@ -6,6 +6,7 @@ import { Criterio } from '../models/Criterio';
 import { Asignacion_Criterios } from '../models/Asignacion-Criterios';
 import { usuario } from '../models/Usuario';
 import { NombreAsigProjection } from '../interface/NombreAsigProjection';
+import { AsignacionProjection } from '../interface/AsignacionProjection';
 
 @Injectable({
   providedIn: 'root'
@@ -79,5 +80,19 @@ export class AsignacionCriterioService {
 
   public nombre_Admin(id_modelo:number,id_criterio:number): Observable<NombreAsigProjection> {
     return this.httpClient.get<NombreAsigProjection>(`${baserUrl}/api/asignacion_admin/listarnombre_admin/${id_modelo}/${id_criterio}`);
+  }
+  
+//@GetMapping(veradminsporcriterio/{id_modelo}/{id_criterio})
+  public verAdminsPorCriterio(id_modelo: number, id_criterio: number): Observable<AsignacionProjection[]> {
+    return this.httpClient.get<AsignacionProjection[]>(`${baserUrl}/api/asignacion_admin/veradminsporcriterio/${id_modelo}/${id_criterio}`);
+  }
+
+
+  public verResponsablesPorCriterio(id_modelo: number, id_criterio: number): Observable<AsignacionProjection[]> {
+    return this.httpClient.get<AsignacionProjection[]>(`${baserUrl}/api/asignacion_admin/verresponsablesporcriterio/${id_modelo}/${id_criterio}`);
+  }
+
+  public asignacion_especifica(idUsuario: number, idModelo: number, idCriterio: number): Observable<Asignacion_Criterios> {
+    return this.httpClient.get<Asignacion_Criterios>(`${baserUrl}/api/asignacion_admin/busqueda_especifica/${idUsuario}/${idModelo}/${idCriterio}`);
   }
 }
