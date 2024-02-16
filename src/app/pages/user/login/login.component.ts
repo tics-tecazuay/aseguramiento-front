@@ -91,7 +91,7 @@ export class LoginComponent implements OnInit {
       )
       return;
     } else if (this.loginData.password.trim() == '' || this.loginData.password.trim() == null) {
-
+      console.log(this.loginData.password)
       Swal.fire(
         'Error',
         'La password es requerida !!',
