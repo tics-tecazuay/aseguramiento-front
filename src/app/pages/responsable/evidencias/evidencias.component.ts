@@ -2,7 +2,6 @@ import { Archivo } from './../../../models/Archivo';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ArchivoService } from 'src/app/services/archivo.service';
-import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
@@ -11,6 +10,7 @@ import { NotificacionService } from 'src/app/services/notificacion.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Asigna_Evi } from 'src/app/models/Asignacion-Evidencia';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-evidencias',

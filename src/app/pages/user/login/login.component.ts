@@ -12,8 +12,9 @@ import { UsuariorolService } from 'src/app/services/usuariorol.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+
 export class LoginComponent implements OnInit {
-  formulario: FormGroup;
+  formLogin: FormGroup;
   selectedRoleValue!: any;
   roles: Rol[] = [];
   loginData = {
@@ -26,11 +27,11 @@ export class LoginComponent implements OnInit {
   sobre = false;
   sobre2 = false;
   sobre3 = false;
-  constructor(private _snack: MatSnackBar, private loginService: LoginService, private formBuilder: FormBuilder, private router: Router, private usuarioRService : UsuariorolService) { 
-    this.formulario = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-      rol: ['', Validators.required]
+  constructor(private _snack: MatSnackBar, private loginService: LoginService, private router: Router, private usuarioRService : UsuariorolService, private fb: FormBuilder ) { 
+    this.formLogin = this.fb.group({
+      username: new FormControl('', [Validators.required, Validators.minLength(10)]),
+      rol: new FormControl(null, [Validators.required]),
+      password: new FormControl('', [Validators.required]),
     });
   }
   
@@ -40,7 +41,11 @@ export class LoginComponent implements OnInit {
       this.router.navigate(['user-dashboard']);
       location.replace('/use/user-dashboard');
     }
+    this.formLogin.get('username')?.valueChanges.subscribe((username) => {
+        this.listarRoles(username);
+    });
   }
+
   abrir() {
     this.sobre = true
     this.mision = true;
@@ -67,40 +72,36 @@ export class LoginComponent implements OnInit {
   }
   
   listarRoles(username: string) {
-  this.usuarioRService.getRolesPorUsername(username).subscribe(
-    (data: Rol[]) => {
-      this.roles = data;
-      console.log(this.roles);
-    }
-  )
+    this.usuarioRService.getRolesPorUsername(username).subscribe(
+      (data: Rol[]) => {
+        if(data.length === 0) {
+          this.roles = [{rolId: 0, rolNombre: 'No hay roles disponibles para este usuario.' }];
+        } else {
+          this.roles = data;
+        }
+      }
+    );
   }
+  
 
   onChangeRole(event: any) {
-    this.selectedRoleValue = event.target.value;
+    this.selectedRoleValue = event.value;
     console.log('Rol seleccionado:', this.selectedRoleValue);
+    console.log('Rol seleccionado form group', this.formLogin.value.rol);
   }
 
   formSubmit() {
-    
-    if (this.loginData.username.trim() == '' || this.loginData.username.trim() == null) {
-
-      Swal.fire(
-        'Error',
-        'El username de usuario es requerido !!',
-        'warning'
-      )
+    if(this.selectedRoleValue.rolId === 0) {
+      this._snack.open('No hay roles disponibles para este usuario.', '', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      });
       return;
-    } else if (this.loginData.password.trim() == '' || this.loginData.password.trim() == null) {
-      console.log(this.loginData.password)
-      Swal.fire(
-        'Error',
-        'La password es requerida !!',
-        'warning'
-      )
-      return;
-    } else (
- // Acceder al valor seleccionado en el combobox de roles
-      this.loginService.generateToken(this.loginData).subscribe(
+    }
+    console.log(this.formLogin.value);
+    console.log(this.selectedRoleValue);
+      this.loginService.generateToken(this.formLogin.value).subscribe(
         (data: any) => {
           console.log(data);
           this.loginService.loginUser(data.token);
@@ -109,7 +110,6 @@ export class LoginComponent implements OnInit {
             console.log(user);
 
             if (this.selectedRoleValue == 'ADMIN') {
-
               this.router.navigate(['user-dashboard']);
               location.replace('/use/user-dashboard');
               this.loginService.loginStatusSubjec.next(true);
@@ -145,30 +145,5 @@ export class LoginComponent implements OnInit {
           )
         }
       )
-    )
-  }
-  validateRol(control: FormControl) {
-    const selectedRol = control.value;
-    if (!selectedRol || selectedRol === 0) {
-      return {
-        required: true
-      };
-    }
-    return null;
-  }
-  validateUsernameLength() {
-    this.listarRoles(this.loginData.username);
-    const usernameControl = this.formulario.get('username');
-    if (usernameControl && usernameControl.value.length !== 10) {
-      usernameControl.setErrors({ 'invalidLength': true });
-    } else {
-      // usernameControl.setErrors(null);
-    }
-  }
-
-  onPaste(event: ClipboardEvent): void {
-    event.preventDefault();
-    const pastedText = event.clipboardData?.getData('text') || '';
-    this.loginData.username = pastedText.trim();
   }
 }

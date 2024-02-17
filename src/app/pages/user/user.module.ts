@@ -8,7 +8,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 import { MatDialogModule } from '@angular/material/dialog';
-
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,7 +21,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     CommonModule,
     UserRoutingModule,
     MatDialogModule,
-    SharedModule
+    SharedModule,
+    ReactiveFormsModule
   ],
   exports: [
     MatDialogModule

@@ -9,50 +9,55 @@
       <div class="col-md-5">
         <mat-card class="panelform">
           <h1 class="text-center" style="margin-top: 6%"><strong>BIENVENIDO</strong></h1>
-          <form (ngSubmit)="formSubmit()">
+          <form [formGroup]="formLogin"(ngSubmit)="formSubmit()">
             <mat-form-field class="full-width" appearance="outline">
               <mat-icon matPrefix class="mat-icon-start">account_circle</mat-icon>
               <mat-label>Usuario</mat-label>
-              <input required [(ngModel)]="loginData.username" name="username" matInput placeholder="Ingrese su usuario"
-                (input)="validateUsernameLength()" />
+              <input formControlName="username" name="username" matInput placeholder="Ingrese su usuario"/>
               <mat-error *ngIf="
-                        formulario.get('username')?.hasError('required') &&
-                        formulario.get('username')?.touched
+                        formLogin.get('username')?.hasError('required') &&
+                        formLogin.get('username')?.touched
                       ">
-                El nombre de usuario es obligatorio
+                * El Usuario es obligatorio 
               </mat-error>
               <mat-error *ngIf="
-                        formulario.get('username')?.hasError('invalidLength') &&
-                        formulario.get('username')?.touched
+                        formLogin.get('username')?.invalid &&
+                        formLogin.get('username')?.touched
                       ">
-                El nombre de usuario debe tener 10 caracteres
+                * El Usuario debe tener 10 caracteres
               </mat-error>
             </mat-form-field>
-
             <!-- Este campo de selección de rol solo se mostrará cuando el nombre de usuario tenga 10 caracteres -->
-            <div style="padding-left: 17px; width: 50px;"
-              *ngIf="loginData.username && loginData.username.length === 10">
+            <div style="padding-left: 17px; width: 50px;" *ngIf="formLogin.get('username')?.valid">
               <mat-form-field appearance="fill">
                 <mat-label>Seleccione Su Rol</mat-label>
-                <select class="selectrol" formControlName="rol" matNativeControl (change)="onChangeRole($event)">
+                <mat-select formControlName="rol" (selectionChange)="onChangeRole($event)">
                   <ng-container *ngFor="let rol of roles">
-                    <option [value]="rol.rolNombre">{{ rol.rolNombre }}</option>
+                    <mat-option [value]="rol.rolNombre">{{ rol.rolNombre }}</mat-option>
                   </ng-container>
-                </select>
-                <mat-error *ngIf="
-                          formulario.get('rol')?.invalid &&
-                          formulario.get('rol')?.touched
-                        ">
-                  El campo de selección de rol es obligatorio
+                </mat-select>
+                <mat-error *ngIf="formLogin.get('rol')?.invalid && formLogin.get('rol')?.touched">
+                  * El campo de selección de rol es obligatorio
                 </mat-error>
-                <br /><br />
-              </mat-form-field>
+              </mat-form-field>              
             </div>
             <mat-form-field class="full-width" appearance="outline">
               <mat-icon matPrefix class="mat-icon-start">lock</mat-icon>
               <mat-label>Contraseña</mat-label>
-              <input [(ngModel)]="loginData.password" name="password" required type="password" matInput
+              <input formControlName="password" name="password" required type="password" matInput
                 placeholder="Digite su contraseña" />
+              <mat-error *ngIf="
+                        formLogin.get('password')?.hasError('required') &&
+                        formLogin.get('password')?.touched
+                      ">
+                * La contraseña es obligatoria
+              </mat-error>
+             <!-- <mat-error *ngIf="
+                        formLogin.get('password')?.invalid &&
+                        formLogin.get('password')?.touched
+                      ">
+                * La contraseña debe tener al menos 8 caracteres
+              </mat-error>-->
             </mat-form-field>
             <br /><br />
             <div class=" text-center">
