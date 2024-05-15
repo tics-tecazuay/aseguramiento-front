@@ -6,11 +6,11 @@
 
 .date-field {
   flex-basis: calc(33.33% - 10px);
-  width:  calc(33.33% - 10px);
+  width: calc(33.33% - 10px);
 }
 
-::ng-deep .cdk-overlay-container{
-  z-index:2000;
+::ng-deep .cdk-overlay-container {
+  z-index: 2000;
 }
 
 .btn-tabs {
@@ -26,7 +26,7 @@
 }
 
 .date-edit {
-  width: 100%; 
+  width: 100%;
   max-width: 300px;
   margin: 10px;
 }
@@ -54,29 +54,49 @@
 }
 
 .mat-select-field .mat-select-panel {
-  z-index: 10000; /* Ajusta este valor según sea necesario */
+  z-index: 10000;
+  /* Ajusta este valor según sea necesario */
 }
 
-input:disabled,mat-label {
-  color: #000000; 
-  background-color: #ffffff; 
+input:disabled,
+mat-label {
+  color: #000000;
+  background-color: #ffffff;
 }
+
 .btn-close {
   background-color: #f00;
 }
+
 .mat-cell {
   max-width: 150px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}.custom-buttonArchivos {
+}
+
+.custom-buttonArchivos {
   position: relative;
 }
 
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  color: white;
+}
+
 .custom-buttonArchivos::after {
-  content: "Asignar";
   position: absolute;
-  top: -5px; 
+  top: -5px;
   left: 50%;
   transform: translateX(-50%);
   padding: 5px 10px;
@@ -96,22 +116,26 @@ input:disabled,mat-label {
 body {
   font: 1em/1.618 Inter, sans-serif;
   display: flex;
-  align-items: center;
   justify-content: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    min-height: 100vh;
-    padding: 30px;
-    color: #224;
-  }
 
-  ::ng-deep .cdk-overlay-container{
-    z-index:2000;
-  }
+  min-height: 100vh;
+  padding-top: 1%;
+  color: #224;
+}
 
-  .tabla-container {
-    max-height: 350px;
-    overflow-y: auto;
-  }
+::ng-deep .cdk-overlay-container {
+  z-index: 2000;
+}
+
+.tabla-container {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.accioness-cell {
+  min-width: 150px;
+}
+
+.matlabel {
+  background: transparent;
+}

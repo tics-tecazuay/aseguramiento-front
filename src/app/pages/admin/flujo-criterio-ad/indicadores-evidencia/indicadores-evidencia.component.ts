@@ -24,7 +24,7 @@ export class IndicadoresEvidenciaComponent{
   guardadoExitoso: boolean = false;
   estado = 'pendiente';
   ocultar=false;
- 
+  nombreCriterio: any;
   subcriterio: Subcriterio = new Subcriterio();
   criterio: Criterio = new Criterio();
   indicador: Indicador = new Indicador();
@@ -57,6 +57,7 @@ export class IndicadoresEvidenciaComponent{
   ngOnInit() {
     this.subcriterio = history.state.subcriterio;
     this.criterio= history.state.criterio;
+    this.nombreCriterio= history.state.criterio;
     this.indicador = history.state.data;
     this.listar()
   }
@@ -143,13 +144,13 @@ export class IndicadoresEvidenciaComponent{
       });
   }
   verIndicadores() {
-    this.router.navigate(['/sup/flujo-criterio-ad/subcriterios-indicador'], { state: { data: this.subcriterio, criterio: this.criterio }});
+    this.router.navigate(['/adm/flujo-criterio-ad/subcriterios-indicador'], { state: { data: this.subcriterio, criterio: this.criterio }});
   }
   verSubcriterios() {
-    this.router.navigate(['/sup/flujo-criterio-ad/criterios-subcriterio'], { state: { data: this.criterio } });
+    this.router.navigate(['/adm/flujo-criterio-ad/criterios-subcriterio'], { state: { data: this.criterio } });
   }
   verCriterios() {
-    this.router.navigate(['/sup/flujo-criterio-ad/criterioSuper']);
+    this.router.navigate(['/adm/flujo-criterio-ad/criterioSuper']);
   }
 
   aplicarFiltro() {

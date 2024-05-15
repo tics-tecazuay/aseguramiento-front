@@ -1,33 +1,33 @@
 .card {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .card-body {
-    font-family: Arial, sans-serif;
-  }
-  
-  .card-body h3 {
-    font-size: 18px;
-    font-weight: bold;
-  }
-  
-  .card-body b {
-    color: #555;
-  }
-  
-  body {
-    font: 1em/1.618 Inter, sans-serif;
-  
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    min-height: 100vh;
-    padding: 30px;
-    
-    color: #224;
-  
-  }
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  margin-top: 5%;
+}
+
+.card-body {
+  font-family: Arial, sans-serif;
+}
+
+.card-body h3 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.card-body b {
+  color: #555;
+}
+
+body {
+  font: 1em/1.618 Inter, sans-serif;
+
+  display: flex;
+  justify-content: center;
+
+  min-height: 100vh;
+  padding-top: 1%;
+
+  color: #224;
+
+}

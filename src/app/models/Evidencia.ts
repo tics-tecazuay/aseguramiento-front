@@ -8,6 +8,7 @@ export class Evidencia {
     descripcion: string = "";
     visible: string = "";
     estado: string = "";
+    valor_obtenido:number=0;
     indicador:Indicador = new Indicador();
 }
 

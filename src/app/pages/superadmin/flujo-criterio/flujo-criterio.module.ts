@@ -9,6 +9,7 @@ import { SubcriteriosIndicadorComponent } from './subcriterios-indicador/subcrit
 import { EvaluacionCuantitativaComponent } from './evaluacion-cuantitativa/evaluacion-cuantitativa.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
   imports: [
     CommonModule,
     FlujoCriterioRoutingModule,
-    SharedModule
+    SharedModule,
+    NgbTooltipModule
   ]
 })
 export class FlujoCriterioModule { }

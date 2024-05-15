@@ -1,0 +1,19 @@
+.noregistros {
+    padding-top: 10px;
+    /* Ajusta el espacio superior según lo necesites */
+    padding-bottom: 10px;
+    /* Ajusta el espacio inferior según lo necesites */
+    text-align: center;
+}
+
+body {
+    font: 1em/1.618 Inter, sans-serif;
+
+    display: flex;
+    justify-content: center;
+
+    min-height: 100vh;
+    padding-top: 1%;
+
+    color: #224;
+}

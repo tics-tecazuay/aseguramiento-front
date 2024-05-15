@@ -15,43 +15,51 @@ export class SidebarService {
       ]
     },
     {
-      icono: 'nav-icon fas fa-users',
+      icono: 'nav-icon fas fa-solid fa-check-square',
       titulo: "Asignación",
       submenu: [
         { titulo: 'Asignar Evidencia', url: 'adm/asignaEvidencia', icono: 'fas fa-check-square' },
-        { titulo: 'Historial', url: 'adm/historialAsigna', icono: 'fas fa-check-square' }
+        { titulo: 'Historial Asignaciones', url: 'adm/historialAsigna', icono: 'fas fa-check-square' }
       ]
     },
     {
       icono: 'nav-icon fas fa-solid fa-list',
       titulo: "Criterio",
       submenu: [
-        { titulo: 'Criterios', url: 'adm/flujo-criterio-ad/criterioSuper', icono: 'fas fa-cubes' },
-        { titulo: 'Reporte de Criterios', url: 'sup/criterio_reporte', icono: 'fas fa-cubes' }
+        { titulo: 'Ver Criterios', url: 'adm/flujo-criterio-ad/criterioSuper', icono: 'fas fa-cubes' }
       ]
     },
     {
-      icono: 'nav-icon fas fa-solid fa-check-square',
-      titulo: "Notificaciones",
+      icono: 'nav-icon fas fa-exclamation-circle',
+      titulo: "Revisión",
       submenu: [
-        { titulo: 'Historial ', url: 'adm/historialnotif', icono: 'fas fa-cubes' }
+        //{ titulo: 'Evaluar Evidencias', url: 'adm/apruebaAdmin', icono: 'fas fa-times-circle' },
+        { titulo: 'Matriz de Evaluación', url: 'adm/calificar', icono: 'fas fa-times-circle' },
+        { titulo: 'Estado Evidencias', url: 'adm/seguimientoevidencias', icono: 'fas fa-cubes' }
       ]
     },
     {
       icono: 'nav-icon fas fa-file-alt',
       titulo: "Reportes",
       submenu: [
-        { titulo: 'Ver reportes', url: '/res/actividadCriterio', icono: 'fas fa-cubes' }
+        { titulo: 'Por Modelo', url: '/res/actividadCriterio', icono: 'fas fa-cubes' },
+        { titulo: 'Por Criterio/s', url: 'adm/criterioreporte', icono: 'fas fa-cubes' }
       ]
     },
     {
-      icono: 'nav-icon fas fa-exclamation-circle',
-      titulo: "Revisión  ",
+      icono: 'nav-icon fas fa-solid fa-bell',
+      titulo: "Notificaciones",
       submenu: [
-        { titulo: 'Evaluación Evidencias', url: 'adm/apruebaAdmin', icono: 'fas fa-times-circle' },
-        { titulo: 'Seguimiento Evidencias', url: 'sup/actividad-rechazada', icono: 'fas fa-cubes' }
+        { titulo: 'Ver Historial', url: 'adm/historialnotif', icono: 'fas fa-cubes' }
       ]
     },
+    {
+      icono: 'nav-icon fa fa-envelope',
+      titulo: "E-mail",
+      submenu: [
+        { titulo: 'Enviar e-mail', url: 'adm/enviaremailadmin', icono: 'fas fa-check-square' }
+      ]
+    }
   ]
 
   //LISTA DE ITEMS PARA SIDEBAR SUPERADMIN
@@ -68,67 +76,64 @@ export class SidebarService {
       titulo: "Usuarios",
       submenu: [
         { titulo: 'Lista de Usuarios', url: 'sup/usuarios', icono: 'fas fa-list-ul ' },
-        { titulo: 'Seguimiento de Usuarios', url: 'sup/seguimiento', icono: 'fas fa-list-ul ' }
+        { titulo: 'Historial de Acciones', url: 'sup/seguimiento', icono: 'fas fa-list-ul ' }
       ]
     },
     {
       icono: 'nav-icon fas fa-solid fa-check-square',
-      titulo: "Email/Asignación",
+      titulo: "Asignación",
       submenu: [
-        { titulo: ' Enviar e-mails ', url: 'sup/email', icono: 'fas fa-cubes' },
-        { titulo: ' Asignar Responsables', url: 'sup/responsables', icono: 'fas fa-cubes' }
+        { titulo: 'Asignar Evidencia', url: 'sup/responsables', icono: 'fas fa-cubes' }
       ]
     },
+
     {
       icono: 'nav-icon fas fa-solid fa-list',
       titulo: "Criterio",
       submenu: [
-        { titulo: 'Criterios', url: 'sup/flujo-criterio/criterioSuper', icono: 'fas fa-cubes' },
-        { titulo: 'Reporte de Criterios', url: 'sup/criterio_reporte', icono: 'fas fa-cubes' }
+        { titulo: 'Ver Criterios', url: 'sup/flujo-criterio/criterioSuper', icono: 'fas fa-cubes' },
+        { titulo: 'Reporte de Criterios', url: 'sup/criterio_reporte', icono: 'fas fa-cubes' },
+        { titulo: 'Responsables Criterios', url: 'sup/actividad_responsable', icono: 'fas fa-times-circle' }
       ]
     },
-
-    // {
-    //   icono: 'nav-icon fas fas fa-star',
-    //   titulo: "Evaluación",
-    //   submenu: [
-    //     { titulo: 'Evaluación de Actividades', url: 'evidenciaSuper', icono: 'fas fa-cubes' }
-
-    //   ]
-    // },
-
     {
       icono: 'nav-icon fas fa-solid fa-cube',
       titulo: "Modelo",
       submenu: [
-        { titulo: 'Modelos', url: 'sup/modelo/modelo', icono: 'fas fa-cubes' }
+        { titulo: 'Ver Modelo/s', url: 'sup/modelo/modelo', icono: 'fas fa-cubes' }
       ]
     },
     {
       icono: 'nav-icon fas fa-superscript',
       titulo: "Fórmula",
       submenu: [
-        { titulo: 'Fórmulas', url: 'sup/formula/formula', icono: 'fas fa-cubes' },
-        { titulo: 'Fórmulas Cuantitativas', url: 'sup/formula/cuantitativa', icono: 'fas fa-cubes' },
-        { titulo: 'Fórmulas Cualitativas', url: 'sup/formula/cualitativa', icono: 'fas fa-cubes' },
+        { titulo: 'Ver Fórmulas', url: 'sup/formula/formula', icono: 'fas fa-cubes' },
+        { titulo: 'Variables Cuantitativas', url: 'sup/formula/cuantitativa', icono: 'fas fa-cubes' },
+        { titulo: 'Escalas Cualitativas', url: 'sup/formula/cualitativa', icono: 'fas fa-cubes' },
       ]
     },
     {
       icono: 'nav-icon fas fa-exclamation-circle',
       titulo: "Revisión  ",
       submenu: [
-        { titulo: 'Responsables de Criterios', url: 'sup/actividad_responsable', icono: 'fas fa-times-circle' },
-        { titulo: 'Evaluación Evidencias', url: 'sup/aprobaciones', icono: 'fas fa-cubes' },
-        { titulo: 'Seguimiento Evidencias', url: 'sup/actividad-rechazada', icono: 'fas fa-cubes' }
+        { titulo: 'Evaluar Evidencias', url: 'sup/aprobaciones', icono: 'fas fa-cubes' },
+        { titulo: 'Estado Evidencias', url: 'sup/actividad-rechazada', icono: 'fas fa-cubes' }
       ]
     },
     {
-      icono: 'nav-icon fas fa-solid fa-check-square',
+      icono: 'nav-icon fas fa-solid fa-bell',
       titulo: "Notificaciones",
       submenu: [
         { titulo: 'Historial ', url: 'adm/historialnotif', icono: 'fas fa-cubes' }
       ]
     },
+    {
+      icono: 'nav-icon fa fa-envelope',
+      titulo: "E-mail",
+      submenu: [
+        { titulo: 'Enviar e-mail', url: 'sup/email', icono: 'fas fa-cubes' }
+      ]
+    }
   ]
 
 
@@ -150,9 +155,9 @@ export class SidebarService {
     },
     {
       icono: 'nav-icon fas fa-tasks',
-      titulo: "Modelos",
+      titulo: "Modelo",
       submenu: [
-        { titulo: 'Reporte Modelos', url: 'res/modeloCriterio', icono: 'fas fa-file-contract' },
+        { titulo: 'Ver modelos', url: 'res/modeloCriterio', icono: 'fas fa-file-contract' },
       ]
     }
   ]
@@ -160,20 +165,26 @@ export class SidebarService {
   //LISTA DE ITEMS PARA SIDEBAR AUTORIDAD
   menu4: any[] = [
     {
-      icono: 'nav-icon fas fa-solid fa-running',
-      titulo: "Actividades",
+      icono: 'nav-icon fas   fa-newspaper',
+      titulo: "Dashboard",
       submenu: [
-        { titulo: 'Actividades Completadas', url: 'aut/consulta', icono: 'fas fa-cubes' }
+        { titulo: 'Ver Dashboard', url: 'aut/reporte', icono: 'fas fa-list-ul ' }
       ]
     },
     {
-      icono: 'nav-icon fas fa-solid fa-list',
-      titulo: "Responsable",
+      icono: 'nav-icon fas fa-file-alt',
+      titulo: "Evidencias",
       submenu: [
-        { titulo: 'Responsables', url: 'aut/actividad_auto', icono: 'fas fa-cubes' }
+        { titulo: 'Evidencias', url: 'aut/consulta', icono: 'fas fa-cubes' }
       ]
-    }
-  ,
+    },
+    {
+      icono: 'nav-icon fas fa-solid fa-users',
+      titulo: "Responsables",
+      submenu: [
+        { titulo: 'Lista de Responsables', url: 'aut/actividad_auto', icono: 'fas fa-cubes' }
+      ]
+    },
     {
       icono: 'nav-icon fas fa-file-pdf',
       titulo: "Reportes",

@@ -54,17 +54,17 @@ export class MatrizEvaluacionComponent implements OnInit {
   };
   displayedColumns3: string[] = ['Indicador','DescIn','Evidencia','Peso','Obtenido','Utilidad','Valor','Archivos','Idind','Tipo', 'Calificar'];
   rowSpanValue: number = 0;
-  verEvidencia=false;
+  verEvidencia=true;
   verTipo=true;
   ocultar=false;
   verIndicador=true;
   verPeso=true;
   verObtenido=true;
   verUtilidad=true;
-  verArchivo=false;
+  verArchivo=true;
   verValor=true;
   verDescripcion=false;
-  verDesIndicador=true;
+  verDesIndicador=false;
   public columnNames: Columnname = {
     nombre: 'Nombre del Indicador',
     descripcion: 'Descripción del Indicador',
@@ -83,6 +83,7 @@ export class MatrizEvaluacionComponent implements OnInit {
   idmodelo: Modelo = new Modelo();
   indicador: Indicador = new Indicador();
   datacrite: any[] = [];
+  rolUser: string = '';
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
   constructor(
     private route: Router,private paginatorIntl: MatPaginatorIntl,
@@ -174,6 +175,9 @@ export class MatrizEvaluacionComponent implements OnInit {
 llenardatos(){
   this.idcriterio = history.state.criterio;
   this.idmodelo = history.state.modelo;
+  if(history.state.criterio!=null){
+    this.rolUser= history.state.rol;
+  }
   let id=history.state.criterio.idcriterio;
   this.nombre=history.state.criterio.nombrecriterio;
   console.log("nombrec"+history.state.criterio.nombrecriterio);
@@ -281,12 +285,18 @@ llenardatos(){
   }
 
   regresar() {
+    if(this.rolUser=="ADMIN"){
+      this.route.navigate(['/adm/calificar']);
+    }else{
     this.route.navigate(['/sup/modelo/detallemodelo'], { state: { modelo: this.idmodelo } });
+    }
   }
   irinicio() {
-
+    if(this.rolUser=="ADMIN"){
+    this.route.navigate(['/adm/calificar']);
+    }else{
     // código del método del botón
     this.route.navigate(['/sup/modelo/modelo']);
-
+    }
   }
 }

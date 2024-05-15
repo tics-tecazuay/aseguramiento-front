@@ -8,8 +8,8 @@ export const environment = {
   production: false,
   //baserUrl:'http://localhost:5000'
   baserUrl:'https://dsbackend.tecazuay.edu.ec/aseguramiento'
+  //baserUrl:'http://localhost:5000/aseguramiento'
 };
-
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

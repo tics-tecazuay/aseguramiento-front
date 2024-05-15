@@ -1,4 +1,4 @@
-import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogoModeloComponent } from '../dialogo-modelo/dialogo-modelo.component';
 import { Router } from '@angular/router';
@@ -7,6 +7,8 @@ import { Modelo } from 'src/app/models/Modelo';
 import { format } from 'date-fns';
 import Swal from 'sweetalert2';
 import { DialogoModeloModComponent } from '../dialogo-modelo-mod/dialogo-modelo-mod.component';
+import { MatSelectionListChange } from '@angular/material/list';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Pipe({ name: 'customDate' })
 export class CustomDatePipe implements PipeTransform {
@@ -22,18 +24,26 @@ export class CustomDatePipe implements PipeTransform {
   styleUrls: ['./inicio-modelo.component.css']
 })
 export class InicioModeloComponent implements OnInit {
+  @ViewChild('modalseleccionarmodelo') modalSelectModelo!: TemplateRef<any>;
   mode = new Modelo();
+  modeloVigente!: Modelo;
+  modeloSeleccionado!: Modelo;
   asignacion: any;
-
+  estado!: string;
   datasource: any[] = [];
+  datasourcemodelosm: any[] = [];
+  isLoading: boolean = false;
+  seleccionado!: boolean;
   constructor(public dialog: MatDialog,
     private router: Router,
     private modeloService: ModeloService,
+    private modalService: NgbModal
 
   ) {
     this.addRandomColors(); // Llama a esta función para asignar colores aleatorios
 
   }
+  
   addRandomColors() {
     this.datasource.forEach((item, index) => {
       const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
@@ -41,38 +51,35 @@ export class InicioModeloComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    this.listar();
-
+    this.isLoading = true;
+    this.seleccionado = false;
+    this.listarModelos();
   }
 
-  listar() {
+  listarModelos() {
     this.modeloService.getModelosVista().subscribe(data => {
       this.datasource = data;
       console.log(data)
+      this.isLoading = false;
+      this.seleccionado = false;
     });
-
-
-
   }
 
   openDialog() {
     const dialogRef = this.dialog.open(DialogoModeloComponent, { width: '50%' });
     dialogRef.afterClosed().subscribe(result => {
-      this.listar();
+      this.listarModelos();
     });
 
   }
   openDialogMod(item: any) {
-    console.log(item);
-    console.log("---------------------------------")
     const dialogRef = this.dialog.open(DialogoModeloModComponent, {
       width: '50%',
       data: { item } // Envía el parámetro 'item' al diálogo
     });
     dialogRef.afterClosed().subscribe(result => {
-      this.listar();
+      this.listarModelos();
     });
-
   }
 
   enviarModelo(modelo: Modelo): void {
@@ -81,7 +88,7 @@ export class InicioModeloComponent implements OnInit {
   }
   eliminar(modelo: any) {
     Swal.fire({
-      title: 'Estas seguro de eliminar el registro?',
+      title: 'Estas seguro de eliminar el modelo "'+modelo.nombre+'"?',
       showDenyButton: true,
       confirmButtonText: 'Cancelar',
       denyButtonText: `Eliminar`,
@@ -90,15 +97,72 @@ export class InicioModeloComponent implements OnInit {
       if (!result.isConfirmed) {
         this.modeloService.eliminarlogic(modelo.id_modelo).subscribe(
           (response) => {
-            this.listar()
+            localStorage.removeItem("modelo");
+            this.modeloService.getModeMaximo().subscribe((data: any) => {
+              this.modeloVigente = data;
+              localStorage.setItem("modelo", JSON.stringify(this.modeloVigente));
+            });
+            this.listarModelos()
             Swal.fire('Eliminado!', '', 'success')
-
           }
         );
       }
     })
-
   }
 
+  actualizarEstadoAD(id_modelo: number, vnum: number) {
+    if(vnum==0){
+      this.estado='Desactivar'
+    }else if(vnum==1){
+      this.estado='Activar'
+    }
+    Swal.fire({
+      title: 'Esta seguro de '+this.estado+' el modelo? ',
+      html: `
+      <div class="alert alert-warning alert-dismissible fade show small" role="alert" *ngIf="seleccionado==true">
+      <strong>Recuerde:</strong> Esta acción activara el modelo para todos los usuarios del sistema.
+  </div>
+    `,
+      showDenyButton: true,
+      confirmButtonText: this.estado,
+      denyButtonText: 'Cancelar',
+    }).then((result) => {
+      if(result.isConfirmed){
+        this.modeloService.editarEstadoModeload(id_modelo, vnum).subscribe(
+          (response) => {
+            localStorage.removeItem("modelo");
+            this.modeloService.getModeMaximo().subscribe((data: any) => {
+              this.modeloVigente = data;
+              localStorage.setItem("modelo", JSON.stringify(this.modeloVigente));
+            });
+            this.listarModelos()
+            if(vnum==0){
+              Swal.fire('Modelo desactivado correctamente', '', 'success')
+            }else if(vnum==1){
+              Swal.fire('Modelo activado correctamente', '', 'success')
+            }
+            
+          }
+        );
+      }
+     console.log(result);
+    })
+  }
 
+  cargarModelos(id_modelo: number){
+    this.modeloService.listarModeloExcepto(id_modelo).subscribe(data => {
+      this.datasourcemodelosm = data;
+    });
+  }
+
+  onSelectionChange(event: MatSelectionListChange) { 
+    this.modeloSeleccionado = event.options[0].value;
+    if (this.modeloSeleccionado) {
+       console.log('LLego',this.modeloSeleccionado);
+       this.seleccionado = true; 
+    }
+  }
+  limpiarSeleccion(){
+    this.seleccionado = false;
+  }
 }

@@ -18,6 +18,7 @@ import { AsignarCriterioComponent } from './detalle-modelo/asignar-criterio/asig
 
 import { SharedModule } from 'src/app/shared/shared.module';
 import { DialogoModeloModComponent } from './dialogo-modelo-mod/dialogo-modelo-mod.component';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,7 @@ import { DialogoModeloModComponent } from './dialogo-modelo-mod/dialogo-modelo-m
   imports: [
     CommonModule,
     ModeloRoutingModule,
-    
+    NgbTooltipModule,
     SharedModule
   ]
 })

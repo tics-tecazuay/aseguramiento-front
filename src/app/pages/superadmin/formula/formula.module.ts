@@ -6,6 +6,7 @@ import { FormulasComponent } from './formulas/formulas.component';
 import { CuanlitativaComponent } from './cuanlitativa/cuanlitativa.component';
 import { CuantitativaComponent } from './cuantitativa/cuantitativa.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CommonModule,
     FormulaRoutingModule,
     SharedModule,
+    NgbTooltipModule
   ]
 })
 export class FormulaModule { }

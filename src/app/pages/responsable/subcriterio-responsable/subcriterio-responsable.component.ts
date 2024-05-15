@@ -1,7 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
 import { Criterio } from 'src/app/models/Criterio';
 import { Modelo } from 'src/app/models/Modelo';
 import { usuario } from 'src/app/models/Usuario';

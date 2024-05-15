@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reporte por Criterio</title>
+</head>
+
+<body>
+  <div class="container bg-light border border-start-0 rounded-4">
+    <blockquote class="blockquote text-dark" style="margin-top: 5%">
+      <h1 style="text-transform: uppercase">
+        <strong><a>REPORTE POR CRITERIO ADMINISTRADOR </a></strong>
+      </h1>
+    </blockquote>
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex">
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Seleccione criterios
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" *ngFor="let CriterioByAdmin of criterios"
+                (click)="toggleCriterioSelection(CriterioByAdmin)">
+                <span class="form-check">
+                  <input class="form-check-input" type="checkbox" [checked]="isCriterioSelected(CriterioByAdmin)" />
+                  <label class="form-check-label">{{ CriterioByAdmin.nombre_criterio }}</label>
+                </span>
+              </a>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-primary" (click)="buscarPorCriterio()" style="margin-left: 2%;">
+            Buscar criterios seleccionados
+          </button>
+          <button type="button" class="btn btn-primary ml-auto" (click)="generarInformeTotal()">
+            <i class="fa fa-file-pdf"></i>
+            Generar pdf
+          </button>
+          <!-- Botón para cambiar entre Cualitativo y Cuantitativo o mostrar la vista general -->
+          <button class="btn btn-primary" (click)="toggleModoVisualizacion()">
+            {{ mostrarVistaGeneral ? 'Mostrar Vista General' : modoVisualizacion === 'cualitativo' ? 'Mostrar
+            Cuantitativos' : 'Mostrar Cualitativos' }}
+          </button>
+
+          <!-- Botón para generar PDF con el modo actual (Cualitativo o Cuantitativo) -->
+          <button type="button" class="btn btn-primary" (click)="generarInforme()">
+            <i class="fa fa-file-pdf"></i>
+            Generar pdf ({{ modoVisualizacion === 'cualitativo' ? 'Cualitativo' : 'Cuantitativo' }})
+          </button>
+          <br />
+        </div>
+        <br />
+        <!-- Sección para mostrar la tabla de datos generales -->
+        <ng-container>
+          <!-- Tabla de datos generales -->
+          <div class="mat-elevation-z8 table-responsive" style="margin-bottom: 5%">
+            <div class="tabla-container">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>CRITERIO</th>
+                    <th>SUBCRITERIO</th>
+                    <th>INDICADOR</th>
+                    <th>DESCRIPCION</th>
+                    <th>VALOR OBTENIDO</th>
+                    <th>PORCENTAJE OBTENIDO</th>
+                    <th>PORCENTAJE UTILIDAD</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let general of indicadors">
+                    <td>{{ general.nombrecriterio }}</td>
+                    <td>{{ general.nombresubcriterio }}</td>
+                    <td>{{ general.nombreindicador }}</td>
+                    <td>{{ general.descripcionindicador }}</td>
+                    <td>{{ general.valorobtenido }}</td>
+                    <td>{{ general.porcentajeobtenido }}</td>
+                    <td>{{ general.porcentajeutilidad }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </ng-container>
+        <!-- Tabla de Indicadores (Combinada) -->
+        <div class="mat-elevation-z8 table-responsive" style="margin-bottom: 5%">
+          <div class="tabla-container">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>CRITERIO</th>
+                  <th>SUBCRITERIO</th>
+                  <th>INDICADOR</th>
+                  <th>DESCRIPCION</th>
+                  <th>VALOR OBTENIDO</th>
+                  <th>PORCENTAJE OBTENIDO</th>
+                  <th>PORCENTAJE UTILIDAD</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngIf="modoVisualizacion === 'cualitativo'; else cuantitativo">
+                  <tr *ngFor="let cuali of criteriosCuali | buscar : searchText">
+                    <td>{{ cuali.nombrecriterio }}</td>
+                    <td>{{ cuali.nombresubcriterio }}</td>
+                    <td>{{ cuali.nombreindicador }}</td>
+                    <td>{{ cuali.descripcionindicador }}</td>
+                    <td>{{ cuali.valorobtenido }}</td>
+                    <td>{{ cuali.porcentajeobtenido }}</td>
+                    <td>{{ cuali.porcentajeutilidad }}</td>
+                  </tr>
+                </ng-container>
+                <ng-template #cuantitativo>
+                  <tr *ngFor="let cuanti of criteriosCuanti | buscar : searchText">
+                    <td>{{ cuanti.nombrecriterio }}</td>
+                    <td>{{ cuanti.nombresubcriterio }}</td>
+                    <td>{{ cuanti.nombreindicador }}</td>
+                    <td>{{ cuanti.descripcionindicador }}</td>
+                    <td>{{ cuanti.valorobtenido }}</td>
+                    <td>{{ cuanti.porcentajeobtenido }}</td>
+                    <td>{{ cuanti.porcentajeutilidad }}</td>
+                  </tr>
+                </ng-template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

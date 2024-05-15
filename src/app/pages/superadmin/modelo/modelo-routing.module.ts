@@ -7,6 +7,8 @@ import { DetalleIndicadorComponent } from './detalle-indicador/detalle-indicador
 import { DetalleSubcriterioComponent } from './detalle-subcriterio/detalle-subcriterio.component';
 import { MatrizEvaluacionComponent } from './matriz-evaluacion/matriz-evaluacion.component';
 import { MatrizEvidenciasComponent } from './matriz-evaluacion/matriz-evidencias/matriz-evidencias.component';
+import { AdminGuard } from 'src/app/services/Guards/admin.guard';
+import { RoleguardGuard } from 'src/app/services/Guards/roleguard.guard';
 
 const routes: Routes = [
   {
@@ -40,7 +42,9 @@ const routes: Routes = [
     path: 'matriz-evaluacion',
     component: MatrizEvaluacionComponent,
     pathMatch: 'full',
-    canActivate: [SuperGuard]
+    //canActivate: [SuperGuard]
+    canActivate: [RoleguardGuard],
+    data: { allowedRoles: ['SUPERADMIN', 'ADMIN'] }
   },
   {
     path: 'matriz-evidencias',

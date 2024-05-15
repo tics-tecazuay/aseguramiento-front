@@ -7,10 +7,12 @@ import { LoginService } from 'src/app/services/login.service';
 import { ModeloService } from 'src/app/services/modelo.service';
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { BaseChartDirective } from 'ng2-charts';
-import { ValoresProjection } from 'src/app/interface/ValoresProjection';
 import { CalificacionComponent } from '../../superadmin/modelo/matriz-evaluacion/calificacion/calificacion.component';
 import { MatDialog } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
+import { CriterioPorcProjection } from 'src/app/interface/CriterioPorcProjection';
+import { Modelo } from 'src/app/models/Modelo';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -34,29 +36,32 @@ export class UserDashboardComponent implements OnInit {
   user: any = null;
   rol: any = null;
   seleccionados: { [key: string]: boolean } = {};
-  verEvidencia = false;
+  verEvidencia = true;
   verIndicador = true;
   verPeso = true;
   verObtenido = true;
   verUtilidad = false;
-  verArchivo = false;
-  verValor = true;
+  verArchivo = true;
+  verValor = false;
   verSubcriterio = true;
-  verCriterio = false;
+  verCriterio = true;
   crite: any[] = [];
   datos: any[] = [];
-  listain: IndicadorProjection[] = [];
+  listain: CriterioPorcProjection[] = [];
   displayedColumns3: string[] = ['Criterio', 'Subcriterio', 'Indicador', 'Evidencia', 'Peso', 'Obtenido', 'Utilidad', 'Valor', 'Archivos', 'Idind', 'Tipo', 'Calificar'];
   datacrite: any[] = [];
   cali = true;
   borderStyles: string[] = [];
   listaIndicadores: IndicadorProjection[] = [];
-  valoresp: ValoresProjection[] = [];
+  valoresp: CriterioPorcProjection[] = [];
   id!: number;
   coloresTarjetas: string[] = [];
 
+  modeloVigente!: Modelo;
+
+
   constructor(public login: LoginService, private service: ModeloService, private dialog: MatDialog,
-    private httpCriterios: CriteriosService) { }
+    private httpCriterios: CriteriosService, private router: Router) { }
 
   ngOnInit() {
     this.isLoggedIn = this.login.isLoggedIn();
@@ -82,9 +87,9 @@ export class UserDashboardComponent implements OnInit {
         type: 'category',
         ticks: {
 
-          autoSkip: false, 
-          maxRotation: 45, 
-          minRotation: 45, 
+          autoSkip: false,
+          maxRotation: 45,
+          minRotation: 45,
           color: 'black',
         },
       },
@@ -105,7 +110,6 @@ export class UserDashboardComponent implements OnInit {
   };
   public barChartType: ChartType = 'bar';
   public barChartPlugins = [DataLabelsPlugin];
-
   public barChartData: ChartData<'bar'> = {
     labels: [],
     datasets: [
@@ -114,54 +118,27 @@ export class UserDashboardComponent implements OnInit {
     ],
   };
 
-  // events
-  public chartClicked({
-    event,
-    active,
-  }: {
-    event?: ChartEvent;
-    active?: object[];
-  }): void {
-    console.log(event, active);
-  }
-
-  public chartHovered({
-    event,
-    active,
-  }: {
-    event?: ChartEvent;
-    active?: object[];
-  }): void {
-    console.log(event, active);
-  }
-
   showTipo() {
     this.verTipo = !this.verTipo;
   }
-
   showArchivo() {
     this.verArchivo = !this.verArchivo;
   }
-
   showValor() {
     this.verValor = !this.verValor;
   }
-
   showUtilidad() {
     this.verUtilidad = !this.verUtilidad;
   }
-
   showObtenido() {
     this.verObtenido = !this.verObtenido;
   }
-
   showCriterio() {
     this.verCriterio = !this.verCriterio;
   }
   showSubcriterio() {
     this.verSubcriterio = !this.verSubcriterio;
   }
-
   showIndicador() {
     this.verIndicador = !this.verIndicador;
   }
@@ -175,76 +152,43 @@ export class UserDashboardComponent implements OnInit {
   cargarDatos(): void {
     if (this.rol === "ADMIN") {
       this.valoresadmin();
-    } else if (this.rol === "RESPONSABLE") {
-      this.valoresresp();
-      this.cali = false;
     }
   }
 
   valoresadmin() {
-    this.httpCriterios.getvalorad(this.idmodel, this.id).subscribe((valores: ValoresProjection[]) => {
+    this.httpCriterios.getIndicadorad(this.idmodel, this.id).subscribe((valores: CriterioPorcProjection[]) => {
       this.valoresp = valores;
+      this.listain = valores;
+      this.indicadoresadmin();
       console.log("Valores de tabla" + JSON.stringify(this.valoresp))
-      this.barChartData.labels = this.valoresp.map(val => val.nomcriterio);
-      this.barChartData.datasets[0].data = this.valoresp.map(val => val.vlObtenido);
-      this.barChartData.datasets[1].data = this.valoresp.map(val => val.vlobtener);
-      this.barChartData = { ...this.barChartData };
-      if (this.valoresp.length == 0) {
-        this.valoresresp();
-      }
-    });
 
-  }
-  valoresresp() {
-    this.httpCriterios.getvaloresponsable(this.idmodel, this.id).subscribe((valores: ValoresProjection[]) => {
-      this.valoresp = valores;
-      console.log("Valores de tabla" + JSON.stringify(this.valoresp))
-      this.barChartData.labels = this.valoresp.map(val => val.nomcriterio);
-      this.barChartData.datasets[0].data = this.valoresp.map(val => val.vlObtenido);
-      this.barChartData.datasets[1].data = this.valoresp.map(val => val.vlobtener);
+      this.barChartData.labels = this.valoresp.map(val => val.nombre.length > 15 ? val.nombre.substring(0, 25) + '...' : val.nombre);
+      this.barChartData.datasets[0].data = this.valoresp.map(val => parseFloat(val.total.toFixed(3))); // Redondear y convertir a número
+      this.barChartData.datasets[1].data = this.valoresp.map(val => parseFloat(val.faltante.toFixed(3))); // Redondear y convertir a número
       this.barChartData = { ...this.barChartData };
     });
   }
+
 
   modeloMax() {
-    this.service.getModeMaximo().subscribe((data) => {
-      this.idmodel = data.id_modelo;
-      this.listardatos();
-      this.cargarDatos();
-      this.listaind();
-    })
+    this.modeloVigente = JSON.parse(localStorage.getItem('modelo') || '{}');
+    this.idmodel = this.modeloVigente.id_modelo;
+    this.listardatos();
+    this.cargarDatos();
+    this.listaind();
+  }
+
+  indicadoresadmin() {
+    this.listain.forEach((item) => {
+      this.coloresTarjetas.push(this.getRandomColor());
+      this.borderStyles.push(this.getBorderColor(item.faltante - item.total));
+    });
   }
 
   listaind() {
     if (this.rol === "ADMIN") {
       this.indicadoresadmin();
-    } else if (this.rol === "RESPONSABLE") {
-      this.indicadoresresp();
     }
-  }
-
-  indicadoresadmin() {
-    this.httpCriterios.getIndicadorad(this.idmodel, this.id).subscribe(
-      (data: IndicadorProjection[]) => {
-        this.listain = data;
-        this.listain.forEach((item) => {
-          this.coloresTarjetas.push(this.getRandomColor());
-          this.borderStyles.push(this.getBorderColor(item.faltante - item.total));
-        });
-
-      });
-
-  }
-
-  indicadoresresp() {
-    this.httpCriterios.getIndicadorresponsable(this.idmodel, this.id).subscribe(
-      (data: IndicadorProjection[]) => {
-        this.listain = data;
-        this.listain.forEach((item) => {
-          this.coloresTarjetas.push(this.getRandomColor());
-          this.borderStyles.push(this.getBorderColor(item.faltante - item.total));
-        });
-      });
   }
 
   getRandomColor(): string {
@@ -255,13 +199,11 @@ export class UserDashboardComponent implements OnInit {
 
     return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
   }
-
   getBorderColor(total: number): string {
     const borderWidth = `${total * 100}px`;
     const borderColor = this.getRandomColor();
     return `${borderWidth} solid ${borderColor}`;
   }
-
   cacheSpan3(key: string, accessor: (d: any) => any) {
     for (let i = 0; i < this.datacrite.length;) {
       let currentValue = accessor(this.datacrite[i]);
@@ -282,11 +224,9 @@ export class UserDashboardComponent implements OnInit {
       i += count;
     }
   }
-
   getRowSpan3(col: any, index: any) {
     return this.spans3[index] && this.spans3[index][col];
   }
-
   getColorcelda(elementName: string, opacity: number): string {
     if (!this.coloresAsignados[elementName]) {
       const red = Math.floor(Math.random() * 256);
@@ -297,11 +237,9 @@ export class UserDashboardComponent implements OnInit {
     }
     return this.coloresAsignados[elementName];
   }
-
   calcularRowSpanValue(index: number): void {
     this.rowSpanValue = this.getRowSpan3('Indicador', index);
   }
-
   async descargarArchivosSeleccionados() {
     const archivosSeleccionados = this.datacrite.filter(element => element.isSelected);
     if (archivosSeleccionados.length === 0) {
@@ -324,7 +262,6 @@ export class UserDashboardComponent implements OnInit {
       await Swal.fire('Error', 'Hubo un error durante las descargas.', 'error');
     }
   }
-
   async descargarArchivo(enlace: string, nombre: string) {
     try {
       const response = await fetch(enlace);
@@ -343,7 +280,6 @@ export class UserDashboardComponent implements OnInit {
     }
 
   }
-
   obtenerNombreArchivo2(url: string): string {
     if (url) {
       const nombreArchivo = url.substring(url.lastIndexOf('/') + 1);
@@ -352,14 +288,12 @@ export class UserDashboardComponent implements OnInit {
       return '';
     }
   }
-
   seleccionarTodosArchivos() {
     for (const element of this.datacrite) {
       element.isSelected = this.todosSeleccionados;
     }
 
   }
-
   calificar(valor: any, id: any, peso: any): void {
     console.log("tipo " + valor + " id ind " + id + " peso " + peso);
     const dialogRef = this.dialog.open(CalificacionComponent, {
@@ -382,7 +316,6 @@ export class UserDashboardComponent implements OnInit {
       }
     });
   }
-
   listardatos() {
     if (this.rol === "ADMIN") {
       this.veradmin();
@@ -390,9 +323,9 @@ export class UserDashboardComponent implements OnInit {
       this.verresponsable();
     } else if (this.rol === "AUTORIDAD") {
       this.verdash = false;
+      this.verAutoridadDashboard();
     }
   }
-
   veradmin() {
     this.cali = true;
     this.service.getcriterioadmin(this.idmodel, this.id).subscribe((data: criteriosdesprojection[]) => {
@@ -423,7 +356,10 @@ export class UserDashboardComponent implements OnInit {
     });
   }
   verresponsable() {
-    location.replace('/res/dashboard');
+    this.router.navigate(['/res/dashboard'])
+  }
+  verAutoridadDashboard(){
+    this.router.navigate(['/aut/reporte']);
   }
 
   aplicar() {
@@ -443,35 +379,30 @@ export class UserDashboardComponent implements OnInit {
       element.indicol = this.generarColor3();
     });
   }
-
   generarC(): string {
     const r = Math.floor(Math.random() * 256);
     const g = Math.floor(Math.random() * 256);
     const b = Math.floor(Math.random() * 256);
     return `rgba(${r}, ${g}, ${b}, 0.3)`;
   }
-
   generarColor(): string {
     const r = Math.floor(Math.random() * 256);
     const g = Math.floor(Math.random() * 256);
     const b = Math.floor(Math.random() * 256);
     return `rgba(${r}, ${g}, ${b}, 0.3)`;
   }
-  
   generarColor2(): string {
     const r = Math.floor(Math.random() * 256);
     const g = Math.floor(Math.random() * 256);
     const b = Math.floor(Math.random() * 256);
     return `rgba(${r}, ${g}, ${b}, 0.3)`;
   }
-
   generarColor3(): string {
     const r = Math.floor(Math.random() * 256);
     const g = Math.floor(Math.random() * 256);
     const b = Math.floor(Math.random() * 256);
     return `rgba(${r}, ${g}, ${b}, 0.3)`;
   }
-
   updateClock() {
     const now = new Date();
     let hours = now.getHours();

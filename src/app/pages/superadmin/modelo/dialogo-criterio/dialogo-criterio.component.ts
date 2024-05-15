@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Criterio } from 'src/app/models/Criterio';
 import { CriteriosService } from 'src/app/services/criterios.service';
 import { IndicadoresService } from 'src/app/services/indicadores.service';
@@ -9,7 +9,6 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Subcriterio } from 'src/app/models/Subcriterio';
 import { Indicador } from 'src/app/models/Indicador';
 import { SharedDataService } from 'src/app/services/shared-data.service';
-import { DialogoModeloComponent } from '../dialogo-modelo/dialogo-modelo.component';
 import { Router } from '@angular/router';
 
 

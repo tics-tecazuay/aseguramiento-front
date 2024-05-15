@@ -4,14 +4,12 @@ import { Criterio } from 'src/app/models/Criterio';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { CriteriosService } from 'src/app/services/criterios.service';
 import Swal from 'sweetalert2';
-import { CriterioSubcriteriosProjection } from 'src/app/interface/CriterioSubcriteriosProjection';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { LoginService } from 'src/app/services/login.service';
 import { CriterioByAdmin } from 'src/app/interface/CriteUsuarioProjection';
-import { Modelo } from 'src/app/models/Modelo';
 import { ModeloService } from 'src/app/services/modelo.service';
 
 (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
@@ -144,6 +142,7 @@ export class CriteriosComponent implements OnInit {
 
   verDetalles(criterio: any) {
     this.router.navigate(['/adm/flujo-criterio-ad/criterios-subcriterio'], { state: { data: criterio } });
+    console.log(this.router)
   }
 
   aplicarFiltro() {

@@ -6,6 +6,7 @@ export class Modelo {
     fecha_fin!: Date;
     fecha_final_act!: Date;
     visible: boolean = true;
+    estadoad!: boolean ;
     usuario!: any;
  
 }

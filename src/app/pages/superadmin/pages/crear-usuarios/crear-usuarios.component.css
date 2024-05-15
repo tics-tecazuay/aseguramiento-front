@@ -1,9 +1,12 @@
 .mat-select-panel.mat-select-panel-right {
   margin-left: auto !important;
 }
+
 .no-asignado {
-  color: gray; /* Cambia el color de texto a gris u otro color deseado */
-  font-style: italic; /* Puede usar cursiva para denotar que es un valor predeterminado */
+  color: gray;
+  /* Cambia el color de texto a gris u otro color deseado */
+  font-style: italic;
+  /* Puede usar cursiva para denotar que es un valor predeterminado */
 }
 
 input:disabled,
@@ -50,9 +53,11 @@ mat-label {
 table {
   width: 100%;
 }
+
 .custom-select-panel {
   z-index: 9999;
 }
+
 .dropdown {
   position: relative;
   display: inline-block;
@@ -71,7 +76,7 @@ table {
   position: absolute;
   background-color: #fff;
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
 
@@ -94,21 +99,39 @@ table {
 .dropdown:hover .dropdown-content {
   display: block;
 }
+
 .custom-select {
-  z-index: 1000; /* Ajusta el valor del z-index según sea necesario para que aparezca por encima del modal */
+  z-index: 1000;
+  /* Ajusta el valor del z-index según sea necesario para que aparezca por encima del modal */
 }
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  color: white;
+}
+
 body {
   font: 1em/1.618 Inter, sans-serif;
 
   display: flex;
-  align-items: center;
   justify-content: center;
-  
+
   min-height: 100vh;
-  padding: 30px;
-  
+  padding-top: 1%;
+
   color: #224;
 }
+
 /*Checkbox*/
 .container {
   width: 100%;
@@ -122,8 +145,10 @@ body {
 .column {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Alinea los elementos en la parte superior de cada columna */
-  margin-right: 40px; /* Espacio entre las columnas */
+  align-items: flex-start;
+  /* Alinea los elementos en la parte superior de cada columna */
+  margin-right: 40px;
+  /* Espacio entre las columnas */
 
 }
 
@@ -131,3 +156,6 @@ body {
   margin-bottom: 10px;
 }
 
+.matlabel {
+  background: transparent;
+}

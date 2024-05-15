@@ -10,28 +10,28 @@ export class NotificacionService {
 
   constructor(private http: HttpClient) { }
 
-  getNotificaciones(id:any):Observable<Notificacion[]>{
-    return this.http.get<Notificacion[]>(`${baserUrl}/api/notificacion/listarnotificaciones/${id}`);
-  }
-
   crear(noti: Notificacion): Observable<Notificacion> {
     return this.http.post<Notificacion>(`${baserUrl}/api/notificacion/crear`, noti);
+  }
+  
+  getNotificaciones(id_usuario: number, id_modelo: number):Observable<Notificacion[]>{
+    return this.http.get<Notificacion[]>(`${baserUrl}/api/notificacion/listarnotificaciones/${id_usuario}/${id_modelo}`);
   }
 
   actualizar(noti:any):Observable<any>{
     return this.http.put(`${baserUrl}/api/notificacion/actualizar/${noti}`,null);
   }
 
-  allnotificacion(noti:any):Observable<Notificacion[]>{
-    return this.http.get<Notificacion[]>(`${baserUrl}/api/notificacion/listartodo/${noti}`);
+  notificacionePorRol(rol:any, id_modelo: number):Observable<Notificacion[]>{
+    return this.http.get<Notificacion[]>(`${baserUrl}/api/notificacion/listarnotificacionesrol/${rol}/${id_modelo}`);
   }
 
-  allnotificacionTODO(noti:any,userId: number):Observable<Notificacion[]>{
-    return this.http.get<Notificacion[]>(`${baserUrl}/api/notificacion/listartodo2/${noti}/${userId}`);
+  allnotificacionTODO(noti:any,userId: number,id_modelo: number):Observable<Notificacion[]>{
+    return this.http.get<Notificacion[]>(`${baserUrl}/api/notificacion/listartodo2/${noti}/${userId}/${id_modelo}`);
   }
 
-  todonotificaciones():Observable<Notificacion[]>{
-    return this.http.get<Notificacion[]>(`${baserUrl}/api/notificacion/listarTodasNotificaciones`);
+  obtenerTodasNotificaciones(id_modelo: number):Observable<Notificacion[]>{
+    return this.http.get<Notificacion[]>(`${baserUrl}/api/notificacion/listartodasnotificaciones/${id_modelo}`);
   }
 
 }

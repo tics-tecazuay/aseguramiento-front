@@ -12,7 +12,6 @@ import { SharedDataService } from 'src/app/services/shared-data.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AsignarCriterioComponent } from './asignar-criterio/asignar-criterio.component';
 import { PonderacionService } from 'src/app/services/ponderacion.service';
-import * as moment from 'moment';
 import Swal from 'sweetalert2';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
@@ -43,17 +42,17 @@ interface f {
   ],
 })
 export class DetalleModeloComponent implements OnInit {
-  ocultar=false;
+  ocultar = false;
   itemsPerPageLabel = 'Criterios por página';
   nextPageLabel = 'Siguiente';
   lastPageLabel = 'Última';
-  firstPageLabel='Primera';
-  previousPageLabel='Anterior';
-  rango:any= (page: number, pageSize: number, length: number) => {
+  firstPageLabel = 'Primera';
+  previousPageLabel = 'Anterior';
+  rango: any = (page: number, pageSize: number, length: number) => {
     if (length == 0 || pageSize == 0) {
       return `0 de ${length}`;
     }
-  
+
     length = Math.max(length, 0);
     const startIndex = page * pageSize;
     const endIndex =
@@ -62,7 +61,7 @@ export class DetalleModeloComponent implements OnInit {
         : startIndex + pageSize;
     return `${startIndex + 1} - ${endIndex} de ${length}`;
   };
-  
+
   dataSource = new MatTableDataSource<any>();
   public columnNames: ColumnNames = {
     nombrecriterio: 'Nombre del Criterio',
@@ -82,21 +81,21 @@ export class DetalleModeloComponent implements OnInit {
   model: Modelo = new Modelo();
   mostrarPrincipal: number = 0;
   mostrarSecundario: number = 0;
-contador: number = 0;
-idmodelo: number = 0;
+  contador: number = 0;
+  idmodelo: number = 0;
   //lista de objetos de f llamada dataSourcePonderacion
   dataSourcePonderacion: any;
   dataSourcePonderacion2: f[] = [];
   columnsToDisplayPonderacion = ['fecha'];
   columnsToDisplayWithExpandPonderacion = [...this.columnsToDisplayPonderacion, 'revisar'];
 
-  displayedColumns: string[] = ['contador','fecha', 'revisar','eliminar'];
+  displayedColumns: string[] = ['contador', 'fecha', 'revisar', 'eliminar'];
 
   fechas: Date[] = [];
   fechasfinal: Date[] = [];
-  
+
   ocultarBoton: boolean = false;
-  @ViewChild(MatTable)table!: MatTable<any>; 
+  @ViewChild(MatTable) table!: MatTable<any>;
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
 
   constructor(
@@ -107,26 +106,27 @@ idmodelo: number = 0;
     public indicadorService: IndicadoresService,
     private asignacionIndicadorService: AsignacionIndicadorService,
     private sharedDataService: SharedDataService,
-    private router: Router,private paginatorIntl: MatPaginatorIntl,
+    private router: Router, private paginatorIntl: MatPaginatorIntl,
     private dialog: MatDialog,
     private ponderacionService: PonderacionService,
   ) {
     this.paginatorIntl.nextPageLabel = this.nextPageLabel;
     this.paginatorIntl.lastPageLabel = this.lastPageLabel;
-    this.paginatorIntl.firstPageLabel=this.firstPageLabel;
-    this.paginatorIntl.previousPageLabel=this.previousPageLabel;
+    this.paginatorIntl.firstPageLabel = this.firstPageLabel;
+    this.paginatorIntl.previousPageLabel = this.previousPageLabel;
     this.paginatorIntl.itemsPerPageLabel = this.itemsPerPageLabel;
-    this.paginatorIntl.getRangeLabel=this.rango;
-   }
-  
+    this.paginatorIntl.getRangeLabel = this.rango;
+  }
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator || null;
 
   }
   ngOnInit(): void {
     this.model = history.state.modelo;
-    this.idmodelo=this.model.id_modelo
-    console.log("Modelo a ver"+this.model.id_modelo)
+    this.idmodelo = this.model.id_modelo
+    console.log("Modelo a ver", this.model)
+    console.log("Modelo a ver" + this.model.id_modelo)
     this.recibeModelo();
     localStorage.removeItem("datopasado");
   }
@@ -144,7 +144,11 @@ idmodelo: number = 0;
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.ponderacionService.getEliminar(element.contador,element.fechapo).subscribe(
+
+        // Formatear la fecha en el formato YYYY-MM-DD
+        const fechaFormateada = this.formatDate(element.fechapo);
+        this.ponderacionService.getEliminar(element.contador, fechaFormateada).subscribe(
+
           () => {
             this.recibeModelo();
             console.log('Registro eliminado exitosamente.');
@@ -156,7 +160,23 @@ idmodelo: number = 0;
       }
     });
   }
- 
+  // Función para formatear la fecha en el formato YYYY-MM-DD
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    let month: string | number = date.getMonth() + 1;
+    let day: string | number = date.getDate();
+
+    if (month < 10) {
+      month = '0' + month;
+    }
+    if (day < 10) {
+      day = '0' + day;
+    }
+  
+    return `${year}-${month}-${day}`;
+  }
+  
   // Función para manejar el cambio de página
   onPageChange(event: any) {
     this.pageIndex = event.pageIndex;
@@ -170,26 +190,27 @@ idmodelo: number = 0;
     this.dataSource = new MatTableDataSource(this.dataSource.data.slice(startIndex, endIndex));
   }
   recibeModelo() {
-      if (true) {
-        this.mostrarPrincipal = 0;
-        this.mostrarSecundario = 0;
-        this.ocultarBoton = false;
-        this.ponderacionService.listarPonderacionPorModelo(this.idmodelo).subscribe(
-          (fechas) => {
-            if (fechas.length > 0) {
-              this.mostrarSecundario = 1;
-            }
-            this.dataSourcePonderacion = fechas;
+    if (true) {
+      this.mostrarPrincipal = 0;
+      this.mostrarSecundario = 0;
+      this.ocultarBoton = false;
+      this.ponderacionService.listarPonderacionPorModelo(this.idmodelo).subscribe(
+        (fechas) => {
+          if (fechas.length > 0) {
+            this.mostrarSecundario = 1;
           }
-        );
-      } 
-      this.asignacionIndicadorService.getasignacriterio(Number(this.model.id_modelo)).subscribe(info => {
-       
-          this.dataSource.data = [];
-          this.asignacion = info;
-          this.dataSource.data = info;
-        console.log("datos "+JSON.stringify(this.dataSource.data))
-      });
+          this.dataSourcePonderacion = fechas;
+          console.log("datos fechas " + JSON.stringify(this.dataSourcePonderacion))
+        }
+      );
+    }
+    this.asignacionIndicadorService.getasignacriterio(Number(this.model.id_modelo)).subscribe(info => {
+      console.log("info " ,info);
+      this.dataSource.data = [];
+      this.asignacion = info;
+      this.dataSource.data = info;
+      console.log("datos " + JSON.stringify(this.dataSource.data))
+    });
   }
 
   irPonderacionModelo(modelo: Modelo): void {
@@ -203,12 +224,15 @@ idmodelo: number = 0;
   }
 
   mostrar(element: any) {
-   // this.sharedDataService.agregarIdCriterio(element.id_criterio);
+    // this.sharedDataService.agregarIdCriterio(element.id_criterio);
     this.router.navigate(['/sup/modelo/detalle-subcriterio'], { state: { data: element.idcriterio, modelo: this.model } });
   }
 
   evaluacion(event: Event, element: any) {
     event.stopPropagation();
+    console.log("Event" , event);
+    console.log("Elemento a evaluar" , element);
+
     this.router.navigate(['/sup/modelo/matriz-evaluacion'], { state: { criterio: element, modelo: this.model } });
   }
 
@@ -216,41 +240,48 @@ idmodelo: number = 0;
     event.stopPropagation();
     this.sharedDataService.agregarIdCriterio(element.idcriterio);
   }
-  pond(element:any) {
-    let fecha=element.fechapo;
+  pond(element: any) {
+    let fecha = element.fechapo;
     localStorage.setItem("contador", element.contador);
-    this.router.navigate(['/sup/ponderacion/ponderacion-modelo'], { state: { fecha: fecha, conf: 1, modelo: this.model, contador:element.contador } });
+    this.router.navigate(['/sup/ponderacion/ponderacion-modelo'], { state: { fecha: fecha, conf: 1, modelo: this.model, contador: element.contador } });
   }
 
   irinicio() {
     this.router.navigate(['/sup/modelo/modelo']);
   }
-  // pond(fecha: Date) {
-
-  //   this.router.navigate(['/sup/ponderacion/ponderacion-modelo'], { queryParams: { fecha: fecha, conf: 1 } });
-  // }
 
   asignar_criterio(event: Event, criterio: any) {
     event.stopPropagation();
     const id_modelo = localStorage.getItem('id');
-    console.log("Id modelo a asignar"+id_modelo+" id criterio "+criterio.idcriterio+" nombre "+criterio.nombrecriterio);
+    console.log("Id modelo a asignar" + id_modelo + " id criterio " + criterio.idcriterio + " nombre " + criterio.nombrecriterio);
     const dialogRef = this.dialog.open(AsignarCriterioComponent, {
       width: '45%',
-      data: { id: criterio.idcriterio,modelo:id_modelo,nombre:criterio.nombrecriterio }
+      data: { id: criterio.idcriterio, modelo: id_modelo, nombre: criterio.nombrecriterio }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result && result.data === 'Succes') {
+      if (result && result.data === 'Success') {
         Swal.fire({
           position: 'center',
           icon: 'success',
           title: 'Criterio asignado correctamente',
           showConfirmButton: false,
-          timer: 1500
+          timer: 1800
         });
       }
     });
-
     
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.data === 'Delete') {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Asignación de criterio eliminado correctamente',
+          showConfirmButton: false,
+          timer: 1800
+        });
+      }
+    });
   }
+
 }

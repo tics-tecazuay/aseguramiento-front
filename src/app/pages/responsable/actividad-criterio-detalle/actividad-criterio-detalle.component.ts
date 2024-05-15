@@ -5,11 +5,10 @@ import { Modelo } from 'src/app/models/Modelo';
 import { CriteriosService } from 'src/app/services/criterios.service';
 import { SubcriteriosService } from 'src/app/services/subcriterios.service';
 import { IndicadoresService } from 'src/app/services/indicadores.service';
-import { ActivatedRoute } from '@angular/router';
 import { AsignacionIndicadorService } from 'src/app/services/asignacion-indicador.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SharedDataService } from 'src/app/services/shared-data.service';
-import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl} from '@angular/material/paginator';
 import { ValoresProjection } from 'src/app/interface/ValoresProjection';
 import { IndicadorProjection } from 'src/app/interface/IndicadorProjection';
 import { IndiColProjection } from 'src/app/interface/IndiColProjection';
@@ -19,6 +18,7 @@ import { BaseChartDirective } from 'ng2-charts';
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { MatTableDataSource } from '@angular/material/table';
 import { LoginService } from 'src/app/services/login.service';
+import { CriterioPorcProjection } from 'src/app/interface/CriterioPorcProjection';
 
 type ColumnNames = {
   [key: string]: string;
@@ -86,7 +86,7 @@ export class ActividadCriterioDetalle implements OnInit {
   expandedElement: any;
   titulocriterio!: string;
   clic: boolean = false;
-  valoresp:ValoresProjection[] = [];
+  valoresp:CriterioPorcProjection[] = [];
   labesCriterios: any[] = [];
   datosPOrceCriter: number[] = [];
   id_modelo!:number;
@@ -94,7 +94,7 @@ export class ActividadCriterioDetalle implements OnInit {
   valores: number[] = [];
   coloresTarjetas: string[] = [];
   borderStyles: string[] = [];
-  listain: IndicadorProjection[] = [];
+  listain: CriterioPorcProjection[] = [];
   indicol:IndiColProjection[] = [];
   model: Modelo = new Modelo();
   datacrite: any[] = [];
@@ -186,26 +186,6 @@ public pieChartData: ChartData<'pie', number[], string | string[]> = {
 public pieChartType: ChartType = 'pie';
 public pieChartPlugins = [DataLabelsPlugin];
 
-// events
-public chartClicked({
-  event,
-  active,
-}: {
-  event?: ChartEvent;
-  active?: object[];
-}): void {
-  console.log(event, active);
-}
-
-public chartHovered({
-  event,
-  active,
-}: {
-  event?: ChartEvent;
-  active?: object[];
-}): void {
-  console.log(event, active);
-}
   constructor(
     public login: LoginService,private paginatorIntl: MatPaginatorIntl,
     public modeloService: ModeloService,private indi:IndicadoresService,
@@ -223,7 +203,6 @@ public chartHovered({
     this.paginatorIntl.getRangeLabel=this.rango;
     this.rol = this.login.getUserRole();
      }
-
   ngOnInit(): void {
     this.isLoggedIn = this.login.isLoggedIn();
          this.user = this.login.getUser();
@@ -238,7 +217,6 @@ public chartHovered({
       this.dataSource.paginator = this.paginator;
     }
   }
-  
   recibeModelo() {
     this.modeloService.getModeloById(Number(this.id_modelo)).subscribe(data => {
       this.model = data;
@@ -258,69 +236,56 @@ public chartHovered({
     this.coloresPro();
     this.valorespr();
   }
-
   listaind(){
     if(this.rol=='ADMIN'){
-      this.criterioService.getIndicadorad(this.id_modelo,this.user.id).subscribe(
-        (data: IndicadorProjection[]) => {
-          this.listain=data;
-          this.listain.forEach((item) => {
-            this.coloresTarjetas.push(this.getRandomColor());
-            this.borderStyles.push(this.getBorderColor(item.faltante-item.total));
-          });
-          if(data.length!=0){
-            this.consul=true;
-          }
-          console.log("lista in "+this.listain)
-        });
-    }else{
-    this.criterioService.getIndicador(this.id_modelo).subscribe(
-      (data: IndicadorProjection[]) => {
-        this.listain=data;
-        this.listain.forEach((item) => {
-          this.coloresTarjetas.push(this.getRandomColor());
-          this.borderStyles.push(this.getBorderColor(item.faltante-item.total));
-        });
-        console.log("lista in "+this.listain)
-      });
-    }
+    this.listain.forEach((item) => {
+       this.coloresTarjetas.push(this.getRandomColor());
+       this.borderStyles.push(this.getBorderColor(item.faltante-item.total));
+    });
   }
-
+  }
+  valorespr(){
+    this.criterioService.getIndicadorad(this.id_modelo,this.user.id).subscribe((valores: CriterioPorcProjection[]) => {
+      if(valores.length!=0){
+        this.consul=true;
+      }
+      this.valoresp = valores;
+      this.listain=valores;
+      this.listaind();
+      this.barChartData.labels = this.valoresp.map(val => val.nombre);
+      this.barChartData.datasets[0].data = this.valoresp.map(val => parseFloat(val.total.toFixed(3))); // Redondear y convertir a número
+      this.barChartData.datasets[1].data = this.valoresp.map(val => parseFloat(val.faltante.toFixed(3))); // Redondear y convertir a número
+      this.barChartData = { ...this.barChartData };
+    });
+  }
+  
   irPonderacionModelo(modelo: Modelo): void {
-
     //llevar modelo
-
     localStorage.setItem("id", modelo.id_modelo.toString());
     console.log(modelo.id_modelo)
     this.model = modelo;
     this.router.navigate(['/sup/ponderacion/ponderacion-modelo']);
-
-
   }
   ponderacionCriterio(event: Event, element: any) {
     event.stopPropagation();
     // código del método del botón
     this.router.navigate(['/sup/ponderacion/ponderacion-criterio'], { queryParams: { criterio: element.id_criterio, modelo: this.id_modelo } });
   }
-
   mostrar(element: any) {
     console.log(element);
     this.sharedDataService.agregarIdCriterio(element.id_criterio);
     this.router.navigate(['/res/criterio-subcriterio']);
   }
-
   evaluacion(event: Event, element: any) {
     event.stopPropagation();
     // código del método del botón
     this.router.navigate(['/sup/modelo/matriz-evaluacion'], { queryParams: { criterio: element.id_criterio, modelo: this.id_modelo } });
   }
-
   ponderacion(event: Event, element: any) {
     event.stopPropagation();
     // código del método del botón
     this.sharedDataService.agregarIdCriterio(element.id_criterio);
   }
-
   getRandomColor(): string {
     const red = Math.floor(Math.random() * 256);
     const green = Math.floor(Math.random() * 256);
@@ -334,7 +299,6 @@ public chartHovered({
     const borderColor = this.getRandomColor();
     return `${borderWidth} solid ${borderColor}`;
   }
-
   fetchAndProcessData(nombre:string) {
     this.titulocriterio=nombre;
     this.datacrite = [];
@@ -369,7 +333,6 @@ public chartHovered({
       }, 0);
     });
   }
-
   aplicar() {
     this.datacrite.forEach(element => {
       element.randomColor = this.generarColor();
@@ -381,7 +344,6 @@ public chartHovered({
       element.indicol = this.generarColor3();
     });
   }
-
   generarColor(): string {
     const r = Math.floor(Math.random() * 256);
     const g = Math.floor(Math.random() * 256);
@@ -394,15 +356,12 @@ public chartHovered({
     const b = Math.floor(Math.random() * 256);
     return `rgba(${r}, ${g}, ${b}, 0.3)`;
   }
-  
   generarColor3(): string {
     const r = Math.floor(Math.random() * 256);
     const g = Math.floor(Math.random() * 256);
     const b = Math.floor(Math.random() * 256);
     return `rgba(${r}, ${g}, ${b}, 0.3)`;
   }
-
-
   cacheSpan3(key: string, accessor: (d: any) => any) {
     for (let i = 0; i < this.datacrite.length;) {
       let currentValue = accessor(this.datacrite[i]);
@@ -423,32 +382,24 @@ public chartHovered({
       i += count;
     }
   }
-  
-  
   getRowSpan3(col: any, index: any) {
     return this.spans3[index] && this.spans3[index][col];
   }
-
-
   showValor() {
     this.verValor = !this.verValor;
   }
-  
   showUtilidad() {
     this.verUtilidad = !this.verUtilidad;
   }
-  
   showObtenido() {
     this.verObtenido = !this.verObtenido;
   }
-  
   showCriterio() {
     this.verCriterio = !this.verCriterio;
   }
   showSubcriterio() {
     this.verSubcriterio = !this.verSubcriterio;
-  }
-  
+  } 
   showIndicador() {
     this.verIndicador = !this.verIndicador;
   }
@@ -457,8 +408,7 @@ public chartHovered({
   }
   showEvidencia() {
     this.verEvidencia = !this.verEvidencia;
-  }
-  
+  } 
   getColorcelda(elementName: string, opacity: number): string {
     if (!this.coloresAsignados[elementName]) {
       const red = Math.floor(Math.random() * 256);
@@ -470,11 +420,9 @@ public chartHovered({
   
     return this.coloresAsignados[elementName];
   }
-
   calcularRowSpanValue(index: number): void {
     this.rowSpanValue = this.getRowSpan3('Indicador', index);
   }
-
   colores(color: string): string {
     switch (color) {
       case 'verde':
@@ -491,7 +439,6 @@ public chartHovered({
         return 'transparent'; // O cualquier otro color por defecto
     }
   }
-
   coloresPro(){
     if(this.rol=='ADMIN'){
       this.indi.getIndicAdmin(this.id_modelo,this.user.id).subscribe((data: IndiColProjection[]) => {
@@ -571,16 +518,5 @@ public chartHovered({
       this.tabla = new MatTableDataSource(this.indicol);
     });
    }
-  }
-
-  valorespr(){
-    this.criterioService.getvalorad(this.id_modelo,this.user.id).subscribe((valores: ValoresProjection[]) => {
-      this.valoresp = valores;
-      this.barChartData.labels = this.valoresp.map(val => val.nomcriterio);
-      this.barChartData.datasets[0].data = this.valoresp.map(val => val.vlObtenido);
-      this.barChartData.datasets[1].data = this.valoresp.map(val => val.vlobtener);
-  
-      this.barChartData = { ...this.barChartData };
-    });
   }
 }

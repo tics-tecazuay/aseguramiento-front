@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SuperGuard } from 'src/app/services/Guards/super.guard';
 import { EvaluacionCuantitativaComponent } from './evaluacion-cuantitativa/evaluacion-cuantitativa.component';
 import { SubcriteriosIndicadorComponent } from './subcriterios-indicador/subcriterios-indicador.component';
 import { IndicadoresEvidenciaComponent } from './indicadores-evidencia/indicadores-evidencia.component';

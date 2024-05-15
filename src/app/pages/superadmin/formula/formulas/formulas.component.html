@@ -11,34 +11,53 @@
           <input type="text" class="form-control" name="filterPost3" placeholder="Buscar..." [(ngModel)]="filterPost"
             (input)="aplicarFiltro()" />
         </div>
-
         <br />
-        <table mat-table [dataSource]="dataSource">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
           <ng-container matColumnDef="id_formula">
             <th mat-header-cell *matHeaderCellDef [style.display]="ocultar ? '' : 'none'">ID</th>
             <td mat-cell *matCellDef="let elemento" [style.display]="ocultar  ? '' : 'none'">
               {{ elemento.id_formula }}
             </td>
           </ng-container>
-
-          <ng-container matColumnDef="descripcion">
-            <th mat-header-cell *matHeaderCellDef>DESCRIPCIÓN</th>
-            <td mat-cell *matCellDef="let elemento">
-              {{ elemento.descripcion }}
+          <ng-container matColumnDef="criterio">
+            <th mat-header-cell *matHeaderCellDef [style.display]="mostrarColumnas ? '' : 'none'">CRITERIO</th>
+            <td mat-cell *matCellDef="let elemento" [style.display]="mostrarColumnas ? '' : 'none'">
+              {{ elemento.criterio }}
             </td>
           </ng-container>
-          <ng-container matColumnDef="formula">
-            <th mat-header-cell *matHeaderCellDef>FORMULA</th>
+          <ng-container matColumnDef="subcriterio">
+            <th mat-header-cell *matHeaderCellDef [style.display]="mostrarColumnas ? '' : 'none'">SUBCRITERIO</th>
+            <td mat-cell *matCellDef="let elemento" [style.display]="mostrarColumnas ? '' : 'none'">
+              {{ elemento.subcriterio }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="indicador">
+            <th mat-header-cell *matHeaderCellDef [style.display]="mostrarColumnas ? '' : 'none'">INDICADOR</th>
+            <td mat-cell *matCellDef="let elemento" [style.display]="mostrarColumnas ? '' : 'none'">
+              {{ elemento.indicador }}
+            </td>
+          </ng-container><ng-container matColumnDef="formula">
+            <th mat-header-cell *matHeaderCellDef>FÓRMULA</th>
             <td mat-cell *matCellDef="let elemento">
               {{ elemento.formula }}
             </td>
           </ng-container>
+          <ng-container matColumnDef="descripcion">
+            <th mat-header-cell *matHeaderCellDef>DESCRIPCIÓN</th>
+            <td mat-cell *matCellDef="let elemento">
+              {{ elemento.descripcion ? elemento.descripcion : 'Sin descripción disponible' }}
+            </td>
+          </ng-container>
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" class="accioness-cell">
+              <button class="btn btn-primary" style="margin-right: 5%" (click)="toggleColumnVisibility()"
+                ngbTooltip="Otras columnas">
+                <i class="fas fa-eye"></i>
+              </button>
               <button class="btn btn-danger" style="background-color: red" (click)="eliminar(element)"
-                style="margin-right: 5%">
-                <i class="fas fa-user-times"></i>
+                style="margin-right: 5%" ngbTooltip="Eliminar fórmula">
+                <i class="fas fa-trash"></i>
               </button>
             </td>
           </ng-container>
@@ -50,74 +69,7 @@
           aria-label="Select page of periodic elements" itemsPerPageLabel="Items por página:" nextPageLabel="Siguiente"
           previousPageLabel="Anterior">
         </mat-paginator>
-        <div class="modal fade" id="materiaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
-          (hidden.bs.modal)="limpiarFormulario()">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header bg-blue">
-                <h3 class="modal-title">
-                  <i class="fas fa-clipboard"></i> Fórmula
-                </h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <form [formGroup]="frmFormula" (ngSubmit)="guardar()" id="formulario">
-                  <div>
-                    <label for="descripcion">Descripción:</label>
-                    <input class="form-control" formControlName="descripcion" type="text" id="descripcion"
-                      name="descripcion" style="margin-bottom: 10px" />
-                    <div class="alert alert-danger" *ngIf="
-                        frmFormula.controls['descripcion'].invalid &&
-                        frmFormula.controls['descripcion'].touched
-                      ">
-                      <div *ngIf="
-                          frmFormula.controls['descripcion'].hasError(
-                            'required'
-                          )
-                        ">
-                        Debe ingresar una descripcion
-                      </div>
-                    </div>
-                    <label for="formula">Fórmula:</label>
-                    <textarea class="form-control" formControlName="formula" id="formula" name="formula"
-                      style="margin-bottom: 10px"></textarea>
-                    <div class="alert alert-danger" *ngIf="
-                        frmFormula.controls['formula'].invalid &&
-                        frmFormula.controls['formula'].touched
-                      ">
-                      <div *ngIf="
-                          frmFormula.controls['formula'].hasError('required')
-                        ">
-                        La descripcion no puede estar vacia
-                      </div>
-                      <div *ngIf="
-                          frmFormula.controls['formula'].hasError('maxlength')
-                        ">
-                        Excedio el numero de caracteres permitido
-                      </div>
-                    </div>
-                  </div>
-                </form>
-                <div class="modal-footer">
-                  <button type="button" form="formulario" class="btn btn-warning" data-bs-dismiss="modal">
-                    Cancelar
-                  </button>
-                  <button type="submit" class="btn btn-primary" form="formulario" *ngIf="!formu.id_formula"
-                    data-dismiss="modal" data-bs-dismiss="modal" [disabled]="!frmFormula.valid">
-                    Agregar
-                  </button>
-                  <button class="btn btn-primary" *ngIf="formu.id_formula" data-dismiss="modal" data-bs-dismiss="modal"
-                    (click)="actualizar()" [disabled]="!frmFormula.valid">
-                    Actualizar
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 </body>
-
-<!--   BODY DE FORMULA CUANTITATIVA -->

@@ -1,8 +1,12 @@
 <body>
-  <div class="container" style="background-color: inherit; border: none; position: relative;">
+  <div class="container" style="background-color: inherit; border: none; position: relative; margin-left: 3%;">
+    <div *ngIf="isLoading" class="loading-overlay">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Iniciando Sesión...</p>
+    </div>
     <div class="row">
       <div class="col-md-7 gradient-custom text-center text-white">
-        <div class="d-flex justify-content-center align-items-center" style="height: 100%;">
+        <div class="d-flex justify-content-center align-items-center" style="height: 75%;">
           <img src="./assets/LOGO_CUADRADO_SIN FONDO.png" width="70%" height="auto" />
         </div>
       </div>
@@ -13,7 +17,7 @@
             <mat-form-field class="full-width" appearance="outline">
               <mat-icon matPrefix class="mat-icon-start">account_circle</mat-icon>
               <mat-label>Usuario</mat-label>
-              <input formControlName="username" name="username" matInput placeholder="Ingrese su usuario"/>
+              <input formControlName="username" name="username" matInput placeholder="Ingrese su usuario" maxlength="10"/>
               <mat-error *ngIf="
                         formLogin.get('username')?.hasError('required') &&
                         formLogin.get('username')?.touched
@@ -45,7 +49,7 @@
               <mat-icon matPrefix class="mat-icon-start">lock</mat-icon>
               <mat-label>Contraseña</mat-label>
               <input formControlName="password" name="password" required type="password" matInput
-                placeholder="Digite su contraseña" />
+                placeholder="Digite su contraseña"  />
               <mat-error *ngIf="
                         formLogin.get('password')?.hasError('required') &&
                         formLogin.get('password')?.touched
@@ -61,7 +65,7 @@
             </mat-form-field>
             <br /><br />
             <div class=" text-center">
-              <button type="submit" mat-raised-button color="primary">
+              <button type="submit" mat-raised-button color="primary" [disabled]="isButtonDisabled">
                 Iniciar sesión
               </button>
             </div>
@@ -112,7 +116,7 @@
     </div>
     <div class="row mt-4">
 
-      <div class="col text-center" style="margin-top: 10%;">
+      <div class="col text-center" style="margin-top: -8%; margin-left: -20%;">
 
         <button mat-button class="btn-tab" [ngClass]="{ 'selected': sobre }" (mouseenter)="abrir()"
           (mouseleave)="cerrar()">Misión</button>

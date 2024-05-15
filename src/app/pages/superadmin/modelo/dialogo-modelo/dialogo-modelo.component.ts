@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { DialogoCriterioComponent } from '../dialogo-criterio/dialogo-criterio.component';
 import { ModeloService } from 'src/app/services/modelo.service';
 import Swal from 'sweetalert2';
@@ -12,7 +11,6 @@ import { Indicador } from 'src/app/models/Indicador';
 import { LoginService } from 'src/app/services/login.service';
 import { AsignacionIndicador } from 'src/app/models/AsignacionIndicador';
 import { DialogoSubcriterioComponent } from '../dialogo-subcriterio/dialogo-subcriterio.component';
-import { Asignacion_Criterios } from 'src/app/models/Asignacion-Criterios';
 import { AsignacionCriterioService } from 'src/app/services/asignacion-criterio.service';
 import { IndicadoresService } from 'src/app/services/indicadores.service';
 import { forkJoin } from 'rxjs';
@@ -32,24 +30,25 @@ export class DialogoModeloComponent implements OnInit {
   isIdmaxSet = false;
   idmax!:number;
   modelo: Modelo = new Modelo();
+  modeloVigente!: Modelo;
   indicador: Indicador = new Indicador();
   asignacionIndicador: AsignacionIndicador = new AsignacionIndicador();
   listaIndicadores: Indicador[] = [];
 
-  constructor(public login: LoginService, private asignacionIndicadorService: AsignacionIndicadorService, private dialogRef: MatDialogRef<DialogoModeloComponent>, private _formBuilder: FormBuilder, private dialog: MatDialog, private router: Router, private modelo_service: ModeloService, private sharedDataService: SharedDataService,
-    private asignacionAdminService: AsignacionCriterioService,
-    private indicadorService: IndicadoresService) {
-
-  }
+  constructor(public login: LoginService, 
+    private asignacionIndicadorService: AsignacionIndicadorService, 
+    private dialogRef: MatDialogRef<DialogoModeloComponent>, 
+    private _formBuilder: FormBuilder, 
+    private dialog: MatDialog, 
+    private modelo_service: ModeloService, 
+    private sharedDataService: SharedDataService,) {}
 
   ngOnInit(): void {
-
     this.sharedDataService.datos$.subscribe(data => {
       this.dataSource = VALOR;
       this.dataSource = data;
       console.log(this.dataSource);
     });
-
     this.isLoggedIn = this.login.isLoggedIn();
     this.user = this.login.getUser();
     this.login.loginStatusSubjec.asObservable().subscribe(
@@ -60,16 +59,10 @@ export class DialogoModeloComponent implements OnInit {
       }
     );
     console.log(this.user);
-    this.modelo_service.getModeMaximo().subscribe(data => {
-      this.idmax = data.id_modelo;
-      
-      console.log("id maximo traido"+this.idmax);
-    });
-    
+    this.modeloVigente = JSON.parse(localStorage.getItem("modelo") || '{}');
+    this.idmax = this.modeloVigente.id_modelo;
   }
   
-
-
   //metodo para crear un modelo
   public createModelo(): void {
     if (this.modelo.fecha_inicio == null || this.modelo.fecha_fin == null || this.modelo.fecha_final_act == null || this.modelo.nombre == null || this.dataSource.length == 0) {
@@ -81,7 +74,6 @@ export class DialogoModeloComponent implements OnInit {
       Swal.fire('Error', `Las fechas no son correctas porfavor revisar`, 'error');
       return;
     }
-
     this.modelo_service.createModelo(this.modelo).subscribe(
       response => {
         console.log(response);
@@ -91,9 +83,12 @@ export class DialogoModeloComponent implements OnInit {
           this.asignacionIndicadorService.createAsignacionIndicador(this.asignacionIndicador).subscribe(
             (result) => {
               console.log(result);
-              this.reiniciarIndicador();
-              this.bloquearModelo(response.id_modelo);
               this.sharedDataService.agregarDatos([]);
+              localStorage.removeItem("modelo");
+              this.modelo_service.getModeMaximo().subscribe((data: any) => {
+              this.modeloVigente = data;
+              localStorage.setItem("modelo", JSON.stringify(this.modeloVigente));
+            });
               this.dialogRef.close();
             }
           )
@@ -122,7 +117,6 @@ export class DialogoModeloComponent implements OnInit {
   dataSource: any;
 
   abrirDialogo(): void {
-
     const dialogRef = this.dialog.open(DialogoCriterioComponent, {
       width: '50%'
     });
@@ -130,7 +124,6 @@ export class DialogoModeloComponent implements OnInit {
       // this.dataSource = VALOR;
       // console.log('El diálogo se cerró');
     });
-
   }
 
   addSubcriterio(): void {
@@ -143,32 +136,22 @@ export class DialogoModeloComponent implements OnInit {
     });
   }
 
+  copiarModelo() {
+    if (this.modelo.fecha_inicio == null || this.modelo.fecha_fin == null || this.modelo.fecha_final_act == null || this.modelo.nombre == null) {
+      Swal.fire('Advertencia', 'Completa las nuevas fechas y el nombre antes de copiar el modelo vigente.', 'warning');
+      return;
+    }
 
-  reiniciarAdmin() {
-    this.asignacionAdminService.listarAsignarResponsable().subscribe(data => {
-      data.forEach((element: any) => {
-        this.asignacionAdminService.deleteAsignacion_Admin(element.id_asignacion).subscribe(data => {
-          console.log(data);
-        });
-      });
-    })
-  }
-  
-  copiarmodelo() {
     this.copiando = true;
     this.secondFormGroup.get('secondCtrl')?.clearValidators();
     this.secondFormGroup.get('secondCtrl')?.updateValueAndValidity();
     console.log("id copiado "+this.idmax);
-    // if (this.modelo.fecha_inicio == null || this.modelo.fecha_fin == null || this.modelo.fecha_final_act == null || this.modelo.nombre == null || this.dataSource.length == 0) {
-    //   Swal.fire('Error', `Debe llenar todos los campos`, 'error');
-    //   return;
-    // }
   
     if (this.modelo.fecha_inicio >= this.modelo.fecha_fin || this.modelo.fecha_inicio >= this.modelo.fecha_final_act || this.modelo.fecha_fin <= this.modelo.fecha_final_act) {
       Swal.fire('Error', `Las fechas no son correctas por favor revisar`, 'error');
       return;
     }
-  
+    console.log("MODELO COPIADO ",this.modelo);
     this.modelo_service.createModelo(this.modelo).subscribe(
       nuevoModelo => {
         console.log("Guardado datos del nuevo modelo: " + JSON.stringify(nuevoModelo));
@@ -190,6 +173,11 @@ export class DialogoModeloComponent implements OnInit {
               resultados => {
                 console.log("Todas las asignaciones creadas:", resultados);
                 this.copiando = false;
+                localStorage.removeItem("modelo");
+                this.modelo_service.getModeMaximo().subscribe((data: any) => {
+                this.modeloVigente = data;
+                localStorage.setItem("modelo", JSON.stringify(this.modeloVigente));
+              });
                 this.dialogRef.close();
                 Swal.fire('Éxito', 'El modelo se ha copiado correctamente', 'success');
               },
@@ -211,92 +199,7 @@ export class DialogoModeloComponent implements OnInit {
       }
     );
   
-    this.reiniciarIndicador();
     this.secondFormGroup.get('secondCtrl')?.setValidators(Validators.required);
     this.secondFormGroup.get('secondCtrl')?.updateValueAndValidity();
-  }
-  
-  /*copiarmodelo() {
-    this.copiando = true;
-    this.spinner.show();
-    this.secondFormGroup.get('secondCtrl')?.clearValidators();
-    this.secondFormGroup.get('secondCtrl')?.updateValueAndValidity();
-    console.log("id copiado "+this.idmax);
-    // if (this.modelo.fecha_inicio == null || this.modelo.fecha_fin == null || this.modelo.fecha_final_act == null || this.modelo.nombre == null || this.dataSource.length == 0) {
-    //   Swal.fire('Error', `Debe llenar todos los campos`, 'error');
-    //   return;
-    // }
-  
-    if (this.modelo.fecha_inicio >= this.modelo.fecha_fin || this.modelo.fecha_inicio >= this.modelo.fecha_final_act || this.modelo.fecha_fin <= this.modelo.fecha_final_act) {
-      Swal.fire('Error', `Las fechas no son correctas por favor revisar`, 'error');
-      return;
-    }
-  
-    this.modelo_service.createModelo(this.modelo).subscribe(
-      nuevoModelo => {
-        console.log("Guardado datos del nuevo modelo: " + JSON.stringify(nuevoModelo));
-     
-        this.asignacionIndicadorService.getasignaindi(this.idmax).subscribe(
-          asignaciones => {
-            console.log('Asignaciones de indicadores del último modelo:', JSON.stringify(asignaciones));
-  
-            asignaciones.forEach(asignacion => {
-              const nuevaAsignacion: AsignacionIndicador = {
-                id_asignacion_indicador: 0,
-                modelo: nuevoModelo,
-                indicador: asignacion.indicador,
-              };
-  
-              this.asignacionIndicadorService.createAsignacionIndicador(nuevaAsignacion).subscribe(
-                resultado => {
-                  console.log("Nueva asignación creada:", JSON.stringify(resultado));
-                },
-                error => {
-                  console.error('Error al crear nueva asignación:', error);
-                }
-              );
-            });
-          },
-          error => {
-            console.error('Error al obtener asignaciones de indicadores:', error);
-          }
-        );
-        //fin asignaciones
-      },
-      error => {
-        console.error("Error al crear el nuevo modelo:", error);
-      }
-    );
-  
-    this.reiniciarIndicador();
-    this.secondFormGroup.get('secondCtrl')?.setValidators(Validators.required);
-    this.secondFormGroup.get('secondCtrl')?.updateValueAndValidity();
-    this.spinner.hide();
-    this.copiando = false;
-    this.dialogRef.close();
-  }*/
-  
-
-  reiniciarIndicador() {
-    this.indicadorService.getIndicadores().subscribe(data => {
-      data.forEach((element: any) => {
-        element.valor_obtenido = 0;
-        element.porc_obtenido = 0;
-        element.porc_utilida_obtenida = 0;
-        this.indicadorService.ponderarIndicador(element.id_indicador, element).subscribe(data => {
-          console.log(data);
-        });
-      });
-    })
-  }
-
-  bloquearModelo(id: any) {
-    this.modelo_service.listarModeloExcepto(id).subscribe(data => {
-      data.forEach((element: any) => {
-        this.modelo_service.eliminarlogic(element.id_modelo).subscribe(data => {
-          console.log(data);
-        });
-      });
-    });
   }
 }

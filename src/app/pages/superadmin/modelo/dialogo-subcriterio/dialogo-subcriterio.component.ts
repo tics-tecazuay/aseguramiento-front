@@ -1,7 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
-import { MatTreeFlatDataSource, MatTreeFlattener, MatTreeNodeToggle } from '@angular/material/tree';
+import { Component } from '@angular/core';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { SelectionModel } from '@angular/cdk/collections';
 
 /**
  * Food data with nested structure.

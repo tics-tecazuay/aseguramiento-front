@@ -1,5 +1,9 @@
 <body>
   <div class="container bg-light border border-start-0 rounded-4">
+    <div *ngIf="isLoading" class="loading-overlay">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Cargando...</p>
+    </div>
     <blockquote class="blockquote text-dark" style="margin-top: 5%">
       <h1><strong> BUSCAR USUARIOS</strong></h1>
     </blockquote>
@@ -13,7 +17,7 @@
         <div class="col col-lg-3">
           <form class="example-form">
             <mat-form-field class="example-full-width">
-              <mat-label>Cédula:</mat-label>
+              <mat-label class="matlabel">Cédula:</mat-label>
               <input matInput placeholder="Ingrese la cédula" [(ngModel)]="fenix.cedula" name="cedula" />
             </mat-form-field>
           </form>
@@ -21,7 +25,7 @@
         <div class="col col-lg-3">
           <form class="example-form">
             <mat-form-field class="example-full-width">
-              <mat-label>Primer Nombre:</mat-label>
+              <mat-label class="matlabel">Primer Nombre:</mat-label>
               <input matInput placeholder="Ingresar un nombre" [(ngModel)]="fenix.primer_nombre" name="primer_nombre" />
             </mat-form-field>
           </form>
@@ -29,7 +33,7 @@
         <div class="col col-lg-3">
           <form class="example-form">
             <mat-form-field class="example-full-width">
-              <mat-label>Primer Apellido:</mat-label>
+              <mat-label class="matlabel">Primer Apellido:</mat-label>
               <input matInput placeholder="Ingrese el apellido" [(ngModel)]="fenix.primer_apellido"
                 name="primer_apellido" />
             </mat-form-field>
@@ -57,49 +61,50 @@
                 The actual rendered columns are set as a property on the row definition" -->
           <!-- Columna Cédula -->
           <ng-container matColumnDef="cedula">
-            <th mat-header-cell *matHeaderCellDef>Cédula</th>
+            <th mat-header-cell *matHeaderCellDef>CÉDULA</th>
             <td mat-cell *matCellDef="let element">{{ element.cedula }}</td>
           </ng-container>
           <!-- Columna primer_apellido -->
           <ng-container matColumnDef="primer_apellido">
-            <th mat-header-cell *matHeaderCellDef>Primer Apellido</th>
+            <th mat-header-cell *matHeaderCellDef>PRIMER APELLIDO</th>
             <td mat-cell *matCellDef="let element">
               {{ element.primer_apellido }}
             </td>
           </ng-container>
           <!-- Columna segundo_apellido -->
           <ng-container matColumnDef="segundo_apellido">
-            <th mat-header-cell *matHeaderCellDef>Segundo Apellido</th>
+            <th mat-header-cell *matHeaderCellDef>SEGUNDO APELLIDO</th>
             <td mat-cell *matCellDef="let element">
               {{ element.segundo_apellido }}
             </td>
           </ng-container>
           <!-- Columna primer_nombre -->
           <ng-container matColumnDef="primer_nombre">
-            <th mat-header-cell *matHeaderCellDef>Primer Nombre</th>
+            <th mat-header-cell *matHeaderCellDef>PRIMER NOMBRE</th>
             <td mat-cell *matCellDef="let element">
               {{ element.primer_nombre }}
             </td>
           </ng-container>
           <!-- Columna segundo_nombre -->
           <ng-container matColumnDef="segundo_nombre">
-            <th mat-header-cell *matHeaderCellDef>Segundo Nombre</th>
+            <th mat-header-cell *matHeaderCellDef>SEGUNDO NOMBRE</th>
             <td mat-cell *matCellDef="let element">
               {{ element.segundo_nombre }}
             </td>
           </ng-container>
           <!-- Columna celular -->
           <ng-container matColumnDef="celular">
-            <th mat-header-cell *matHeaderCellDef>Celular</th>
+            <th mat-header-cell *matHeaderCellDef>CELULAR</th>
             <td mat-cell *matCellDef="let element">{{ element.celular }}</td>
           </ng-container>
           <!--columna acciones-->
           <ng-container matColumnDef="acciones">
-            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
             <td mat-cell *matCellDef="let element">
+
               <button (click)="seleccionar(element)" mat-icon-button type="button" class="btn btn-primary"
                 style="background-color: rgb(151, 166, 189); margin-right: 1%" data-bs-toggle="modal"
-                data-bs-target="#staticBackdrop">
+                data-bs-target="#staticBackdrop" [ngbTooltip]="'Agregar usuario'">
                 <mat-icon>person_add</mat-icon>
               </button>
             </td>
@@ -142,7 +147,7 @@
                   <mat-form-field class="full-width" appearance="outline">
                     <mat-label>Nombre de usuario</mat-label>
                     <input required formControlName="username" name="username" matInput
-                      placeholder="Digite su nombre de usuario" [value]="personaSele.cedula" />
+                      placeholder="Digite su nombre de usuario" [value]="personaSele.cedula" [disabled]="true" />
                   </mat-form-field>
 
                   <mat-form-field class="full-width" appearance="outline">
@@ -157,7 +162,7 @@
                   </mat-form-field>
 
                   <div class="container text-left">
-                    <mat-label>ROL</mat-label>
+                    <h4 style="font-size: small; font-weight: bold;">Rol</h4>
                     <div class="example-section">
                       <div class="column">
                         <span class="example-list-section "
@@ -204,73 +209,75 @@
     <div class="card">
       <div class="card-body">
         <div class="form-group">
-          <input type="text" class="form-control" name="filterPost3" placeholder="Buscar..." [(ngModel)]="filterPost"
-            (input)="aplicarFiltro()" />
+          <input type="text" class="form-control" placeholder="Buscar..." [(ngModel)]="searchTerm" />
         </div>
-        <div class="form-group">
-          <mat-form-field appearance="outline">
-            <mat-label>Rol</mat-label>
-            <mat-select [(ngModel)]="selectedRole" (ngModelChange)="aplicarFiltroPorRol()">
-              <mat-option *ngFor="let rol of roles" [value]="rol.rolNombre">
-                {{ rol.rolNombre }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-
-
         <div class="mat-elevation-z8">
-          <table mat-table [dataSource]="dataSource2" class="table table-hover">
+          <table mat-table [dataSource]="asig | responsable : searchTerm" class="table table-hover">
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef [style.display]="ocultar ? '' : 'none'">ID</th>
-              <td mat-cell *matCellDef="let elemento" [style.display]="ocultar  ? '' : 'none'">
-                {{ elemento.usuario.id }}
+              <td mat-cell *matCellDef="let element; let i = index" [attr.rowspan]="getRowSpan('id', i)"
+                [style.display]="getRowSpan('id', i) ? '' : 'none'" [style.display]="ocultar  ? '' : 'none'">
+                {{ element.id }}
               </td>
             </ng-container>
 
-            <ng-container matColumnDef="enc">
-              <th mat-header-cell *matHeaderCellDef [style.display]="ocultar ? '' : 'none'">ID</th>
-              <td mat-cell *matCellDef="let a; let i = index" [attr.rowspan]="getRowSpan('enc', i)"
-                [style.display]="getRowSpan('enc', i) ? '' : 'none'" [style.display]="ocultar  ? '' : 'none'">
-                {{ a.enc }}
+            <ng-container matColumnDef="idrol">
+              <th mat-header-cell *matHeaderCellDef [style.display]="ocultar ? '' : 'none'">ID ROL</th>
+              <td mat-cell *matCellDef="let element" [style.display]="ocultar  ? '' : 'none'">
+                {{ element.userrolid }}
               </td>
             </ng-container>
 
             <ng-container matColumnDef="nombre">
-              <th mat-header-cell *matHeaderCellDef>Nombres</th>
-              <td mat-cell *matCellDef="let elemento">
-                {{ elemento?.usuario.persona?.primer_nombre }}
-                {{ elemento?.usuario.persona?.primer_apellido }}
+              <th mat-header-cell *matHeaderCellDef>NOMBRES</th>
+              <td mat-cell *matCellDef="let element; let i = index" [attr.rowspan]="getRowSpan('nombre', i)"
+                [style.display]="getRowSpan('nombre', i) ? '' : 'none'">
+                {{ element.nombres }}
               </td>
             </ng-container>
 
             <ng-container matColumnDef="usuario">
-              <th mat-header-cell *matHeaderCellDef>Usuario</th>
-              <td mat-cell *matCellDef="let elemento">
-                {{ elemento.usuario.username }}
+              <th mat-header-cell *matHeaderCellDef>USUARIO</th>
+              <td mat-cell *matCellDef="let element; let i = index" [attr.rowspan]="getRowSpan('usuario', i)"
+                [style.display]="getRowSpan('usuario', i) ? '' : 'none'">
+                {{ element.usuario }}
               </td>
             </ng-container>
 
             <ng-container matColumnDef="rol">
-              <th mat-header-cell *matHeaderCellDef>Rol</th>
-              <td mat-cell *matCellDef="let elemento">
-                {{ elemento.rol.rolNombre }}
+              <th mat-header-cell *matHeaderCellDef>ROL</th>
+              <td mat-cell *matCellDef="let element; let i = index" [attr.rowspan]="getRowSpan('rol', i)"
+                [style.display]="getRowSpan('rol', i) ? '' : 'none'">
+                {{ element.rolnombre }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="criterio">
+              <th mat-header-cell *matHeaderCellDef>CRITERIOS</th>
+              <td mat-cell *matCellDef="let element; let i = index" [attr.rowspan]="getRowSpan('rol', i)"
+                [style.display]="getRowSpan('rol', i) ? '' : 'none'">
+                <button mat-icon-button (click)="openDialog(element.userrolid)" ngbTooltip="Ver Criterios">
+                  <mat-icon aria-label="Ver Criterios">visibility</mat-icon>
+                </button>
               </td>
             </ng-container>
 
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
-              <td mat-cell *matCellDef="let element">
-                <button class="btn btn-danger" style="background-color: red" (click)="eliminar(element.usuario)"
-                  style="margin-right: 5%">
-                  <i class="fas fa-user-times"></i>
-                </button>
+              <td mat-cell *matCellDef="let element; let i = index" [attr.rowspan]="getRowSpan('id', i)"
+                [style.display]="getRowSpan('id', i) ? '' : 'none'">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal3"
-                  style="margin-right: 5%" (click)="EditarUsuari(element)">
+                  style="margin-right: 5%" (click)="handleClick(element.usuario, element)"
+                  [ngbTooltip]="'Editar usuario'">
                   <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-danger" style="background-color: red" (click)="eliminar(element.id)"
+                  style="margin-right: 5%" [ngbTooltip]="'Eliminar usuario'">
+                  <i class="fas fa-user-times"></i>
                 </button>
               </td>
             </ng-container>
+
 
             <tr mat-header-row *matHeaderRowDef="columnasUsuario"></tr>
             <tr mat-row *matRowDef="let fila; columns: columnasUsuario"></tr>
@@ -279,6 +286,8 @@
             aria-label="Select page of periodic elements">
           </mat-paginator>
         </div>
+
+
 
         <!-- Modal -->
         <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -297,10 +306,12 @@
                   <mat-form-field class="full-width" appearance="outline">
                     <mat-label>Nombre de usuario</mat-label>
                     <input [(ngModel)]="usuariosEditGuar.usuario.username" name="username" matInput
-                      placeholder="Digite su nombre de usuario" [value]="usuariosEdit.usuario.username" />
+                      placeholder="Digite su nombre de usuario" type="text" [value]="usuarioEdit.username"
+                      [disabled]="true">
+
                   </mat-form-field>
                   <div class="container text-left">
-                    <mat-label>ROL</mat-label>
+                    <h4 style="font-size: small; font-weight: bold;">Rol</h4>
                     <section class="example-section">
                       <div class="column">
                         <span class="example-list-section "
@@ -322,11 +333,7 @@
                       </div>
                     </section>
                   </div>
-                  <mat-form-field class="full-width" appearance="outline">
-                    <mat-label>Contraseña</mat-label>
-                    <input disabled name="password" matInput placeholder="Digite su contraseña"
-                      [value]="usuariosEdit.usuario.password" />
-                  </mat-form-field>
+                  <br>
                   <mat-form-field class="full-width" appearance="outline">
                     <mat-label>Nueva Contraseña</mat-label>
                     <input required [(ngModel)]="usuariosEditGuar.usuario.password" name="password2" type="password"
@@ -334,7 +341,7 @@
                   </mat-form-field>
                   <div class="container text-center">
                     <button mat-raised-button color="primary" data-bs-dismiss="modal"
-                      (click)="Actualizar(usuariosEditGuar)">
+                      (click)="Actualizar(usuariosEditGuar,usuarioSele.usuarioRolId)">
                       <mat-icon>save</mat-icon>Guardar
                     </button>
                     <button type="button" style="margin-left: 5%" class="btn btn-secondary" data-bs-dismiss="modal">

@@ -13,9 +13,10 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { AprobacionactComponent } from './pages/aprobacionact/aprobacionact.component';
-import { DetalleaprobComponent } from './pages/detalleaprob/detalleaprob.component';
 import { SeguimientoUsuariosComponent } from './seguimiento-usuarios/seguimiento-usuarios.component';
-
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import {CdkDrag, CdkDragHandle} from '@angular/cdk/drag-drop';
+import { MatTooltipModule } from '@angular/material/tooltip';
 @NgModule({
   declarations: [
     DashboardComponent2,
@@ -24,7 +25,6 @@ import { SeguimientoUsuariosComponent } from './seguimiento-usuarios/seguimiento
     CriterioReporteComponent,
     EvidenciaAtrasadaComponent,
     AprobacionactComponent,
-    DetalleaprobComponent,
     SeguimientoUsuariosComponent
   ],
   imports: [
@@ -33,6 +33,10 @@ import { SeguimientoUsuariosComponent } from './seguimiento-usuarios/seguimiento
     MatTableModule,
     MatPaginatorModule,
     SharedModule,
+    NgbTooltipModule,
+    MatTooltipModule, 
+    CdkDrag,
+    CdkDragHandle
   ]
 })
 export class SuperadminModule { }

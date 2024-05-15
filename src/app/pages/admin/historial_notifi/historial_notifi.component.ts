@@ -1,10 +1,10 @@
 import { Component,AfterViewInit, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { Observable } from 'rxjs';
 import { Notificacion } from 'src/app/models/Notificacion';
 import { NotificacionService } from 'src/app/services/notificacion.service';
 import { MatPaginator, MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
 import { LoginService } from 'src/app/services/login.service';
+import { Modelo } from 'src/app/models/Modelo';
 
 @Component({
   selector: 'app-historial_notifi',
@@ -22,7 +22,8 @@ export class Historial_notifiComponent implements OnInit, AfterViewInit {
   numNotificacionesSinLeer: number = 0;
   filterPost = '';
   idUserLogged!: number;
-  
+  modeloVigente!: Modelo;
+
   ngAfterViewInit() {
     console.log('Paginator:', this.paginator);
     if (this.paginator) {
@@ -56,16 +57,14 @@ export class Historial_notifiComponent implements OnInit, AfterViewInit {
         data.mensaje.toLowerCase().includes(term)
       );
     };
-    
+    this.modeloVigente = JSON.parse(localStorage.getItem('modelo') || '{}');
     this.listarnot(this.user.id);
    }
 
   listarnot(id: any) {
-    console.log("ID: " + id);
     if (this.rol == "ADMIN") {
-      console.log("ROL: " + this.rol);
       // Cargar notificaciones del rol ADMIN
-      this.notificacionService.allnotificacionTODO(this.rol,this.idUserLogged).subscribe(
+      this.notificacionService.allnotificacionTODO(this.rol,this.idUserLogged, this.modeloVigente.id_modelo).subscribe(
         (data: Notificacion[]) => {
           this.notificaciones = data;
           this.dataSource.data = data;
@@ -74,7 +73,7 @@ export class Historial_notifiComponent implements OnInit, AfterViewInit {
           this.numNotificacionesSinLeer = this.dataSource.data.filter(n => !n.visto).length;
   
           // Cargar notificaciones propias por id
-          this.notificacionService.getNotificaciones(id).subscribe(
+          this.notificacionService.getNotificaciones(id, this.modeloVigente.id_modelo).subscribe(
             (dataPropias: Notificacion[]) => {
               this.notificaciones = this.notificaciones.concat(dataPropias);
               this.dataSource.data = this.dataSource.data.concat(dataPropias);
@@ -92,7 +91,7 @@ export class Historial_notifiComponent implements OnInit, AfterViewInit {
       );
     } else if (this.rol == "SUPERADMIN") {
       // Si el rol es SUPERADMIN, cargar todas las notificaciones
-      this.notificacionService.todonotificaciones().subscribe(
+      this.notificacionService.obtenerTodasNotificaciones(this.modeloVigente.id_modelo).subscribe(
         (data: Notificacion[]) => {
           this.notificaciones = data;
           this.dataSource.data = data;

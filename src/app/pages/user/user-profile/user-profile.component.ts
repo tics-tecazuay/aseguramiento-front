@@ -18,7 +18,8 @@ export class UserProfileComponent implements OnInit {
   rol: any = null;
   idprueba: any;
   idpruebapersona: any;
-//
+  username!: string;
+  //
   usuariosEditGuar = new Usuario2();
   usuarioForm: FormGroup;
   contraForm: FormGroup;
@@ -106,6 +107,7 @@ export class UserProfileComponent implements OnInit {
       primer_apellido: new FormControl(this.user?.persona?.primer_apellido, [Validators.required])
   });
   this.idprueba = this.user.id;
+  this.username = this.user.username;
   this.idpruebapersona = this.user?.persona?.id_persona;
   }
 
@@ -123,7 +125,7 @@ export class UserProfileComponent implements OnInit {
       icon: 'info',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.personaService.existencia(this.idprueba).subscribe((existencia: boolean) => {
+        this.personaService.existencia(this.username).subscribe((existencia: boolean) => {
           if (existencia == true) {
             // La persona no existe, realizar la creación
             this.personaService.createPersona(persona).subscribe((response: any) => {

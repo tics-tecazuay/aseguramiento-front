@@ -8,4 +8,5 @@ export interface AsignaProjection{
     descev:string;
     ini:Date;
     fini:Date;
+    asignador:string;
 }

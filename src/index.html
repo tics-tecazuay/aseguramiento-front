@@ -3,102 +3,78 @@
   <head>
     <meta charset="utf-8" />
     <title>SistemaACI</title>
-    <base href="/aseguramiento/" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="icon" type="image/png" href="assets/uista.png">
+    <base href="/aseguramiento/">
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="assets/uista.png">
+  <link rel="stylesheet" href="./assets/plugins/fontawesome-free/css/all.min.css" />
+  <link rel="stylesheet" href="./assets/dist/css/adminlte.min.css" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
-    <link
-      rel="stylesheet"
-      href="assets/plugins/fontawesome-free/css/all.min.css"
-    />
-    <link rel="stylesheet" href="assets/dist/css/adminlte.min.css" />
-<!--    <link-->
-<!--      rel="stylesheet"-->
-<!--      href="https://pro.fontawesome.com/releases/5.13.0/css/all.css"-->
-<!--      integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V"-->
-<!--      crossorigin="anonymous"-->
-<!--    />-->
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
-<!--    <link-->
-<!--      href="@{/css/bootstrap.css}"-->
-<!--      rel="stylesheet"-->
-<!--      href="static/css/bootstrap.css"-->
-<!--    />-->
-<!--    <script href="@{/js/jquery.js}" src="static/js/jquery.js"></script>-->
-<!--    <script href="@{/js/bootstrap.js}" src="static/js/bootstrap.js"></script>-->
-<!--    <link-->
-<!--      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"-->
-<!--      rel="stylesheet"-->
-<!--      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"-->
-<!--      crossorigin="anonymous"-->
-<!--    />-->
-      <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Cambiar color -->
-    <script type="text/javascript">
-      function cambiar(x){
-        var body=document.getElementById("body");
-        var enc=document.getElementById("enc");
-        var let=document.getElementById("letra");
-        var let2=document.getElementById("letra2");
-        var cal=document.getElementById("cal");
-        var fig=document.getElementById("fig");
-        var fig2=document.getElementById("tooltip");
-        var menu=document.getElementById("menu");
-        var notif=document.getElementById("notif");
-        var txt=document.getElementById("txt");
-        var selectedColor = x.value;
-        localStorage.setItem('selectedColor', selectedColor);
-        body.style.backgroundColor=selectedColor;
-        // console.log('Color seleccionado:', selectedColor);
-        if(x.value==="white"){
-          enc.style.backgroundColor="#eeeee4";
-          fig.style.backgroundColor="white";
-          let.style.color="black";
-          let2.style.color="black";
-          notif.style.backgroundColor="white";
-          txt.style.backgroundColor="white";
-          notif.style.color="black";
-          txt.style.color="black";
-          fig2.style.color="green";
-          menu.style.backgroundColor="#b0bec5";
-      } else if(x.value==="#151a30"){
-        enc.style.backgroundColor="#222b45";
-        menu.style.backgroundColor="#BEC8DC80";
-        txt.style.backgroundColor="#0d47a1";
-        notif.style.backgroundColor="#151a30";
-        let.style.color="white";
-        notif.style.color="white";
-        txt.style.color="white";
-        let2.style.color="white";
-        cal.style.color="white";
-        fig.style.backgroundColor="#BEC8DC80";
-        fig2.style.color="white";
+  <!-- <script href="@{/js/jquery.js}" src="../static/js/jquery.js"></script>
+  <script href="@{/js/bootstrap.js}" src="../static/js/bootstrap.js"></script> -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous" />
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Cambiar color -->
+  <script type="text/javascript">
+    function cambiar(x) {
+      var body = document.getElementById("body");
+      var enc = document.getElementById("enc");
+      var let = document.getElementById("letra");
+      var let2 = document.getElementById("letra2");
+      var cal = document.getElementById("cal");
+      var fig = document.getElementById("fig");
+      var fig2 = document.getElementById("tooltip");
+      var menu = document.getElementById("menu");
+      var notif = document.getElementById("notif");
+      var txt = document.getElementById("txt");
+      var selectedColor = x.value;
+      localStorage.setItem('selectedColor', selectedColor);
+      body.style.backgroundColor = selectedColor;
+      console.log('Color seleccionado:', selectedColor);
+      if (x.value === "white") {
+        enc.style.backgroundColor = "#eeeee4";
+        fig.style.backgroundColor = "white";
+        let.style.color = "black";
+        let2.style.color = "black";
+        notif.style.backgroundColor = "white";
+        txt.style.backgroundColor = "white";
+        notif.style.color = "black";
+        txt.style.color = "black";
+        fig2.style.color = "green";
+        menu.style.backgroundColor = "#b0bec5";
+      } else if (x.value === "#151a30") {
+        enc.style.backgroundColor = "#222b45";
+        menu.style.backgroundColor = "#BEC8DC80";
+        txt.style.backgroundColor = "#0d47a1";
+        notif.style.backgroundColor = "#151a30";
+        let.style.color = "white";
+        notif.style.color = "white";
+        txt.style.color = "white";
+        let2.style.color = "white";
+        cal.style.color = "white";
+        fig.style.backgroundColor = "#BEC8DC80";
+        fig2.style.color = "white";
       }
-      }
-    </script>
+    }
+  </script>
 </head>
-  <body class="mat-typography sidebar-mini sidebar-collapse">
-    <app-root class="wrapper"></app-root>
 
-    <script src="assets/plugins/jquery/jquery.min.js"></script>
-    <script src="assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/dist/js/adminlte.min.js"></script>
+<body class="mat-typography sidebar-mini sidebar-collapse">
+  <app-root class="wrapper"></app-root>
 
-<!--    <script-->
-<!--      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"-->
-<!--      integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"-->
-<!--      crossorigin="anonymous"-->
-<!--    ></script>-->
+  <script src="./assets/plugins/jquery/jquery.min.js"></script>
+  <script src="./assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="./assets/dist/js/adminlte.min.js"></script>
 
-  </body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+    crossorigin="anonymous"></script>
+
+</body>
+
 </html>

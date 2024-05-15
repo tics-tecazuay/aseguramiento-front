@@ -6,9 +6,11 @@ import baserUrl from './helper';
 import { HttpParams } from '@angular/common/http';
 import { IndicadorEvidenciasProjection } from '../interface/IndicadorEvidenciasProjection';
 import { Archivo } from '../models/Archivo';
-import { IndicadorEvidenciasProjectionFull } from '../interface/IndicadorEvidenciasProjectionFull';
 import { IndiColProjection } from '../interface/IndiColProjection';
 import { IndicadorResp } from '../interface/IndicadorResp';
+import { IndicadorProjection } from '../interface/IndicadorProjection';
+import { IndicadorPorcProjection } from '../interface/IndicadorPorcProjection';
+import { PonderacionProjection } from '../interface/PonderacionProjection';
 
 @Injectable({
   providedIn: 'root'
@@ -50,29 +52,29 @@ export class IndicadoresService {
       .get(`${baserUrl}/api/indicadores/listarIndicadorPorCriterioModelo/${id_criterio}/${id_modelo}`)
       .pipe(map((response) => response as Indicador[]));
   }
-  indicadoresPorCriterios(ids: number[]): Observable<Indicador[]> {
+  indicadoresPorCriterios(id_modelo: number,ids: number[]): Observable<IndicadorProjection[]> {
     const params = new HttpParams().set('idCriterios', ids.join(','));
     const options = {
       params: params,
       responseType: 'json' as const
     };
-    return this.http.get<Indicador[]>(`${baserUrl}/api/indicadores/indicadoresPorCriterios`, options);
+    return this.http.get<IndicadorProjection[]>(`${baserUrl}/api/indicadores/indicadoresPorCriterios/${id_modelo}`, options);
   }
-  indicadoresPorCriteriosPruebaAlvCL(ids: number[]): Observable<Indicador[]> {
+  indicadoresPorCriteriosPruebaAlvCL(ids: number[], id_modelo: number): Observable<IndicadorProjection[]> {
     const params = new HttpParams().set('idCriterios', ids.join(','));
     const options = {
       params: params,
       responseType: 'json' as const
     };
-    return this.http.get<Indicador[]>(`${baserUrl}/api/indicadores/indicadoresPorCriteriosPruebaCL`, options);
+    return this.http.get<IndicadorProjection[]>(`${baserUrl}/api/indicadores/indicadoresPorCriteriosPruebaCualitativa/${id_modelo}`, options);
   }
-  indicadoresPorCriteriosPruebaAlvCT(ids: number[]): Observable<Indicador[]> {
+  indicadoresPorCriteriosPruebaAlvCT(ids: number[], id_modelo: number): Observable<IndicadorProjection[]> {
     const params = new HttpParams().set('idCriterios', ids.join(','));
     const options = {
       params: params,
       responseType: 'json' as const
     };
-    return this.http.get<Indicador[]>(`${baserUrl}/api/indicadores/indicadoresPorCriteriosPruebaCT`, options);
+    return this.http.get<IndicadorProjection[]>(`${baserUrl}/api/indicadores/indicadoresPorCriteriosPruebaCuantitativa/${id_modelo}`, options);
   }
   ponderarIndicador(id: any, indicador: any): Observable<any> {
     return this.http.put(`${baserUrl}/api/indicadores/ponderacion/${id}`, indicador);
@@ -80,14 +82,17 @@ export class IndicadoresService {
   getIndicadores(): Observable<Indicador[]> {
     return this.http.get<Indicador[]>(`${baserUrl}/api/indicadores/listar`);
   }
+  getIndicadoresModelo(id_modelo:number): Observable<PonderacionProjection[]> {
+    return this.http.get<PonderacionProjection[]>(`${baserUrl}/api/indicadores/listarindicadoresModelo/${id_modelo}`);
+  }
   getSubcrindica(id_subcriterio:number,id_modelo:number): Observable<IndicadorResp[]> {
     return this.http.get<IndicadorResp[]>(`${baserUrl}/api/indicadores/subcritindicador/${id_subcriterio}/${id_modelo}`);
   }
   getIndicadorById(id_indicador: number): Observable<Indicador> {
-    return this.http.get<Indicador>(`${baserUrl}/api/indicadores/buscar/id_indicador/${id_indicador}`);
+    return this.http.get<Indicador>(`${baserUrl}/api/indicadores/buscar/${id_indicador}`);
   }
-  obtenerDatosIndicadores(id_subcriterio: any): Observable<IndicadorEvidenciasProjection[]> {
-    return this.http.get<IndicadorEvidenciasProjection[]>(`${baserUrl}/api/indicadores/datosIndicadores/${id_subcriterio}`);
+  obtenerDatosIndicadores(id_subcriterio: any, id_modelo:number): Observable<IndicadorEvidenciasProjection[]> {
+    return this.http.get<IndicadorEvidenciasProjection[]>(`${baserUrl}/api/indicadores/datosIndicadores/${id_subcriterio}/${id_modelo}`);
   }
   //consumir servicio de back @GetMapping("/listarIndicadorPorCriterioModelo/{id_criterio}")
   recoverPdfLink(id_criterio: number): Observable<string> {
@@ -98,9 +103,6 @@ export class IndicadoresService {
   getarchivorecoverPdf(id_indicador: number): Observable<Archivo[]> {
     return this.http.get<Archivo[]>(`${baserUrl}/archivo/recoverPdf/${id_indicador}`);
   }
-  obtenerDatosIndicadoresFull(): Observable<IndicadorEvidenciasProjectionFull[]> {
-    return this.http.get<IndicadorEvidenciasProjectionFull[]>(`${baserUrl}/api/indicadores/datosIndicadoresFull`);
-  }
   getIndicadorPorModelo(id_modelo: number): Observable<Indicador[]> {
     return this.http.get<Indicador[]>(`${baserUrl}/api/indicadores/indicadorespormodelo/${id_modelo}`);
   }
@@ -109,5 +111,8 @@ export class IndicadoresService {
   }
   getIndicAdmin(id_modelo: number,id:number): Observable<IndiColProjection[]> {
     return this.http.get<IndiColProjection[]>(`${baserUrl}/api/indicadores/indicvaladmin/${id_modelo}/${id}`);
+  }
+  getvaloresporcIndicadores(sub_nombre:string, id_modelo: number): Observable<IndicadorPorcProjection[]> {
+    return this.http.get<IndicadorPorcProjection[]>(`${baserUrl}/api/indicadores/listarporcindicadores/${sub_nombre}/${id_modelo}`);
   }
 }

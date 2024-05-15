@@ -9,4 +9,9 @@ export class Asignacion_Criterios {
     id_modelo:number=0;
 }
 
+export interface AsignacionAdminPDTO {
+    idModelo: number;
+    idCriterio: number;
+    idUsuario: number;
+}
 

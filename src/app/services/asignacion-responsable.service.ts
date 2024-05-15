@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import baserUrl from './helper';
- import { map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Criterio } from '../models/Criterio';
 import { asigna_R } from '../models/Asigna-Responsable';
 import { usuario } from '../models/Usuario';
 import { Usuario2 } from '../models/Usuario2';
 import { ResponsableProjection } from '../interface/ResponsableProjection';
 import { AsignacionProjection } from '../interface/AsignacionProjection';
- 
+
 
 @Injectable({
   providedIn: 'root'
@@ -22,22 +22,19 @@ export class AsignacionResponsableService {
     return this.httpClient.get(`${baserUrl}/usuarios/listar`).
       pipe(map((response) => response as usuario[]));
   }
+
  //Listar responsables
- public getResponsables(): Observable<ResponsableProjection[]> {
-  return this.httpClient.get(`${baserUrl}/usuarios/responsablesGeneral`).
+ public getResponsables(id_modelo: number): Observable<ResponsableProjection[]> {
+  return this.httpClient.get(`${baserUrl}/usuarios/responsablesGeneral/${id_modelo}`).
     pipe(map((response) => response as ResponsableProjection[]));
 }
 
-//BUSCAR DE RESPONSABLES POR ADMIN
-public getlistadeResponsablesByAdmin(idAdministrador: number): Observable<ResponsableProjection[]> {
-  return this.httpClient.get<ResponsableProjection[]>(`${baserUrl}/api/asignacion_responsable/listadeResponsablesByAdmin/${idAdministrador}`);
-}
 
- //LISTAR RESPONSABLEAdmin
- public listarUsuarioAdmin(): Observable<Usuario2[]> {
-  return this.httpClient.get(`${baserUrl}/usuarios/listarResponsableAdmin`).
-    pipe(map((response) => response as Usuario2[]));
-}
+  //BUSCAR DE RESPONSABLES POR ADMIN
+  public getlistadeResponsablesByAdmin(idModel: number, idAdministrador: number): Observable<ResponsableProjection[]> {
+    return this.httpClient.get<ResponsableProjection[]>(`${baserUrl}/api/asignacion_responsable/listadeResponsablesByAdmin/${idModel}/${idAdministrador}`);
+  }
+
 
   //LISTAR CRITERIOS
   public listarCriterios(): Observable<Criterio[]> {
@@ -55,7 +52,7 @@ public getlistadeResponsablesByAdmin(idAdministrador: number): Observable<Respon
     return this.httpClient.get(`${baserUrl}/api/asignacion_admin/listar`).
       pipe(map((response) => response as asigna_R[]));
   }
-  public asignaradmin(id_modelo:number,veri:string): Observable<AsignacionProjection[]> {
+  public asignaradmin(id_modelo: number, veri: string): Observable<AsignacionProjection[]> {
     return this.httpClient.get(`${baserUrl}/api/asignacion_admin/asignacionadmin/${id_modelo}/${veri}`).
       pipe(map((response) => response as AsignacionProjection[]));
   }
@@ -72,7 +69,7 @@ public getlistadeResponsablesByAdmin(idAdministrador: number): Observable<Respon
 
   //ELIMINAR ASIGNACION RESPONSABLE
   public deleteAsignacionResponsableAdmin(id_usuarioResponsable: number) {
-    return this.httpClient.put<any>(`${baserUrl}/api/asignacion_responsable/eliminarlogic/` + id_usuarioResponsable, {}	);
+    return this.httpClient.put<any>(`${baserUrl}/api/asignacion_responsable/eliminarlogic/` + id_usuarioResponsable, {});
   }
 
   //BUSCAR POR ID
@@ -80,6 +77,6 @@ public getlistadeResponsablesByAdmin(idAdministrador: number): Observable<Respon
     return this.httpClient.get<asigna_R>(`${baserUrl}/api/asignacion_admin/buscar/` + id);
   }
 
- 
-  
+
+
 }

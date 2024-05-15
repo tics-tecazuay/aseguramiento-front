@@ -5,7 +5,7 @@
         <strong><a style="cursor: pointer" (click)="verCriterios()">LISTADO CRITERIOS
           </a>
           >
-          <a style="cursor: pointer" (click)="verSubcriterios()">{{ criterio.nombre }}
+          <a style="cursor: pointer" (click)="verCriterios()">{{ nombreCriterio.nombre_criterio }}
           </a>
           >
           <a>{{ subcriterio.nombre }}</a></strong>
@@ -20,9 +20,6 @@
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#materiaModal">
           CREAR NUEVO INDICADOR
         </button>
-
-        <br />
-
         <br />
         <div class="mat-elevation-z8 table-responsive" style="margin-bottom: 5%">
 
@@ -41,7 +38,7 @@
             </ng-container>
             <ng-container matColumnDef="descripcion">
               <th mat-header-cell *matHeaderCellDef>DESCRIPCIÓN</th>
-              <td mat-cell *matCellDef="let elemento">
+              <td mat-cell *matCellDef="let elemento" class="descripcion-cell">
                 {{ elemento.descripcion }}
               </td>
             </ng-container>
@@ -59,11 +56,13 @@
             </ng-container>
             <ng-container matColumnDef="tipo">
               <th mat-header-cell *matHeaderCellDef>TIPO</th>
-              <td mat-cell *matCellDef="let elemento">
+              <td mat-cell *matCellDef="let elemento" class="descripcion-cell">
+                {{ elemento.tipo | uppercase }}
                 <button class="btn btn-primary" role="button" (click)="verEvaluacion(elemento)"
-                  *ngIf="elemento.tipo !== 'cualitativa'">
+                  *ngIf="elemento.tipo !== 'cualitativa'" [ngbTooltip]="'Ver la fórmula'"
+                  style="margin-top: 10%; margin-left: 25%;">
                   <div class="d-flex">
-                    <i class="fas fa-file-pdf"></i>
+                    <i class="fas fa-superscript"></i>
                   </div>
                 </button>
               </td>
@@ -86,16 +85,15 @@
 
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
-              <td mat-cell *matCellDef="let element">
-                <button class="btn btn-danger" style="background-color: red" (click)="eliminar(element)"
-                  style="margin-right: 5%">
-                  <i class="fas fa-user-times"></i>
-                </button>
+              <td mat-cell *matCellDef="let element" class="accioness-cell">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#materiaModal"
-                  style="margin-right: 5%" (click)="editDatos(element)">
+                  style="margin-right: 5%" (click)="editDatos(element)" [ngbTooltip]="'Editar indicador'">
                   <i class="fas fa-edit"></i>
                 </button>
-
+                <button class="btn btn-danger" style="background-color: red" (click)="eliminar(element)"
+                  style="margin-right: 5%" [ngbTooltip]="'Eliminar indicador'">
+                  <i class="fas fa-trash"></i>
+                </button>
               </td>
             </ng-container>
 

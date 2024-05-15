@@ -2,7 +2,6 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Criterio } from 'src/app/models/Criterio';
-import { Indicador } from 'src/app/models/Indicador';
 import { Subcriterio } from 'src/app/models/Subcriterio';
 import { IndicadoresService } from 'src/app/services/indicadores.service';
 import { SubcriteriosService } from 'src/app/services/subcriterios.service';

@@ -11,6 +11,7 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { Criterio } from 'src/app/models/Criterio';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { Modelo } from 'src/app/models/Modelo';
 
 (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
 
@@ -46,7 +47,7 @@ export class SubcriteriosIndicadorComponent {
   indicadors: any[] = [];
   subcriterio: Subcriterio = new Subcriterio();
   criterio: Criterio = new Criterio();
-
+  modeloVigente!: Modelo;
   miModal!: ElementRef;
   public indic = new Indicador();
   selectedTipo: string="";
@@ -88,9 +89,13 @@ export class SubcriteriosIndicadorComponent {
       this.router.navigate(['user-dashboard']);
       location.replace('/use/user-dashboard');
     }
+    this.obtenerModeloVigente();
     this.listar()
   }
 
+  obtenerModeloVigente() { 
+    this.modeloVigente = JSON.parse(localStorage.getItem('modelo') || '{}');
+    }
   
 
   guardar() {
@@ -139,7 +144,7 @@ export class SubcriteriosIndicadorComponent {
   }
 
   listar(): void {
-    this.indicadorservice.obtenerDatosIndicadores(this.subcriterio.id_subcriterio).subscribe(
+    this.indicadorservice.obtenerDatosIndicadores(this.subcriterio.id_subcriterio, this.modeloVigente.id_modelo).subscribe(
       (data: any[]) => {
         this.indicadors = data;
         this.dataSource.data=this.indicadors;

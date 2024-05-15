@@ -8,7 +8,6 @@ import { IndicadoresService } from 'src/app/services/indicadores.service';
 import { ModeloService } from 'src/app/services/modelo.service';
 import { AsignacionIndicadorService } from 'src/app/services/asignacion-indicador.service';
 import { SharedDataService } from 'src/app/services/shared-data.service';
-import { SubcriteriosService } from 'src/app/services/subcriterios.service';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 

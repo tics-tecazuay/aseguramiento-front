@@ -9,6 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { Modelo } from 'src/app/models/Modelo';
 
 (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
 
@@ -49,7 +50,7 @@ export class CriteriosComponent implements OnInit {
   filterPost = '';
   dataSource = new MatTableDataSource<CriterioSubcriteriosProjection>();
   columnasUsuario: string[] = ['id_criterio', 'nombre', 'descripcion', 'cantidadSubcriterios', 'actions'];
-
+  modeloVigente!: Modelo;
   @ViewChild('datosModalRef') datosModalRef: any;
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
 
@@ -73,10 +74,14 @@ export class CriteriosComponent implements OnInit {
 
   }
   ngOnInit(): void {
+    this.obtenerModeloVigente();
     this.listar();
   }
   
- 
+ obtenerModeloVigente() {
+  this.modeloVigente=JSON.parse(localStorage.getItem('modelo') || '{}');
+  }
+
   guardar() {
     this.crite = this.frmCriterio.value;
     this.criterioservice.crear(this.crite)
@@ -124,7 +129,7 @@ export class CriteriosComponent implements OnInit {
   }
 
   listar(): void {
-    this.criterioservice.obtenerDatosCriterios().subscribe(
+    this.criterioservice.obtenerDatosCriterios(this.modeloVigente.id_modelo).subscribe(
       (data: any[]) => {
         this.criterios = data;
         this.dataSource.data = this.criterios;

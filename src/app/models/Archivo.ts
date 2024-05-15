@@ -7,9 +7,21 @@ export class Archivo {
   enlace: string = "";
   nombre: string = "";
   descripcion: string = "";
-  actividad:Asigna_Evi|null=null;
-
+  actividad: Asigna_Evi | null = null;
   visible: string = "";
- // indicador:Indicador | null = null;
+}
+export interface ArchivoProjectionRes {
+  id_archivo: number;
+  enlace: string;
+  nombre: string;
+  descripcion: string;
+  comentario: string;
 }
 
+export interface ArchivoAdmSupProjection {
+  id_archivo: number;
+  enlace: string;
+  nombre: string;
+  descripcion: string;
+  comentario: string;
+}

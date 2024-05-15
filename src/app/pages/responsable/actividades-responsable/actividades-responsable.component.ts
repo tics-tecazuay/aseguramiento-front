@@ -2,23 +2,19 @@ import { Evidencia } from 'src/app/models/Evidencia';
 import { Archivo } from './../../../models/Archivo';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActividadService } from 'src/app/services/actividad.service';
-import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoginService } from 'src/app/services/login.service';
 import { Notificacion } from 'src/app/models/Notificacion';
-import { NotificacionService } from 'src/app/services/notificacion.service';
 import { Modelo } from 'src/app/models/Modelo';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
-import { EvidenciaService } from 'src/app/services/evidencia.service';
-import { AsignaEvidenciaService } from 'src/app/services/asigna-evidencia.service';
 import { CriteriosService } from 'src/app/services/criterios.service';
-import { Observacion2 } from 'src/app/models/Observaciones2';
 import { Asigna_EviDTO } from 'src/app/models/Asignacion-EvidenciaDTO';
 import { Asigna_Evi } from 'src/app/models/Asignacion-Evidencia';
-import { of, switchMap } from 'rxjs';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { detalleEvaluacion } from 'src/app/models/DetalleEvaluacion';
+import { DetalleEvaluacionService } from 'src/app/services/detalle-evaluacion.service';
+import { boolean } from 'mathjs';
 
 @Component({
   selector: 'app-actividades-responsable',
@@ -34,15 +30,30 @@ export class ActividadesResponsableComponent implements OnInit {
   Asigna_Evi: Asigna_Evi[] = [];
   Asigna_EviDTO: Asigna_EviDTO[] = [];
   noti = new Notificacion();
-  user: any = null;
+  user: any;
   idevidencia!: number;
   idusuario: any = null;
   nombreact: any = null;
   id_modelo!: number;
   ocultar = false;
-  isLoggedIn = false;
-
+  isLoggedIn: boolean;
+  isLoading = false;
   despuesFechaLimite: boolean = false;
+  id_ev!: number;
+  mostrarbotonDetalle = false;
+  dataSource4 = new MatTableDataSource<detalleEvaluacion>();
+  noRegistros: any;
+  modeloVigente!: Modelo;
+  columnasDetalle: string[] = [
+    'iddetalle',
+    'evi',
+    'observacion',
+    'fecha',
+    'usua',
+    'estado'
+  ];
+  listadodetalleEval: detalleEvaluacion[] = [];
+
   // Crear una fuente de datos para la tabla
   dataSource = new MatTableDataSource<Asigna_EviDTO>();
 
@@ -61,24 +72,22 @@ export class ActividadesResponsableComponent implements OnInit {
     'FECHA FINALIZACION',
     'ESTADO',
     'Observacion',
+    'Comentario',
     'Subir evidencia'
   ];
-acti: any;
-
+  acti: any;
 
   constructor(
     private services: ActividadService,
-    private fb: FormBuilder, private evid: EvidenciaService,
-    private router: Router, private asigna: AsignaEvidenciaService,
-    public login: LoginService, private criteriosService: CriteriosService,
-    private notificationService: NotificacionService,
+    private router: Router, public login: LoginService,
     private paginatorIntl: MatPaginatorIntl,
-    private _snackBar: MatSnackBar,
+    private detalleEvaluaService: DetalleEvaluacionService
   ) {
-
+    this.isLoggedIn = this.login.isLoggedIn();
+    this.user = this.login.getUser();
     this.paginatorIntl.nextPageLabel = 'Siguiente';
     this.paginatorIntl.lastPageLabel = 'Última';
-    this.paginatorIntl.itemsPerPageLabel = 'Actividades por página';
+    this.paginatorIntl.itemsPerPageLabel = 'Evidencia por página';
     this.paginatorIntl.previousPageLabel = 'Anterior';
     this.paginatorIntl.firstPageLabel = 'Primera';
     // Además, puedes definir la función para la etiqueta de rango en español si es necesario
@@ -96,14 +105,12 @@ acti: any;
       return `${startIndex + 1} - ${endIndex} de ${length}`;
     };
   }
-  evi: Evidencia = new Evidencia();
-  idevi: number = 0;
-  evide: number = 0;
-  id_ev!: number;
+
   ngOnInit(): void {
-    const idEvidencia = localStorage.getItem("eviden");
-    this.id_ev = Number(idEvidencia);
-    console.log("traido ev " + idEvidencia);
+    this.isLoading = true;
+    const data = history.state.data;
+    this.id_ev = data;
+
     this.modeloMax();
 
     setInterval(() => {
@@ -114,39 +121,31 @@ acti: any;
     this.user = this.login.getUser();
 
     this.idusuario = this.user.id;
-    console.log("usuar " + this.idusuario);
     this.login.loginStatusSubjec.asObservable().subscribe(
       data => {
         this.isLoggedIn = this.login.isLoggedIn();
         this.user = this.login.getUser();
-
       }
     );
   }
 
   modeloMax() {
-    this.criteriosService.getModeMaximo().subscribe((data) => {
-      this.id_modelo = data.id_modelo;
-      this.inicio();
-    });
+    this.modeloVigente = JSON.parse(localStorage.getItem('modelo') || '{}');
+    this.id_modelo = this.modeloVigente.id_modelo;
+    this.listar();
   }
 
-  inicio() {
-    if (this.id_ev != 0) {
-      this.evid.buscar(this.id_ev).subscribe((evidencia: Evidencia) => {
-        this.evi = evidencia;
-        this.listar();
-        //this.fechaminima();
-      });
-    } else {
-      const data = history.state.data;
-      this.id_ev = data;
-      this.evid.buscar(this.id_ev).subscribe((evidencia: Evidencia) => {
-        this.evi = evidencia;
-        this.listar();
-        //this.fechaminima();
-      });
-    }
+
+  listar(): void {
+    this.services.getactivievid(this.user.username, this.id_ev, this.id_modelo).subscribe((data: Asigna_EviDTO[]) => {
+      this.Asigna_EviDTO = data;
+      this.dataSource.data = this.Asigna_EviDTO;
+      this.dataSource.paginator = this.paginator;
+      this.isLoading = false;
+    }, (error) => {
+      console.error("Error al obtener actividades:", error);
+      this.isLoading = false;
+    });
   }
 
   getColorEstado(estado: string): string {
@@ -161,33 +160,6 @@ acti: any;
         return '';
     }
   }
-
-  listar(): void {
-    console.log("IDS: " + this.user.username + " id " + this.id_ev + " idevidencia " + this.evi.id_evidencia);
-    this.services.getactivievid(this.user.username, this.id_ev).subscribe((data: any[]) => {
-      const actidata = data;
-      this.Asigna_EviDTO = actidata;
-      actidata.forEach(activi => {
-        this.services.getObservaciones(activi.id_asignacion_evidencia).subscribe(
-          (obser: Observacion2[]) => {
-            activi.observacion = obser.map((c) => c.observacion);
-          },
-          (error) => {
-            console.error("Error al obtener observaciones:", error);
-
-            
-          }
-        );
-      });
-    
-      this.dataSource.data = this.Asigna_EviDTO;
-      this.dataSource.paginator = this.paginator;
-    }, (error) => {
-      console.error("Error al obtener actividades:", error);
-    });
-  }
-
-  archivo: Archivo = new Archivo();
 
   verDetalles(archivos: any) {
     archivos.id_asignacion_evidencia;
@@ -233,30 +205,6 @@ acti: any;
     });
   }
 
-
-  fechaMinima: string = "";
-  fechaMax: string = "";
-
-  datasource: Modelo[] = [];
-
-  /*fechaminima() {
-    let fechaactual = new Date();
-    this.asigna.getfechaAsignacion(this.id_ev, this.id_modelo)
-      .pipe(
-        switchMap(data => {
-          console.log("Fecha " + JSON.stringify(data));
-          const fechaInicio = new Date(data.fecha_inicio);
-          this.fechaMinima = fechaInicio.toISOString().split('T')[0];
-  
-          const fechaactividad = new Date(data.fecha_fin);
-          this.fechaMax = fechaactividad.toISOString().split('T')[0];
-          this.crear = fechaactual <= fechaactividad;
-          return of(null);
-        })
-      )
-      .subscribe();
-      }  
-      */
   filterPost = '';
 
   aplicarFiltro() {
@@ -266,31 +214,63 @@ acti: any;
         return JSON.stringify(item).toLowerCase().includes(lowerCaseFilter);
       });
     } else {
-
       // Restaurar los datos originales si no hay filtro aplicado
       this.listar();
     }
   }
+
   esFechaPasada(activi: any): boolean {
-  // Obtén la zona horaria de Ecuador (GMT-5)
-  const zonaHorariaEcuador = -5 * 60;
+    // Obtén la zona horaria de Ecuador (GMT-5)
+    const zonaHorariaEcuador = -5 * 60;
 
-  const fechaActual = new Date();
-  const fechaFinActividad = new Date(activi.fecha_fin);
+    const fechaActual = new Date();
+    const fechaFinActividad = new Date(activi.fecha_fin);
 
-  // Ajusta la zona horaria de la fecha actual para que sea GMT-5
-  fechaActual.setUTCMinutes(fechaActual.getUTCMinutes() - zonaHorariaEcuador);
+    // Ajusta la zona horaria de la fecha actual para que sea GMT-5
+    fechaActual.setUTCMinutes(fechaActual.getUTCMinutes() - zonaHorariaEcuador);
 
-  // Ajusta la zona horaria de la fecha de finalización de la actividad para que sea GMT-5
-  fechaFinActividad.setUTCMinutes(fechaFinActividad.getUTCMinutes() - zonaHorariaEcuador);
+    // Ajusta la zona horaria de la fecha de finalización de la actividad para que sea GMT-5
+    fechaFinActividad.setUTCMinutes(fechaFinActividad.getUTCMinutes() - zonaHorariaEcuador);
 
-  // Establece la hora al final del día de la fecha de finalización
-  fechaFinActividad.setHours(23, 59, 59, 999);
+    // Establece la hora al final del día de la fecha de finalización
+    fechaFinActividad.setHours(23, 59, 59, 999);
 
-  console.log('Fecha actual:', fechaActual);
-  console.log('Fecha fin actividad:', fechaFinActividad);
+    // console.log('Fecha actual:', fechaActual);
+    // console.log('Fecha fin actividad:', fechaFinActividad);
 
-  // Compara las fechas directamente
-  return fechaActual.getTime() > fechaFinActividad.getTime();
+    // Compara las fechas directamente
+    return fechaActual.getTime() > fechaFinActividad.getTime();
+  }
+
+  debeSerVerde(cantidadArchivos: number): boolean {
+    return cantidadArchivos > 0;
+  }
+
+  MostrarBotonDetalleEvalucaion() {
+    this.mostrarbotonDetalle = true;
+    this.ListarObservaciones();
+  }
+
+  OcultarbotonDetalleEvalucaion() {
+    this.mostrarbotonDetalle = false;
+  }
+
+  ListarObservaciones() {
+    this.noRegistros = null;
+    this.detalleEvaluaService
+      .getDetalleEvi(this.id_ev, this.id_modelo)
+      .subscribe(
+        (detalles) => {
+          if (detalles.length > 0) {
+            this.listadodetalleEval = detalles;
+            this.dataSource4.data = detalles;
+          } else {
+            this.noRegistros = 'No hay registros disponibles.';
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
   }
 }

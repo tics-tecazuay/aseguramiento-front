@@ -4,9 +4,6 @@ import { Router } from '@angular/router';
 import { ModeloService } from 'src/app/services/modelo.service';
 import { Modelo } from 'src/app/models/Modelo';
 
-
-
-
 @Component({
   selector: 'app-actividad-criterio-modelo',
   templateUrl: './actividad-criterio-modelo.component.html',

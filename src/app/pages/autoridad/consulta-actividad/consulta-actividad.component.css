@@ -1,14 +1,44 @@
-
-
 body {
-    font: 1em/1.618 Inter, sans-serif;
-  
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    min-height: 100vh;
-    padding: 30px;
-    
-    color: #224;
-  }
+  font: 1em/1.618 Inter, sans-serif;
+
+  display: flex;
+  justify-content: center;
+
+  min-height: 100vh;
+  padding-top: 1%;
+
+  color: #224;
+}
+
+.noregistros {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+.estado-pendiente {
+  background-color: yellow;
+  color: blue;
+}
+
+.estado-aprobada {
+  background-color: green;
+  color: white;
+}
+
+.estado-rechazada {
+  background-color: red;
+  color: white;
+}
+
+.acciones-cell {
+  min-width: 150px;
+}
+
+.accioness-cell {
+  min-width: 100px;
+}
+
+.accionesss-cell {
+  min-width: 500px;
+}

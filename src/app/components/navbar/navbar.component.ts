@@ -2,9 +2,10 @@ import { NotificacionService } from 'src/app/services/notificacion.service';
 import { LoginService } from './../../services/login.service';
 import { Component, OnInit } from '@angular/core';
 import { Notificacion } from 'src/app/models/Notificacion';
-import { MatDialog } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { Modelo } from 'src/app/models/Modelo';
+import { ModeloService } from 'src/app/services/modelo.service';
 
 @Component({
   selector: 'app-navbar',
@@ -20,10 +21,13 @@ export class NavbarComponent implements OnInit {
   user: any = null;
   noti = new Notificacion();
   notificaciones: Notificacion[] = [];
-  notificaciones2: Notificacion[] = [];
   idactividad:any;
-  constructor(public login: LoginService, private notificationService: NotificacionService,
-    private dialog: MatDialog,private router: Router) {
+  modeloVigente!: Modelo;
+
+  constructor(public login: LoginService, 
+    private notificationService: NotificacionService, 
+    private modelservice: ModeloService,
+    private router: Router) {
     this.rol = this.login.getUserRole();
   }
 
@@ -36,21 +40,21 @@ export class NavbarComponent implements OnInit {
         this.user = this.login.getUser();
       }
     );
-    this.listarnot(this.user.id);
+    this.obtenermodeloVigenteVigente();
+   
    
   }
 
   listarnot(id: any) {
-    console.log("id ver " + id);
     // Cargar notificaciones propias por id
-    this.notificationService.getNotificaciones(id).subscribe(
+    this.notificationService.getNotificaciones(id,this.modeloVigente.id_modelo).subscribe(
       (dataPropias: Notificacion[]) => {
         this.notificaciones = dataPropias;
         this.numNotificacionesSinLeer = this.notificaciones.filter(n => !n.visto).length;
         // Verifica si es ADMIN o SUPERADMIN
         if (this.rol == "ADMIN" || this.rol == "SUPERADMIN") {
           // Cargar notificaciones del rol ADMIN
-          this.notificationService.allnotificacion(this.rol).subscribe(
+          this.notificationService.notificacionePorRol(this.rol, this.modeloVigente.id_modelo).subscribe(
             (dataRol: Notificacion[]) => {
               this.notificaciones = this.notificaciones.concat(dataRol);
               this.numNotificacionesSinLeer += dataRol.filter(n => !n.visto).length;
@@ -69,7 +73,13 @@ export class NavbarComponent implements OnInit {
     );
   }
   
-  
+  obtenermodeloVigenteVigente(){
+    this.modelservice.getModeMaximo().subscribe((data: any) => {
+      this.modeloVigente = data;
+      localStorage.setItem("modelo", JSON.stringify(this.modeloVigente));
+      this.listarnot(this.user.id);
+    });
+  }
   
 ir(noti:any){
   noti.url;
@@ -83,16 +93,13 @@ ir(noti:any){
     this.router.navigate([noti.url]);
   }
 }
+ 
   public logout() {
-    localStorage.clear();
     this.login.logout();
-    location.replace('/use/login');
+    localStorage.clear();
+    location.replace('#/use/login');
+    location.reload();
   }
-
-  perfil() {
-    location.replace('/adm/admin');
-  }
-
 
   openNotifications() {
     // Actualizo las notificaciones cargadas
@@ -101,11 +108,9 @@ ir(noti:any){
         n.visto = true;
         // Actualizar el estado de la notificación en el servidor
         this.notificationService.actualizar(n.id).subscribe(() => {
-          console.log(`Notificación ${n.id} actualizada`);
         });
       }
     });
-
     // Actualizar el contador de notificaciones sin leer
     this.numNotificacionesSinLeer = 0;
   }

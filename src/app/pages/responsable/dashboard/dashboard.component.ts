@@ -18,8 +18,7 @@ import { Router } from '@angular/router';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { detalleEvaluacion } from 'src/app/models/DetalleEvaluacion';
-import Swal from 'sweetalert2';
-
+import { Modelo } from 'src/app/models/Modelo';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -33,7 +32,7 @@ export class DashboardComponent {
   valoresporcentajes: number[] = [];
   conteoActividades: { estado: string, conteo: number }[] = [];
   porcentajes!: ActiDiagramaPieProjection;
-
+  valoresevid = false;
   //CODIGO TABLA
   evidencias: EvidenciaProjection[] = []; // Declaración de la propiedad
   isLoggedIn2: boolean;
@@ -44,8 +43,9 @@ export class DashboardComponent {
   botonDeshabilitado: boolean | undefined;
   dataSource = new MatTableDataSource<EvidenciaProjection>();
   displayedModel: string[] = ['ID', 'Criterio', 'Subcriterio', 'Indicador', 'Descripcion'];
-  id_modelo!: number;
-
+  modeloVigente!: Modelo;
+  isLoading = false;
+  actividad!: EvidenciaProjection[];
 
   constructor(
     private services: AsignaEvidenciaService,
@@ -80,25 +80,18 @@ export class DashboardComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngOnInit(): void {
-    this.login.loginStatusSubjec.asObservable().subscribe(
-      data => {
-        this.isLoggedIn = this.login.isLoggedIn();
-        this.user = this.login.getUser();
-
-      }
-    );
-    this.Inicio();
-    localStorage.removeItem("eviden");
-
-    this.isLoggedIn = this.login.isLoggedIn();
-    this.user = this.login.getUser();
+    this.isLoading = true;
     this.login.loginStatusSubjec.asObservable().subscribe((data) => {
       this.isLoggedIn = this.login.isLoggedIn();
       this.user = this.login.getUser();
     });
+    this.Inicio();
+    localStorage.removeItem("eviden");
+    this.isLoggedIn = this.login.isLoggedIn();
+    this.user = this.login.getUser();  
     this.idUserLogged = this.user.id;
     this.services
-      .getActiCalendar(this.idUserLogged)
+      .getActiCalendar(this.idUserLogged, this.modeloVigente.id_modelo)
       .subscribe((data: ActividadesCalendar[]) => {
         // Envio los datos
         console.log(data);
@@ -110,7 +103,11 @@ export class DashboardComponent {
         }));
         this.calendarOptions.events = this.eventos;
       });
-    this.servicesEvidencia.getPorcentajesEstadosPorResponsable(this.idUserLogged).subscribe((data: ActiDiagramaPieProjection) => {
+    this.servicesEvidencia.getPorcentajesEstadosPorResponsable(this.idUserLogged, this.modeloVigente.id_modelo).subscribe((data: ActiDiagramaPieProjection) => {
+      console.log('DATAAAAAAA DEL GRAFICO',data);
+      if (data.porcentaje_pendientes == null) {
+        this.valoresevid = true;  
+      }
       this.porcentajes = data;
       this.valoresporcentajes = [
         this.porcentajes.porcentaje_rechazados,
@@ -141,24 +138,20 @@ export class DashboardComponent {
   //CODIGO PARA LA TABLA DE ACTIVIDADES
 
   Inicio() {
-    this.httpCriterios.getModeMaximo().subscribe((data) => {
-      this.id_modelo = data.id_modelo;
-      console.log("ID modelo" + this.id_modelo);
-      this.Listado();
-    });
+    this.isLoading = true;
+    this.modeloVigente = JSON.parse(localStorage.getItem('modelo') || '{}');
+    this.Listado();
   }
 
   spans: any[] = [];
-  spans2: any[] = [];
 
-  cacheSpan(keys: string[], accessor: (d: any) => any): void {
+  cacheSpan(key: string, accessor: (d: any) => any) {
     for (let i = 0; i < this.evidencias.length;) {
-      const currentValues = keys.map(key => accessor(this.evidencias[i][key]));
+      let currentValue = accessor(this.evidencias[i]);
       let count = 1;
 
       for (let j = i + 1; j < this.evidencias.length; j++) {
-        const nextValues = keys.map(key => accessor(this.evidencias[j][key]));
-        if (!currentValues.every((value, index) => value === nextValues[index])) {
+        if (currentValue !== accessor(this.evidencias[j])) {
           break;
         }
         count++;
@@ -168,43 +161,45 @@ export class DashboardComponent {
         this.spans[i] = {};
       }
 
-      keys.forEach(key => {
-        this.spans[i][key] = count;
-      });
-
+      this.spans[i][key] = count;
       i += count;
     }
   }
 
-  getRowSpan(col: string, index: number): number {
+
+  getRowSpan(col: any, index: any) {
     return this.spans[index] && this.spans[index][col];
   }
 
   Listado(): void {
-    this.servicesEvidencia.geteviuserpen(this.user.username).subscribe((data: any[]) => {
+    this.servicesEvidencia.geteviuserpen(this.user.username, this.modeloVigente.id_modelo).subscribe((data: any[]) => {
       if (data.length != 0) {
         this.verificar = true;
-        this.titulo = 'ACTIVIDADES PENDIENTES';
-        const evidata: any[] = data;
-        this.evidencias = evidata;
+        this.titulo = 'EVIDENCIAS PENDIENTES POR SUBIR';
+        this.evidencias = data;
 
-        this.cacheSpan(['criterio', 'subcriterio', 'indicador', 'descripcion'], (d: any) => [d.criterio, d.subcriterio, d.indicador, d.descripcion]);
+        this.cacheSpan('Criterio', (d) => d.criterio);
+        this.cacheSpan('Subcriterio', (d) => d.criterio + d.subcriterio);
+        this.cacheSpan('Indicador', (d) => d.criterio + d.subcriterio + d.indicador);
+        this.cacheSpan('Descripcion', (d) => d.criterio + d.subcriterio + d.indicador + d.descripcion);
 
-        evidata.forEach(evidencia => {
-          this.detaeva.getObservaciones(evidencia.id_evidencia, this.id_modelo).subscribe(
-            (observac: detalleEvaluacion[]) => {
-              evidencia.observacion = observac.map((c) => c.observacion);
-            }
-          );
-        });
+        // data.forEach(evidencia => {
+        //   this.detaeva.getObservaciones(evidencia.id_evidencia, this.id_modelo).subscribe(
+        //     (observac: detalleEvaluacion[]) => {
+        //       evidencia.observacion = observac.map((c) => c.observacion);
+        //     }
+        //   );
+        // });
 
         this.dataSource.data = this.evidencias;
+        this.isLoading = false;
       } else {
-        this.titulo = 'NO TIENES ACTIVIDADES PENDIENTES';
+        this.isLoading = false;
+        this.titulo = 'NO TIENES EVIDENCIAS PENDIENTES POR SUBIR';
+        this.isLoading = false;
       }
     });
   }
-
 
   verDetalles(evidencia: any) {
     this.router.navigate(['/res/ActividadesResponsable'], { state: { data: evidencia.id_evidencia } });
@@ -304,7 +299,7 @@ function colorCalendario(): string {
   return color;
 }
 
-  
 
-  
- 
+
+
+

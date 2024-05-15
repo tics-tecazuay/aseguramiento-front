@@ -39,25 +39,25 @@
             <td mat-cell *matCellDef="let elemento" [class.color-verde]="elemento.color === 'verde'"
               [class.color-rojo]="elemento.color === 'rojo'" [class.color-naranja]="elemento.color === 'naranja'"
               [class.color-amarillo]="elemento.color === 'amarillo'">
-              {{ elemento.porc_obtenido }}
+              {{ elemento.porc_obtenido | number:'1.2-2'}}
             </td>
           </ng-container>
           <ng-container matColumnDef="porc_utilidad">
             <th mat-header-cell *matHeaderCellDef>% UTILIDAD</th>
             <td mat-cell *matCellDef="let elemento">
-              {{ elemento.porc_utilida_obtenida }}
+              {{ elemento.porc_utilida_obtenida | number:'1.2-2'}}
             </td>
           </ng-container>
           <ng-container matColumnDef="valor">
             <th mat-header-cell *matHeaderCellDef>VALOR OBTENIDO</th>
             <td mat-cell *matCellDef="let elemento">
-              {{ elemento.valor_obtenido }}
+              {{ elemento.valor_obtenido | number:'1.4-4'}}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="archivo">
-            <th mat-header-cell *matHeaderCellDef>Archivo</th>
-            <td mat-cell *matCellDef="let elemento">
+            <th mat-header-cell *matHeaderCellDef [style.display]="ocultar ? '' : 'none'">ARCHIVO</th>
+            <td mat-cell *matCellDef="let elemento" [style.display]="ocultar  ? '' : 'none'">
               <a (click)="recoverPdf(elemento.id_indicador)">Descargar PDF</a>
               <div *ngIf="elemento.id_indicador=== idndicadorseleccionado ">
 

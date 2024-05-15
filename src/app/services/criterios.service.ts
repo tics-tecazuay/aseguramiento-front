@@ -12,9 +12,10 @@ import { IndicadorProjection } from '../interface/IndicadorProjection';
 import { ValoresProjection } from '../interface/ValoresProjection';
 import { IdCriterioProjection } from '../interface/IdCriterioProjection';
 import { CorreoProjection } from '../interface/CorreoProjection';
-import { CriterioByAdmin } from '../interface/CriteUsuarioProjection';
+import { CriteUsuarioProjection, CriterioByAdmin } from '../interface/CriteUsuarioProjection';
 import { CriRespProjection } from '../interface/CriteRespProjection';
 import { id } from '@swimlane/ngx-charts';
+import { CriterioPorcProjection } from '../interface/CriterioPorcProjection';
 
 
 @Injectable({
@@ -73,8 +74,8 @@ export class CriteriosService {
     return this.http.get<IndicadorProjection[]>(`${baserUrl}/api/indicadores/listarindi/${id_modelo}`)
   }
 
-  getIndicadorad(id_modelo:number,id:number): Observable<IndicadorProjection[]> {
-    return this.http.get<IndicadorProjection[]>(`${baserUrl}/api/indicadores/listarindiad/${id_modelo}/${id}`)
+  getIndicadorad(id_modelo:number,id_usuario:number): Observable<CriterioPorcProjection[]> {
+    return this.http.get<CriterioPorcProjection[]>(`${baserUrl}/api/indicadores/listarindiad/${id_modelo}/${id_usuario}`)
   }
   
   getIndicadorresponsable(id_modelo:number,id:number): Observable<IndicadorProjection[]> {
@@ -97,8 +98,8 @@ export class CriteriosService {
   getActividadCumplida(): Observable<any[]> {
     return this.http.get<any[]>(`${baserUrl}/api/actividad/listarCumpli`)
   }
-  getCriteriosUltimoModelo(): Observable<Criterio[]> {
-    return this.http.get<Criterio[]>(`${baserUrl}/api/criterio/obtenerCriteriosUltimoModelo`);
+  CriterioUltimoModelo(id_modelo: number): Observable<CriteUsuarioProjection[]> {
+    return this.http.get<CriteUsuarioProjection[]>(`${baserUrl}/api/criterio/CriteriosUltimoModelo/${id_modelo}`);
   }
   //metodo para consumir las evidencias rechasadas
   public getEvidenciaAtrasFecha(): Observable<any[]> {
@@ -110,8 +111,8 @@ export class CriteriosService {
     return this.http.get<Observacion[]>(`${baserUrl}/api/observacion/buscarObserByActiv/`+id);
 
   }
-  obtenerDatosCriterios(): Observable<CriterioSubcriteriosProjection[]> {
-    return this.http.get<CriterioSubcriteriosProjection[]>(`${baserUrl}/api/criterio/datosCriterios`);
+  obtenerDatosCriterios(id_modelo: number): Observable<CriterioSubcriteriosProjection[]> {
+    return this.http.get<CriterioSubcriteriosProjection[]>(`${baserUrl}/api/criterio/datosCriterios/${id_modelo}`);
   }
 
   obtenerDatosCriteriosAdmin(id:number): Observable<CriterioSubcriteriosProjection[]> {
@@ -128,6 +129,11 @@ export class CriteriosService {
 
   getcriresponsable(id_modelo: number,id:number): Observable<CriRespProjection[]> {
     return this.http.get<CriRespProjection[]>(`${baserUrl}/api/criterio/listcriresp/${id}/${id_modelo}`);
+  }
+
+  //esta aqui
+  getcriteriousuario(id:number, id_modelo: number): Observable<CriteUsuarioProjection[]> {
+    return this.http.get<CriteUsuarioProjection[]>(`${baserUrl}/api/criterio/listarcriteriosUsuarios/${id}/${id_modelo}`);
   }
   getvalores(id_modelo: number): Observable<ValoresProjection[]> {
     return this.http.get<ValoresProjection[]>(`${baserUrl}/api/criterio/listarvalores/${id_modelo}`);
@@ -155,4 +161,10 @@ export class CriteriosService {
     return this.http.get<any[]>(`${baserUrl}/api/criterio/criteriosporusuarioymodelo/${usuarioId}/${idModelo}`);
   }
 
+  getCriteriosByAdminUltimateModel(userId: number): Observable<CriterioByAdmin[]> {
+    return this.http.get<CriterioByAdmin[]>(`${baserUrl}/api/criterio/listCriAdminultimodel/${userId}`);
+  }
+  getvaloresporcCriterios(id_modelo: number): Observable<CriterioPorcProjection[]> {
+    return this.http.get<CriterioPorcProjection[]>(`${baserUrl}/api/criterio/listarporccriterios/${id_modelo}`);
+  }
 }

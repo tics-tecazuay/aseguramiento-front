@@ -1,31 +1,43 @@
 #cal {
-  max-height: 450px; /* Establece una altura máxima para el calendario */
+  max-height: 450px;
+  /* Establece una altura máxima para el calendario */
   /* o */
-  /* height: 400px; */ /* Establece una altura específica para el calendario */
+  /* height: 400px; */
+  /* Establece una altura específica para el calendario */
 }
+
 /* Estilos para la lista desordenada */
 .custom-ul {
-  list-style-type: none; /* Quita los puntos predeterminados de la lista */
-  padding: 0; /* Elimina el relleno predeterminado */
+  list-style-type: none;
+  /* Quita los puntos predeterminados de la lista */
+  padding: 0;
+  /* Elimina el relleno predeterminado */
 }
 
 /* Estilos para cada elemento de la lista */
 .custom-li {
-  margin-bottom: 3px; /* Espacio entre cada elemento de la lista */
-  padding: 4px; /* Relleno interno */
-  background-color: #f0f0f0; /* Color de fondo */
-  border-radius: 5px; /* Bordes redondeados */
+  margin-bottom: 3px;
+  /* Espacio entre cada elemento de la lista */
+  padding: 4px;
+  /* Relleno interno */
+  background-color: #f0f0f0;
+  /* Color de fondo */
+  border-radius: 5px;
+  /* Bordes redondeados */
 }
 
 /* Estilos para el texto del estado */
 .estado {
-  font-weight: bold; /* Texto en negrita */
+  font-weight: bold;
+  /* Texto en negrita */
 }
 
 /* Estilos para el conteo */
 .conteo {
-  margin-left: 10px; /* Espacio a la izquierda del conteo */
-  color: #007bff; /* Color del texto */
+  margin-left: 10px;
+  /* Espacio a la izquierda del conteo */
+  color: #007bff;
+  /* Color del texto */
 }
 
 /* css para la tabla de actividades */
@@ -43,46 +55,66 @@
  
   }*/
 
-  .titulo {
-    font-size: 24px; /* Tamaño del texto */
-    font-weight: bold; /* Negrita */
-    text-align: center; /* Alineación centrada */
-    color: #333; /* Color del texto (puedes ajustarlo según tu preferencia) */
-    margin-top: 20px; /* Espacio superior */
-    margin-bottom: 20px; /* Espacio inferior */
-  }
-  
-  .tabla-container {
-    max-height: 750px;
-    overflow-y: auto;
-  }
-  
-  .carousel-container {
-    display: flex;
-    overflow: hidden;
-    width: 300px;
-    height: 200px;
-    margin: 0 auto;
-  }
-  
-  .slide {
-    flex: 0 0 100%;
-    transition: transform 1s ease;
-  }
-  
-  img {
-    width: 100%; 
-    height: 100%;
-  }
-  
+.titulo {
+  font-size: 24px;
+  /* Tamaño del texto */
+  font-weight: bold;
+  /* Negrita */
+  /* text-align: center;  */
+  /* Alineación centrada */
+  color: #007bff;
+  /* Color del texto (puedes ajustarlo según tu preferencia) */
+  margin-top: 5px;
+  /* Espacio superior */
+  margin-bottom: 5px;
+  /* Espacio inferior */
+}
 
-  .imagen img {
-    max-width: 100%;  
-    max-height: 100%; 
-    width: auto;      
-    height: auto;    
-    display: block;   
-    margin: 0 auto;
-    opacity: 0.5;   
-  }
-  
+.tabla-container {
+  max-height: 750px;
+  overflow-y: auto;
+}
+
+.carousel-container {
+  display: flex;
+  overflow: hidden;
+  width: 300px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+.slide {
+  flex: 0 0 100%;
+  transition: transform 1s ease;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+}
+
+
+.imagen img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  opacity: 0.5;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  color: white;
+}
