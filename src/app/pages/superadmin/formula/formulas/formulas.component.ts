@@ -3,9 +3,10 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { Cuantitativa } from 'src/app/models/Cuantitativa';
-import { Formulas } from 'src/app/models/Formulas';
+import { Formulas, FormulasProjection } from 'src/app/models/Formulas';
+import { Modelo } from 'src/app/models/Modelo';
 import { FormulaService } from 'src/app/services/formula.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-formulas',
@@ -17,15 +18,16 @@ export class FormulasComponent implements OnInit {
   itemsPerPageLabel = 'Fórmulas por página';
   nextPageLabel = 'Siguiente';
   lastPageLabel = 'Última';
-  firstPageLabel='Primera';
-  previousPageLabel='Anterior';
-  ocultar=false;
-  
-  rango:any= (page: number, pageSize: number, length: number) => {
+  firstPageLabel = 'Primera';
+  previousPageLabel = 'Anterior';
+  ocultar = false;
+  mostrarColumnas = false;
+
+  rango: any = (page: number, pageSize: number, length: number) => {
     if (length == 0 || pageSize == 0) {
       return `0 de ${length}`;
     }
-  
+
     length = Math.max(length, 0);
     const startIndex = page * pageSize;
     const endIndex =
@@ -34,79 +36,77 @@ export class FormulasComponent implements OnInit {
         : startIndex + pageSize;
     return `${startIndex + 1} - ${endIndex} de ${length}`;
   };
-  
-  miModal!: ElementRef;
-  public formu = new Formulas();
-  listaFromulas: Formulas[] = [];
-  frmFormula: FormGroup;
-  guardadoExitoso: boolean = false;
+
+
+  listaFromulas: FormulasProjection[] = [];
 
   filterPost = '';
-  dataSource = new MatTableDataSource<Formulas>();
-  columnasUsuario: string[] = ['id_formula', 'descripcion','formula', 'actions'];
-
+  dataSource = new MatTableDataSource<FormulasProjection>();
+  columnasUsuario: string[] = ['id_formula', 'criterio', 'subcriterio', 'indicador', 'formula', 'descripcion', 'actions'];
+  modeloVigente!: Modelo;
   @ViewChild('datosModalRef') datosModalRef: any;
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
 
   constructor(
-    private service: FormulaService,private paginatorIntl: MatPaginatorIntl,
-    private fb: FormBuilder,
-    private router: Router
+    private service: FormulaService, private paginatorIntl: MatPaginatorIntl,
+
   ) {
-    this.frmFormula = fb.group({
-      descripcion: ['', Validators.required],
-      formula: ['', [Validators.required, Validators.maxLength(250)]]
-    });
+
     this.paginatorIntl.nextPageLabel = this.nextPageLabel;
     this.paginatorIntl.lastPageLabel = this.lastPageLabel;
-    this.paginatorIntl.firstPageLabel=this.firstPageLabel;
-    this.paginatorIntl.previousPageLabel=this.previousPageLabel;
+    this.paginatorIntl.firstPageLabel = this.firstPageLabel;
+    this.paginatorIntl.previousPageLabel = this.previousPageLabel;
     this.paginatorIntl.itemsPerPageLabel = this.itemsPerPageLabel;
-    this.paginatorIntl.getRangeLabel=this.rango;
+    this.paginatorIntl.getRangeLabel = this.rango;
   }
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator || null;
 
   }
   ngOnInit(): void {
+    this.obtenerModeloVigente();
     this.listar();
   }
 
-  guardar() {
-    this.formu = this.frmFormula.value;
-    console.log(this.formu)
-    this.service.crear(this.formu).
-      subscribe(
-        (reponse) => {
-          console.log('Formula creada con éxito:', reponse);
-          this.guardadoExitoso = true;
-          this.listar();
-
-        },
-        (error) => {
-          console.error('Error al crear la formula:', error);
-        }
-      )
+  obtenerModeloVigente() {
+  this.modeloVigente=JSON.parse(localStorage.getItem('modelo') || '{}');
   }
 
   eliminar(formula: Formulas) {
-    console.log(formula);
-    this.service.eliminar(formula).
-      subscribe((reponse) => {
-        this.listar();
-      },
-        (error: any) => {
-          console.error('Error al listar los criterios al eliminar:', error);
-        })
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción no se puede revertir',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log(formula);
+        this.service.eliminar(formula).
+          subscribe((reponse) => {
+            this.listar();
+            Swal.fire('¡Eliminado!', 'La fórmula ha sido eliminada', 'success');
+          },
+            (error: any) => {
+              console.error('Error ocurrió un error al eliminar la fórmula:', error);
+              Swal.fire('Error', 'Ocurrió un error al eliminar la fórmula', 'error');
+            }
+          );
+      }
+    });
+
   }
 
 
   listar(): void {
-    this.service.getFormulas().
+    this.service.getFormulas(this.modeloVigente.id_modelo).
       subscribe(
         (data: any) => {
           this.listaFromulas = data;
-          this.dataSource.data=this.listaFromulas;
+          this.dataSource.data = this.listaFromulas;
         },
         (error: any) => {
           console.error('Error al listar las formula', error);
@@ -114,32 +114,7 @@ export class FormulasComponent implements OnInit {
       )
   }
 
-  editDatos(formulaN: Formulas) {
-    this.formu = formulaN;
-    this.frmFormula = new FormGroup({
-      descripcion: new FormControl(formulaN.descripcion),
-      formula: new FormControl(formulaN.formula)
-    });
-  }
-
-  limpiarFormulario() {
-    this.frmFormula.reset();
-    this.formu = new Formulas;
-  }
-
-  actualizar() {
-    this.formu.descripcion = this.frmFormula.value.descripcion;
-    this.formu.formula = this.frmFormula.value.formula;
-    this.service.actualizar(this.formu.id_formula, this.formu)
-      .subscribe(response => {
-        this.formu = new Formulas();
-        this.listar();
-      });
-  }
-
-  //TS PARA CUANTITATIVA
-
-aplicarFiltro() {
+  aplicarFiltro() {
     if (this.filterPost) {
       const lowerCaseFilter = this.filterPost.toLowerCase();
       this.dataSource.data = this.dataSource.data.filter((item: any) => {
@@ -149,6 +124,11 @@ aplicarFiltro() {
       this.dataSource.data = this.listaFromulas;;
     }
   }
+
+  toggleColumnVisibility() {
+    this.mostrarColumnas = !this.mostrarColumnas;
+  }
+
 }
 
 

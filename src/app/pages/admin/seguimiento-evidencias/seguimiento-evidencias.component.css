@@ -1,0 +1,54 @@
+body {
+    font: 1em/1.618 Inter, sans-serif;
+
+    display: flex;
+    justify-content: center;
+
+    min-height: 100vh;
+    padding-top: 1%;
+
+    color: #224;
+
+}
+
+.rojo_evidencia {
+    background-color: rgb(253, 79, 56);
+    color: black;
+}
+
+.amarillo_evidencia {
+    background-color: rgb(255, 242, 170);
+    color: black;
+}
+
+.verde_evidencia {
+    background-color: rgb(96, 179, 114);
+    color: black;
+}
+
+.acciones-cell {
+    min-width: 150px;
+}
+
+.accioness-cell {
+    min-width: 100px;
+}
+
+.accionesss-cell {
+    min-width: 500px;
+}
+
+.descripcion-cell {
+    padding-top: 10px;
+    /* Ajusta el espacio superior según lo necesites */
+    padding-bottom: 10px;
+    /* Ajusta el espacio inferior según lo necesites */
+}
+
+.noregistros {
+    padding-top: 10px;
+    /* Ajusta el espacio superior según lo necesites */
+    padding-bottom: 10px;
+    /* Ajusta el espacio inferior según lo necesites */
+    text-align: center;
+}

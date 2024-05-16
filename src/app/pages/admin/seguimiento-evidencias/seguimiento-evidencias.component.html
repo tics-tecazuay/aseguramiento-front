@@ -1,0 +1,102 @@
+<body>
+  <div class="container bg-light border border-start-0 rounded-4">
+    <blockquote class="blockquote text-dark" style="margin-top: 5%">
+      <h1><strong> ESTADO DE EVIDENCIAS</strong></h1>
+    </blockquote>
+    <div></div>
+    <div class="card">
+      <div class="card-body">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>ESTADO</mat-label>
+            <mat-select (selectionChange)="onSelectionChange($event)">
+              <mat-option *ngFor="let estado of estados" [value]="estado.estadoName">
+                {{ estado.estadoName }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <input type="text" class="form-control" name="filterPost3" placeholder="Buscar..." [(ngModel)]="filterPost"
+            (input)="aplicarFiltro()" />
+        </div>
+        <div class="mat-elevation-z8 table-responsive" style="margin-bottom: 5%">
+          <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="responsable">
+              <th mat-header-cell *matHeaderCellDef>RESPONSABLE</th>
+              <td mat-cell *matCellDef="let elemento" class="acciones-cell" [ngClass]="getColorEstado(elemento.estado)">
+                {{ elemento.responsable }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="nombre_criterio">
+              <th mat-header-cell *matHeaderCellDef>CRITERIO</th>
+              <td mat-cell *matCellDef="let elemento" class="acciones-cell" [ngClass]="getColorEstado(elemento.estado)">
+                {{ elemento.nombre_criterio }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="nombre_subcriterio">
+              <th mat-header-cell *matHeaderCellDef>SUBCRITERIO</th>
+              <td mat-cell *matCellDef="let elemento" class="accioness-cell descripcion-cell"
+                [ngClass]="getColorEstado(elemento.estado)">
+                {{ elemento.nombre_subcriterio }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nombre_indicador">
+              <th mat-header-cell *matHeaderCellDef>INDICADOR</th>
+              <td mat-cell *matCellDef="let elemento" class="accioness-cell descripcion-cell"
+                [ngClass]="getColorEstado(elemento.estado)">
+                {{ elemento.nombre_indicador }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="evidencia">
+              <th mat-header-cell *matHeaderCellDef>EVIDENCIA</th>
+              <td mat-cell *matCellDef="let elemento" class="accionesss-cell descripcion-cell"
+                [ngClass]="getColorEstado(elemento.estado)">
+                {{ elemento.evidencia }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fecha_fin">
+              <th mat-header-cell *matHeaderCellDef>FECHA FIN</th>
+              <td mat-cell *matCellDef="let elemento" class="acciones-cell" [ngClass]="getColorEstado(elemento.estado)">
+                {{ elemento.fecha_fin | date : "dd-MM-yyyy" }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fecha_inicio">
+              <th mat-header-cell *matHeaderCellDef>FECHA INICIO</th>
+              <td mat-cell *matCellDef="let elemento" class="acciones-cell" [ngClass]="getColorEstado(elemento.estado)">
+                {{ elemento.fecha_inicio | date : "dd-MM-yyyy" }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="estado">
+              <th mat-header-cell *matHeaderCellDef>ESTADO</th>
+              <td mat-cell *matCellDef="let elemento" [ngClass]="getColorEstado(elemento.estado)">
+                {{ elemento.estado.toUpperCase() }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let fila; columns: displayedColumns"></tr>
+          </table>
+
+          <ng-container *ngIf="!estadoSeleccionado">
+            <p class="noregistros">Por favor, seleccione un estado para ver los registros.</p>
+          </ng-container>
+          <ng-container *ngIf="estadoSeleccionado && dataSource.data.length === 0">
+            <p class="noregistros">No hay registros disponibles.</p>
+          </ng-container>
+
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+            aria-label="Select page of periodic elements" itemsPerPageLabel="Items por página:"
+            nextPageLabel="Siguiente" previousPageLabel="Anterior">
+          </mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

@@ -16,10 +16,10 @@ export class PersonaService {
   public getUsua(idUsua: number): Observable<Persona2[]> {
     return this.http.get<Persona2[]>(`${baserUrl}/api/persona/buscarpersonaId/${idUsua}`);
   }
-  //Metodo para listar
+  //Metodo para listar personas
   getPersonas(): Observable<Persona2[]> {
     return this.http
-      .get(`${baserUrl}/api/persona/listar`)
+      .get(`${baserUrl}/api/persona/usuariosp`)
       .pipe(map((response) => response as Persona2[]));
   }
   //metodo para crear una persona
@@ -38,8 +38,8 @@ export class PersonaService {
     const url = `${baserUrl}/api/persona/findByCedula/${cedula}`;
     return this.http.get<Persona2>(url);
   }
-  existencia(id: any): Observable<any> {
-    return this.http.get(`${baserUrl}/usuarios/listausuariosprueba/${id}`);
+  existencia(username: any): Observable<any> {
+    return this.http.get(`${baserUrl}/usuarios/buscar/${username}`);
   }
   // Método para actualizar el campo persona_id_persona en la entidad de usuario
   actualizarPersonaIdEnUsuario(usuarioId: number, crite: any): Observable<any> {

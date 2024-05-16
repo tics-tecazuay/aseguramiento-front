@@ -5,11 +5,12 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { SubcriterioIndicadoresProjection } from 'src/app/interface/SubcriterioIndicadoresProjection';
 import { Criterio } from 'src/app/models/Criterio';
-import { Subcriterio } from 'src/app/models/Subcriterio';
+import { Subcriterio, SubcriterioPDTO } from 'src/app/models/Subcriterio';
 import { SubcriteriosService } from 'src/app/services/subcriterios.service';
 import Swal from 'sweetalert2';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { Modelo } from 'src/app/models/Modelo';
 
 (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
 
@@ -48,6 +49,9 @@ export class CriteriosSubcriterioComponent implements OnInit {
   miModal!: ElementRef;
   public subcrite = new Subcriterio();
 
+  subcriterioSave: SubcriterioPDTO = {} as SubcriterioPDTO;
+  modeloVigente!: Modelo;
+
   filterPost = '';
   dataSource = new MatTableDataSource<SubcriterioIndicadoresProjection>();
   columnasUsuario: string[] = ['id_subcriterio', 'nombre', 'descripcion', 'cantidadIndicadores', 'actions'];
@@ -83,13 +87,16 @@ export class CriteriosSubcriterioComponent implements OnInit {
       this.router.navigate(['user-dashboard']);
       location.replace('/use/user-dashboard');
     }
+    this.obtenerModeloVigente();
     this.listar()
   }
-
+  obtenerModeloVigente(){
+    this.modeloVigente= JSON.parse(localStorage.getItem('modelo') || '{}');
+  }
   guardar() {
-    this.subcrite = this.frmSubcriterio.value;
-    this.subcrite.criterio = this.criterio;
-    this.subcriterioservice.crear(this.subcrite)
+    this.subcriterioSave = this.frmSubcriterio.value;
+    this.subcriterioSave.id_criterio = this.criterio.id_criterio;
+    this.subcriterioservice.crearSubcriterio(this.subcriterioSave)
       .subscribe(
         (response: any) => {
           console.log('Criterio creado con éxito:', response);
@@ -133,7 +140,7 @@ export class CriteriosSubcriterioComponent implements OnInit {
   }
   //optimizar
   listar(): void {
-    this.subcriterioservice.obtenerDatosCriterios(this.criterio.id_criterio).subscribe(
+    this.subcriterioservice.obtenerDatosCriterios(this.criterio.id_criterio, this.modeloVigente.id_modelo).subscribe(
       (data: any[]) => {
         this.subcriterios = data;
         this.dataSource.data = this.subcriterios;

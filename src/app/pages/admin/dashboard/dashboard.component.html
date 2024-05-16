@@ -1,6 +1,11 @@
 <body>
   <div class="container bg-light border border-start-0 rounded-4">
-    <div class="card" style="max-height: 500px;">
+    <blockquote class="blockquote text-dark" style="margin-top: 5%">
+      <h1 style="text-transform: uppercase">
+        <strong><a>RESPONSABLES DE LOS CRITERIOS </a></strong>
+      </h1>
+    </blockquote>
+    <div class="card">
       <div class="card-body">
         <div class="input-group mb-3">
           <input type="text" class="form-control" placeholder="Buscar..." [(ngModel)]="searchTerm" />
@@ -13,7 +18,7 @@
             </ng-container>
 
             <ng-container matColumnDef="nombre">
-              <th mat-header-cell *matHeaderCellDef>Nombre</th>
+              <th mat-header-cell *matHeaderCellDef>NOMBRE</th>
               <td mat-cell *matCellDef="let m" (mouseenter)="showHint = true" (mouseleave)="showHint = false"
                 [class.show-hint]="showHint">
                 {{ m.nombre }}
@@ -21,13 +26,13 @@
             </ng-container>
 
             <ng-container matColumnDef="fecha_inicio">
-              <th mat-header-cell *matHeaderCellDef>Fecha Inicio</th>
+              <th mat-header-cell *matHeaderCellDef>FECHA INICIO</th>
               <td mat-cell *matCellDef="let m">
                 {{ m.fecha_inicio | date : "yyyy-MM-dd" }}
               </td>
             </ng-container>
             <ng-container matColumnDef="fecha_fin">
-              <th mat-header-cell *matHeaderCellDef>Fecha Fin</th>
+              <th mat-header-cell *matHeaderCellDef>FECHA FIN</th>
               <td mat-cell *matCellDef="let m">
                 {{ m.fecha_fin | date : "yyyy-MM-dd" }}
               </td>
@@ -35,8 +40,6 @@
             <tr mat-header-row *matHeaderRowDef="displayedModel"></tr>
             <tr mat-row *matRowDef="let m; columns: displayedModel" (click)="cargarTabla(m.id_modelo)"></tr>
           </table>
-          <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Seleccione">
-          </mat-paginator>
         </div>
       </div>
     </div>
@@ -56,7 +59,7 @@
       </section>
     </div>
     <mat-tab-group>
-      <mat-tab label="Responsables Actuales">
+      <mat-tab label="RESPONSABLES ACTUALES">
         <div class="card">
           <div class="card-body">
             <div class="input-group mb-3">
@@ -73,7 +76,7 @@
                 </ng-container>
 
                 <ng-container matColumnDef="nombrescri">
-                  <th mat-header-cell *matHeaderCellDef>Nombres</th>
+                  <th mat-header-cell *matHeaderCellDef>NOMBRES</th>
                   <td mat-cell *matCellDef="let a; let i = index" [attr.rowspan]="getRowSpan('nombrescri', i)"
                     [style.display]="getRowSpan('nombrescri', i) ? '' : 'none'">
                     {{ a.nombrescri }}
@@ -81,7 +84,7 @@
                 </ng-container>
 
                 <ng-container matColumnDef="actividasi">
-                  <th mat-header-cell *matHeaderCellDef>Criterio</th>
+                  <th mat-header-cell *matHeaderCellDef>CRITERIO</th>
                   <td mat-cell *matCellDef="let a">
                     {{ a.actividasi }}
                   </td>
@@ -98,7 +101,7 @@
       </mat-tab>
 
       <!-- Tab para Actividades Rechazadas -->
-      <mat-tab label="Responsables Anteriores">
+      <mat-tab label="RESPONSABLES ANTERIORES">
         <div class="card">
           <div class="card-body">
             <div class="input-group mb-3">

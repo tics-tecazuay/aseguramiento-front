@@ -1,69 +1,102 @@
 .mi-card {
-    max-width: 50%;
-    min-width: 200px;
-    margin: 10px;
+  max-width: 50%;
+  min-width: 200px;
+  margin: 10px;
 }
 
 #my-button {
-    margin: 10px;
-    padding-right: 1%;
+  margin: 10px;
+  padding-right: 1%;
 }
 
 .horizontal-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-  }
-  .mini-table {
-    display: flex;
-    flex-direction: column;
-    margin-top: 10px;
-  }
-  
-  .mini-table-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-  }
-  
-  .mini-table-header {
-    font-weight: bold;
-    margin-right: 10px;
-  }
-  
-  .mini-table-value {
-    flex-grow: 1;
-  }
-  .mi-card {
-    margin: 10px;
-    border: 2px solid #ccc; /* Borde predeterminado para todas las tarjetas */
-    padding: 10px;
-    border-radius: 5px; /* Bordes redondeados */
-  }
-  
-  /* Estilos para colores aleatorios */
-  .mi-card.card-0 { border-color: #f44336; } /* Rojo */
-  .mi-card.card-1 { border-color: #e91e63; } /* Rosa */
-  .mi-card.card-2 { border-color: #9c27b0; } /* Púrpura */
-  .mi-card.card-3 { border-color: #673ab7; } /* Índigo */
-  /* Y así sucesivamente, puedes seguir añadiendo estilos para colores aleatorios */
-  
-  /* Estilo para sombra en hover */
-  .mi-card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease-in-out;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
 
-  body {
-    font: 1em/1.618 Inter, sans-serif;
-  
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    min-height: 100vh;
-    padding: 30px;
-    
-    color: #224;
-  }
-  
+.mini-table {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.mini-table-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.mini-table-header {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.mini-table-value {
+  flex-grow: 1;
+}
+
+.mi-card {
+  margin: 10px;
+  border: 2px solid #ccc;
+  /* Borde predeterminado para todas las tarjetas */
+  padding: 10px;
+  border-radius: 5px;
+  /* Bordes redondeados */
+}
+
+/* Estilos para colores aleatorios */
+.mi-card.card-0 {
+  border-color: #f44336;
+}
+
+/* Rojo */
+.mi-card.card-1 {
+  border-color: #e91e63;
+}
+
+/* Rosa */
+.mi-card.card-2 {
+  border-color: #9c27b0;
+}
+
+/* Púrpura */
+.mi-card.card-3 {
+  border-color: #673ab7;
+}
+
+/* Índigo */
+/* Y así sucesivamente, puedes seguir añadiendo estilos para colores aleatorios */
+
+/* Estilo para sombra en hover */
+.mi-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+body {
+  font: 1em/1.618 Inter, sans-serif;
+
+  display: flex;
+  justify-content: center;
+
+  min-height: 100vh;
+  padding-top: 1%;
+
+  color: #224;
+}
+.card-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 1%;
+}
+.custom-modal-dialog {
+  max-width: 65%; /* Define el ancho máximo del modal */
+}
+.selection-list-container {
+  background-color: #f2f2f2;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 2%;
+}

@@ -1,36 +1,35 @@
+p.fant {
+  font-family: sans-serif;
 
-p.fant {font-family: sans-serif;
-  
-    left : 10px; 
-    text-align: left ;
+  left: 10px;
+  text-align: left;
 }
 
 .color-verde {
-    background-color: green;
-  }
-  
-  .color-rojo {
-    background-color: red;
-  }
+  background-color: green;
+}
 
-  .color-naranja {
-    background-color: orange;
-  }
-  .color-amarillo {
-    background-color: yellow;
-  }
+.color-rojo {
+  background-color: red;
+}
 
-  body {
-    font: 1em/1.618 Inter, sans-serif;
-  
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    min-height: 100vh;
-    padding: 30px;
-    
-    color: #224;
+.color-naranja {
+  background-color: orange;
+}
 
-  }
-  
+.color-amarillo {
+  background-color: yellow;
+}
+
+body {
+  font: 1em/1.618 Inter, sans-serif;
+
+  display: flex;
+  justify-content: center;
+
+  min-height: 100vh;
+  padding-top: 1%;
+
+  color: #224;
+
+}

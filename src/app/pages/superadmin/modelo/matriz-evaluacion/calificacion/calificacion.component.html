@@ -1,9 +1,10 @@
 <body>
   <div class="container bg-light border border-start-0 rounded-4">
     <mat-dialog-content>
-      <ng-container
-        *ngIf="data.valor === 'cualitativa'; then template1; else template2"
-      ></ng-container>
+      <ng-container *ngIf="data.valor === 'cualitativa'; then template1;" ></ng-container>
+      <ng-container *ngIf="data.valor === 'cualitativaevid'; then template1;" ></ng-container>
+      <ng-container *ngIf="data.valor === 'cuantitativa'; then template2;" ></ng-container>
+      <ng-container *ngIf="data.valor === 'cuantitativaevid'; then template2;" ></ng-container>
       <ng-template #template1>
         <h2 mat-dialog-title>Seleccionar valor</h2>
         <table
@@ -55,12 +56,12 @@
         >
           <ng-container
             matColumnDef="{{ column }}"
-            *ngFor="let column of columnsToDisplay2"
+            *ngFor="let column of columnsToDisplay2" 
           >
             <th mat-header-cell *matHeaderCellDef>
               {{ columnNames2[column] }}
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" >
               {{ element.cuantitativa[column] }}
             </td>
           </ng-container>

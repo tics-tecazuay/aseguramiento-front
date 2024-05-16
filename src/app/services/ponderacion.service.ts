@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Ponderacion } from '../models/Ponderacion';
+import { Ponderacion, PonderacionPDTO } from '../models/Ponderacion';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { map, Observable, catchError } from "rxjs";
 import baserUrl from './helper';
@@ -14,8 +14,13 @@ export class PonderacionService {
   guardarPonderacion(ponderacion: Ponderacion): Observable<Ponderacion> {
     return this.http.post<Ponderacion>(`${baserUrl}/api/ponderacion/crear`, ponderacion);
   }
-  guardarPonderacionLista(ponderaciones: Ponderacion[]): Observable<Ponderacion[]> {
-    return this.http.post<Ponderacion[]>(`${baserUrl}/api/ponderacion/crearLista`, ponderaciones);
+  guardarPonderacionLista(ponderaciones: PonderacionPDTO[]): Observable<PonderacionPDTO[]> {
+    return this.http.post<PonderacionPDTO[]>(`${baserUrl}/api/ponderacion/crearLista`, ponderaciones).pipe(
+      catchError((error) => {
+        console.error('error: ' + error);
+        throw error;
+      })
+    );
   }
   listarPonderacion(): Observable<Ponderacion[]> {
     return this.http
@@ -31,8 +36,8 @@ export class PonderacionService {
   idmax(id_modelo: number): Observable<PonderacionProjection[]> {
     return this.http.get<PonderacionProjection[]>(`${baserUrl}/api/ponderacion/idmax/${id_modelo}`);
   }
-  listarPonderacionPorFecha(fecha: string,contador:number): Observable<Ponderacion[]> {
-    return this.http.get<Ponderacion[]>(`${baserUrl}/api/ponderacion/listarPonderacionPorFecha/${fecha}/${contador}`);
+  listarPonderacionPorFecha(fecha: string,contador:number): Observable<PonderacionProjection[]> {
+    return this.http.get<PonderacionProjection[]>(`${baserUrl}/api/ponderacion/listarPonderacionPorFecha/${fecha}/${contador}`);
   }
   getEliminar(contador: number,fecha:string): Observable<Ponderacion> {
     return this.http.delete<Ponderacion>(`${baserUrl}/api/ponderacion/eliminarponderacion/${contador}/${fecha}`);

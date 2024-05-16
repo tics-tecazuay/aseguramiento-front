@@ -3,12 +3,11 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { data } from 'jquery';
 import { Cualitativa } from 'src/app/models/Cualitativa';
-import { Indicador } from 'src/app/models/Indicador';
 import { FormulaService } from 'src/app/services/formula.service';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import Swal from 'sweetalert2';
 
 (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
 
@@ -22,15 +21,15 @@ export class CuanlitativaComponent implements OnInit {
   itemsPerPageLabel = 'Fórmulas por página';
   nextPageLabel = 'Siguiente';
   lastPageLabel = 'Última';
-  firstPageLabel='Primera';
-  previousPageLabel='Anterior';
-  ocultar=false;
-  
-  rango:any= (page: number, pageSize: number, length: number) => {
+  firstPageLabel = 'Primera';
+  previousPageLabel = 'Anterior';
+  ocultar = false;
+
+  rango: any = (page: number, pageSize: number, length: number) => {
     if (length == 0 || pageSize == 0) {
       return `0 de ${length}`;
     }
-  
+
     length = Math.max(length, 0);
     const startIndex = page * pageSize;
     const endIndex =
@@ -39,7 +38,7 @@ export class CuanlitativaComponent implements OnInit {
         : startIndex + pageSize;
     return `${startIndex + 1} - ${endIndex} de ${length}`;
   };
- 
+
   miModal!: ElementRef;
   public cuali = new Cualitativa();
   listaCualitativa: Cualitativa[] = [];
@@ -50,13 +49,13 @@ export class CuanlitativaComponent implements OnInit {
 
   filterPost = '';
   dataSource = new MatTableDataSource<Cualitativa>();
-  columnasUsuario: string[] = ['id_cualitativa', 'valor','escala', 'actions'];
+  columnasUsuario: string[] = ['id_cualitativa', 'valor', 'escala', 'actions'];
 
   @ViewChild('datosModalRef') datosModalRef: any;
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
 
   constructor(
-    private service: FormulaService,private paginatorIntl: MatPaginatorIntl,
+    private service: FormulaService, private paginatorIntl: MatPaginatorIntl,
     private fb: FormBuilder,
     private router: Router
   ) {
@@ -66,12 +65,13 @@ export class CuanlitativaComponent implements OnInit {
       escala: ['', [Validators.required, Validators.maxLength(250)]],
       //indicador: ['', Validators.required],
     });
+
     this.paginatorIntl.nextPageLabel = this.nextPageLabel;
     this.paginatorIntl.lastPageLabel = this.lastPageLabel;
-    this.paginatorIntl.firstPageLabel=this.firstPageLabel;
-    this.paginatorIntl.previousPageLabel=this.previousPageLabel;
+    this.paginatorIntl.firstPageLabel = this.firstPageLabel;
+    this.paginatorIntl.previousPageLabel = this.previousPageLabel;
     this.paginatorIntl.itemsPerPageLabel = this.itemsPerPageLabel;
-    this.paginatorIntl.getRangeLabel=this.rango;
+    this.paginatorIntl.getRangeLabel = this.rango;
   }
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator || null;
@@ -81,44 +81,58 @@ export class CuanlitativaComponent implements OnInit {
     this.listarCuali();
   }
 
-  
+
 
   guardarCuali(cualiNu: Cualitativa) {
     this.cuali = this.frmCualitativa.value;
     console.log(cualiNu)
-    this.service.crearCuali(cualiNu).
-      subscribe(
-        (reponse) => {
-          console.log('Formula Cualitativa creado con éxito:', reponse);
-          this.cuali = new Cualitativa();
-          this.listarCuali();
-          this.guardadoExitoso = true;
-          this.guardadoExitoso2 = false;
-        },
-        (error) => {
-          console.error('Error al crear el formula cuanti:', error);
-        }
-      )
+    this.service.crearCuali(cualiNu).subscribe(
+      (reponse) => {
+        console.log('Formula Cualitativa creado con éxito:', reponse);
+        this.cuali = new Cualitativa();
+        this.listarCuali();
+        this.guardadoExitoso = true;
+        this.guardadoExitoso2 = false;
+        Swal.fire('¡Éxito!', 'La escala cualitativa ha sido creada correctamente', 'success');
+      },
+      (error) => {
+        console.error('Error al crear la escala cualitativa:', error);
+        Swal.fire('Error', 'Ocurrió un error al crear la escala cualitativa', 'error');
+      }
+    )
   }
 
   eliminarCuali(cuali: Cualitativa) {
-
-    this.service.eliminarCuali(cuali).
-      subscribe((reponse) => {
-        this.listarCuali();
-      },
-        (error: any) => {
-          console.error('Error al listar los formulas cuali al eliminar:', error);
-        })
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción no se puede revertir',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.service.eliminarCuali(cuali).subscribe(
+          (response) => {
+            this.listarCuali();
+            Swal.fire('¡Eliminado!', 'La escala ha sido eliminada', 'success');
+          },
+          (error) => {
+            Swal.fire('Error', 'Ocurrió un error al eliminar la escala', 'error');
+          }
+        );
+      }
+    });
   }
+
   listarCuali() {
     this.service.getCualitativa().
       subscribe(
-
-
         (data: any) => {
           this.listaCualitativa = data;
-          this.dataSource.data= this.listaCualitativa
+          this.dataSource.data = this.listaCualitativa
           console.log(this.listaCualitativa)
         },
         (error: any) => {
@@ -139,24 +153,46 @@ export class CuanlitativaComponent implements OnInit {
     });
   }
 
-  limpiarFormulario2() {
+  limpiarFormCuali() {
     this.frmCualitativa.reset();
     this.cuali = new Cualitativa;
   }
 
   actualizarCuali() {
-    console.log(this.cuali);
-    this.service.actualizarCuali(this.cuali)
-      .subscribe(response => {
-        this.cuali = new Cualitativa();
-        this.listarCuali();
-        this.guardadoExitoso = true;
-        this.guardadoExitoso2 = false;
-      });
-
-    this.cuali.escala = "";
-    this.cuali.valor = 0;
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción actualizará los datos',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, actualizar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.service.actualizarCuali(this.cuali).subscribe(
+          (response) => {
+            this.listarCuali();
+            this.guardadoExitoso = true;
+            this.guardadoExitoso2 = false;
+            this.limpiarFormCuali();
+            Swal.fire('¡Actualizado!', 'Los datos han sido actualizados', 'success');
+          },
+          (error) => {
+            console.error('Error al actualizar la escala:', error);
+            Swal.fire('Error', 'Ocurrió un error al actualizar la escala', 'error');
+          }
+        );
+      }
+    });
   }
+
+  cancelarEdicion() {
+    this.limpiarFormCuali();
+    this.guardadoExitoso = true;
+    this.guardadoExitoso2 = false;
+  }
+
 
   aplicarFiltro() {
     if (this.filterPost) {
@@ -168,14 +204,14 @@ export class CuanlitativaComponent implements OnInit {
       this.dataSource.data = this.listaCualitativa;
     }
   }
-  
-  
+
+
   generarReportePDF() {
     const data = this.dataSource.data.map((elemento: Cualitativa) => [elemento.id_cualitativa, elemento.valor, elemento.escala]);
 
     const docDefinition: any = {
       content: [
-        { text: 'Reporte de Formulas Cualitativas', style: 'header' },
+        { text: 'Reporte de Escalas Cualitativas', style: 'header' },
         '\n\n',
         {
           table: {
@@ -209,7 +245,7 @@ export class CuanlitativaComponent implements OnInit {
         ]
       }
     };
-  
+
     pdfMake.createPdf(docDefinition).open();
   }
 }

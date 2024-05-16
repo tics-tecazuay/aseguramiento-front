@@ -4,9 +4,9 @@
       <h1 style="text-transform: uppercase">
         <strong><a style="cursor: pointer;" (click)="verCriterios()">LISTADO CRITERIOS </a>
           >
-          <a style="cursor: pointer;" (click)="verSubcriterios()">{{ criterio.nombre }} </a>
+          <a style="cursor: pointer;" (click)="verCriterios()">{{ nombreCriterio.nombre_criterio }} </a>
           >
-          <a style="cursor: pointer;" (click)="verIndicadores()">{{ subcriterio.nombre }} </a>
+          <a style="cursor: pointer;" (click)="verSubcriterios()">{{ subcriterio.nombre }} </a>
           >
           <a>{{ indicador.nombre }}</a></strong>
       </h1>
@@ -18,14 +18,16 @@
             (input)="aplicarFiltro()" />
         </div>
         <br />
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#materiaModal">
-          CREAR NUEVA EVIDENCIA
-        </button>
-        <br />
-        <button type="button" class="btn btn-warning" (click)="generarReportePDFindicador()" style="margin-right: 5%">
-          <i class="fas fa-file-pdf"></i>
-          GENERAR REPORTE
-        </button>
+        <div class="d-flex">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#materiaModal"
+            style="margin-right: 2%;">
+            CREAR NUEVA EVIDENCIA
+          </button>
+          <button type="button" class="btn btn-warning" (click)="generarReportePDFindicador()">
+            <i class="fas fa-file-pdf"></i>
+            GENERAR REPORTE
+          </button>
+        </div>
         <br />
         <div class="mat-elevation-z8 table-responsive" style="margin-bottom: 5%">
           <table mat-table [dataSource]="dataSource">
@@ -38,21 +40,21 @@
 
             <ng-container matColumnDef="descripcion">
               <th mat-header-cell *matHeaderCellDef>DESCRIPCIÓN</th>
-              <td mat-cell *matCellDef="let elemento">
+              <td mat-cell *matCellDef="let elemento" class="descripcion-cell">
                 {{ elemento.descripcion }}
               </td>
             </ng-container>
 
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
-              <td mat-cell *matCellDef="let element">
-                <button class="btn btn-danger" style="background-color: red" (click)="eliminar(element)"
-                  style="margin-right: 5%">
-                  <i class="fas fa-user-times"></i>
-                </button>
+              <td mat-cell *matCellDef="let element" class="accioness-cell">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#materiaModal"
-                  style="margin-right: 5%" (click)="editDatos(element)">
+                  style="margin-right: 5%" (click)="editDatos(element)" [ngbTooltip]="'Editar evidencia'">
                   <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-danger" style="background-color: red" (click)="eliminar(element)"
+                  style="margin-right: 5%" [ngbTooltip]="'Eliminar evidencia'">
+                  <i class="fas fa-trash"></i>
                 </button>
               </td>
             </ng-container>

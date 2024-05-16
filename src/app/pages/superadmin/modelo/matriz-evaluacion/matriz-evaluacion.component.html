@@ -3,23 +3,21 @@
     <blockquote class="blockquote text-dark" style="margin-top: 5%">
       <h1 style="text-transform: uppercase">
         <strong
-          ><a style="cursor: pointer" (click)="irinicio()">Modelos </a>
+          ><a style="cursor: pointer" (click)="irinicio()">{{ idmodelo.nombre }} </a>
           >
           <a style="cursor: pointer" (click)="regresar()"
-            >{{ idmodelo.nombre }}
+            >MATRIZ DE EVALUACIÓN
           </a>
           >
           <a>{{nombre}} </a></strong
         >
       </h1>
     </blockquote>
-    <h1 class="display-1">MATRIZ DE EVALUACIÓN</h1>
+    <br/>
    
-
   <div id="tit">
     <div class="btn-tabs">
     
-
     <button mat-button class="btn-tab" [ngClass]="verIndicador ? 'selected' : ''" (click)="showIndicador()">
     Indicador
     </button>
@@ -94,7 +92,7 @@
               'verde': element.obt > 75 && element.obt <= 100
             }"
           >
-            {{ element.obt }}
+            {{ element.obt | number:'1.2-2' }}
           </td>
         </ng-container>
         
@@ -104,7 +102,7 @@
             [attr.rowspan]="getRowSpan3('Utilidad', i)"
             class="centrar"
             [style.display]="verUtilidad && getRowSpan3('Utilidad', i) ? '' : 'none'">
-            {{ element.uti }}
+            {{ element.uti | number:'1.2-2'}}
           </td>
         </ng-container>
         <ng-container matColumnDef="Valor">
@@ -122,7 +120,11 @@
             [attr.rowspan]="getRowSpan3('Evidencia', i)"
             [style.background-color]="element.indicol"
             [style.display]="verEvidencia && getRowSpan3('Evidencia', i) ? '' : 'none'"
-            >
+            [ngClass]="{
+              'rojo_evidencia': element.estado_evi === 'Rechazada',
+              'amarillo_evidencia': element.estado_evi === 'pendiente' || '',
+              'verde_evidencia': element.estado_evi === 'Aprobada'
+            }">
             {{ element.descrip }}
           </td>
         </ng-container>
@@ -131,9 +133,16 @@
            <th mat-header-cell *matHeaderCellDef  [style.display]="verArchivo ? '' : 'none'">  
            </th>
            <td mat-cell style="padding: 4px; font-size: 14px;" *matCellDef="let element; let i = index"
-           [style.display]="verArchivo && getRowSpan3('Archivos', i) ? '' : 'none'">
+           [style.display]="verArchivo && getRowSpan3('Archivos', i) ? '' : 'none'"
+           [ngClass]="{
+            'rojo_evidencia': element.estado_evi === 'Rechazada',
+            'amarillo_evidencia': element.estado_evi === 'pendiente' || '',
+            'verde_evidencia': element.estado_evi === 'Aprobada'
+          }">
             <a href="{{ element.archivo_enlace }}" download>{{ element.archivo_nombre }}</a>
-            
+            <ng-container *ngIf="!element.archivo_enlace || !element.archivo_nombre">
+              Sin archivo/s
+            </ng-container>
           </td>
          </ng-container>
          <ng-container matColumnDef="Idind">
@@ -149,7 +158,7 @@
           <td mat-cell style="padding: 4px; font-size: 12px;" *matCellDef="let element; let i = index"
           [attr.rowspan]="rowSpanValue"
           [style.display]="verTipo && rowSpanValue ? '' : 'none'" >
-            {{ element.tip }}
+            {{ element.tip.toUpperCase() }}
           </td>
         </ng-container>
          <ng-container matColumnDef="Calificar">
@@ -157,7 +166,7 @@
           <td mat-cell *matCellDef="let element" [attr.rowspan]="rowSpanValue"
           [style.display]="rowSpanValue ? '' : 'none'">
             
-            <button mat-icon-button (click)="abrirDialogo(element.tip, element.id_indicardorj, element.pes)" class="boton">
+            <button mat-icon-button (click)="abrirDialogo(element.tip, element.id_indicardorj, element.pes)" class="boton" [style.opacity]="idmodelo.estadoad ? '1' : '0.5'" [disabled]="!idmodelo.estadoad">
               <mat-icon class="iconoB">open_in_new</mat-icon>
             </button>
           </td>

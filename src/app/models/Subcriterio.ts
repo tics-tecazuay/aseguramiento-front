@@ -1,3 +1,4 @@
+import { number } from "mathjs";
 import { Criterio } from "./Criterio";
 
 export class Subcriterio {
@@ -6,4 +7,10 @@ export class Subcriterio {
     descripcion: string = "";
     criterio: Criterio | null = null;
     visible: boolean = true;
+}
+
+export interface SubcriterioPDTO {
+    nombre: string;
+    descripcion: string;
+    id_criterio: number;
 }

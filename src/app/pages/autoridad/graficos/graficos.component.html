@@ -7,15 +7,19 @@
 
         <ng-container *ngFor="let item of datasource">
             <mat-card class="mi-card">
-                <mat-card-content>
-                    <div class="item">
-                        <h3><b>{{ item.nombre }}</b></h3>
-                    </div>
-                    <button mat-button (click)="irDetalle(item)" id="my-button">Ver Contenido</button>
-                </mat-card-content>
+              <mat-card-content>
+                <div class="item">
+                  <h3><b>{{ item.nombre }}</b></h3>
+                </div>
+                <button mat-button (click)="irDetalle(item)" id="my-button">
+                  <div class="icon-text-container">
+                    <i class="fas fa-eye mr-2"></i>
+                    <span>Ver Contenido</span>
+                  </div>
+                </button>
+              </mat-card-content>
             </mat-card>
             <br>
-        </ng-container>
-
+          </ng-container>          
     </div>
 </body>

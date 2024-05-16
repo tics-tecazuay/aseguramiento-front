@@ -1,7 +1,7 @@
 <body>
   <div class="container bg-light border border-start-0 rounded-4">
     <blockquote class="blockquote text-dark" style="margin-top: 5%">
-      <h1><strong> LISTADO FORMULAS CUANTITATIVAS</strong></h1>
+      <h1><strong> LISTADO VARIABLES CUANTITATIVAS</strong></h1>
     </blockquote>
     <div></div>
 
@@ -12,15 +12,17 @@
             (input)="aplicarFiltro()" />
         </div>
         <br />
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#materiaModal">
-          CREAR NUEVA FORMULA CUANTITATIVA
-        </button>
-        <button type="button" class="btn btn-warning" (click)="generarReportePDF()">
-          GENERAR REPORTE CUANTITATIVA
-        </button>
+        <div class="d-flex">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#materiaModal"
+            style="margin-right: 2%;">
+            CREAR NUEVA VARIABLE CUANTITATIVA
+          </button>
+          <button type="button" class="btn btn-warning" (click)="generarReportePDF()">
+            GENERAR REPORTE CUANTITATIVA
+          </button>
+        </div>
         <br />
-
-        <table mat-table [dataSource]="dataSource">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
           <ng-container matColumnDef="id_cuantitativa">
             <th mat-header-cell *matHeaderCellDef [style.display]="ocultar ? '' : 'none'">ID</th>
             <td mat-cell *matCellDef="let elemento" [style.display]="ocultar  ? '' : 'none'">
@@ -43,14 +45,14 @@
 
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" class="accioness-cell">
               <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#materiaModal"
-                style="margin-right: 5%" (click)="editDatosCuanti(element)">
+                style="margin-right: 5%" (click)="editDatosCuanti(element)" ngbTooltip="Editar variable">
                 <i class="fas fa-edit"></i>
               </button>
               <button class="btn btn-danger" style="background-color: red" (click)="eliminarCuanti(element)"
-                style="margin-right: 5%">
-                <i class="fas fa-user-times"></i>
+                style="margin-right: 5%" ngbTooltip="Eliminar variable">
+                <i class="fas fa-trash"></i>
               </button>
             </td>
           </ng-container>
@@ -69,7 +71,7 @@
             <div class="modal-content">
               <div class="modal-header bg-blue">
                 <h3 class="modal-title">
-                  <i class="fas fa-clipboard"></i> Formula Cuantitativa
+                  <i class="fas fa-clipboard"></i> Variable Cuantitativa
                 </h3>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>

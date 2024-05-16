@@ -38,7 +38,7 @@ import { ResponsablePipe } from '../pages/admin/asignacion-evidencia/responsable
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FiltrarEvidenciasPorIDPipe } from '../pages/admin/aprobar-rechazar-admin/filtro-prueba.pipe';
 import { MatSortModule } from '@angular/material/sort';
-
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 @NgModule({
   declarations: [BuscarPipe,BuscarUsuarioPipe,PageNotFoundComponent,
     FiltrarEvidenciasPorIDPipe, ResponsablePipe,
@@ -77,7 +77,8 @@ import { MatSortModule } from '@angular/material/sort';
     NgxChartsModule,
     CdkTableModule,
     MatTooltipModule,
-    MatSortModule
+    MatSortModule,
+    NgbTooltipModule
   ],
   exports: [
     BuscarPipe,

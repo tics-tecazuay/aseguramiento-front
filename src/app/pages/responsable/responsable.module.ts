@@ -14,6 +14,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { CriterioResponsableComponent } from './criterio-responsable/criterio-responsable.component';
 import { CriterioModeloResponsableComponent } from './criterio-modelo-responsable/criterio-modelo-responsable.component';
 import { SubcriterioResponsableComponent } from './subcriterio-responsable/subcriterio-responsable.component';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -32,8 +33,9 @@ import { SubcriterioResponsableComponent } from './subcriterio-responsable/subcr
   ],
   imports: [
     CommonModule,
-    ResponsableRoutingModule, 
-    SharedModule
+    ResponsableRoutingModule,
+    SharedModule,
+    NgbTooltipModule
   ]
 })
 export class ResponsableModule { }

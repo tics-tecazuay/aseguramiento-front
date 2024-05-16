@@ -10,7 +10,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { UsuariorolService } from 'src/app/services/usuariorol.service';
-import { catchError, tap, throwError } from 'rxjs';
+import { catchError, tap, throwError, timer } from 'rxjs';
 import { Usuario2 } from 'src/app/models/Usuario2';
 import { Persona2 } from 'src/app/models/Persona2';
 import { CriteriosService } from 'src/app/services/criterios.service';
@@ -20,6 +20,7 @@ import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Rol } from 'src/app/models/Rol';
 import { CriRespProjection } from 'src/app/interface/CriteRespProjection';
+import { UsuariosProjection } from 'src/app/interface/UsuariosProjection';
 
 
 let ELEMENT_DATA: Fenix[] = [];
@@ -42,13 +43,21 @@ export class CrearUsuariosComponent implements OnInit {
   fenix: Fenix = new Fenix();
   listaPersonas: Persona2[] = [];
   selectedRole: string | null = null;
-  listaUsuarios: Usuario2[] = [];
+  listaUsuarios: UsuariosProjection[] = [];
   filterPost = '';
   personaSele = new Persona2();
+
+  usuarioEdit = new Usuario2();
+  usuarioSele = new UsuarioRol();
+
   usuariosEdit = new UsuarioRol();
   usuariosEditGuar = new UsuarioRol();
+  usuarioBd = new UsuarioRol();
   selectedRol: any;
   searchTerm: string = '';
+  asig!: UsuariosProjection[];
+  criterio!: CriteUsuarioProjection[];
+  dato: number = 23;
 
   dataSource5: Usuario2[] = [];
 
@@ -102,15 +111,16 @@ export class CrearUsuariosComponent implements OnInit {
   formulario: FormGroup;
   user: CriRespProjection[] = [];
   spans: any[] = [];
-
-  dataSource2 = new MatTableDataSource<Usuario2>();
-  columnasUsuario: string[] = ['id', 'nombre', 'usuario', 'rol','actions'];
+  isLoading = false;
+  dataSource2 = new MatTableDataSource<UsuariosProjection>();
+  columnasUsuario: string[] = ['id', 'idrol', 'nombre', 'usuario', 'rol', 'criterio', 'actions'];
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
   @ViewChild('modal') modal: any;
   constructor(
     private personaService: PersonaService,
     private usuariosService: UsuarioService,
-    private userService: UserService, private httpCriterios: CriteriosService,
+    private criterioService: CriteriosService,
+     private httpCriterios: CriteriosService,
     private fenix_service: FenixService,
     private formBuilder: FormBuilder,
     private paginatorIntl: MatPaginatorIntl,
@@ -133,10 +143,9 @@ export class CrearUsuariosComponent implements OnInit {
 
   }
   ngOnInit(): void {
-
+    this.isLoading = true;
     this.personaService.getPersonas().subscribe(
       listaPerso => this.listaPersonas = listaPerso);
-
     this.modeloMax();
 
   }
@@ -147,57 +156,6 @@ export class CrearUsuariosComponent implements OnInit {
       this.Listado();
     });
   }
-
-  Listado3() {
-    this.usuariorolservice.getusuarios().subscribe(
-      (usuarios: any[]) => {
-        const usuariosData = usuarios;
-        console.log("usuarios " + JSON.stringify(usuarios))
-        usuariosData.forEach((usuario) => {
-          console.log("usuario id " + JSON.stringify(usuario.usuario.id))
-          this.usuariorolservice.getcriterios(usuario.usuario.id, this.idmodel).subscribe(
-            (criterios: CriteUsuarioProjection[]) => {
-              usuario.criterio = criterios.map((c) => c.criterio);
-              usuario.evidencia = criterios.map((c) => c.evidencia);
-
-              if (usuariosData.every((u) => u.criterio && u.criterio.length > 0)) {
-                this.dataSource2.data = usuariosData;
-                console.log("criterios v " + JSON.stringify(this.dataSource2.data));
-              }
-
-            }
-          );
-        });
-      }
-    );
-  }
-
-  aplicarFiltroPorRol() {
-    if (this.selectedRole) {
-      console.log(this.selectedRole);
-      this.dataSource2.data = this.listaUsuarios.filter((item: any) => {
-        return item.rol.rolNombre === this.selectedRole;
-      });
-    } else {
-      // Restaurar los datos originales si no hay filtro de rol aplicado
-      this.dataSource2.data = this.listaUsuarios;
-    }
-  }
-
-  aplicarFiltro() {
-    if (this.filterPost) {
-      const lowerCaseFilter = this.filterPost.toLowerCase();
-      this.dataSource2.data = this.dataSource2.data.filter((item: any) => {
-        return JSON.stringify(item).toLowerCase().includes(lowerCaseFilter);
-      });
-    } else {
-      // Restaurar los datos originales si no hay filtro aplicado
-      this.dataSource2.data = this.listaUsuarios;;
-    }
-  }
-
-
-
 
   displayedColumns: string[] = [
     'cedula',
@@ -211,6 +169,13 @@ export class CrearUsuariosComponent implements OnInit {
   dataSource = ELEMENT_DATA;
 
   //consumir servicio de fenix para obtener datos de la persona por cedula
+  getUsarioBase(username: string) {
+    this.usuariorolservice.buscaruser(username).subscribe(
+      (data) => {
+        this.usuarioBd = data;
+      }
+    );
+  }
   public consultarPorCedula() {
     if (this.fenix.cedula == null || this.fenix.cedula == '') {
       Swal.fire('Error', 'Debe ingresar una cedula', 'error');
@@ -378,7 +343,8 @@ export class CrearUsuariosComponent implements OnInit {
   }
 
   limpiarFormulario() {
-    //this.usuarioGuardar = new Usuario2;
+    this.usuarioGuardar = new Usuario2;
+
     //this.selectedRol = null;
     // this.rol=0;
   }
@@ -419,20 +385,22 @@ export class CrearUsuariosComponent implements OnInit {
   }
 
   crearUsuario() {
+    this.isLoading = true;
     console.log(this.usuarioGuardar)
     this.usuariosService.createUsuarioSup(this.usuarioGuardar, this.getRolesSeleccionados()).subscribe(
-      () => {
+      (response) => {
         Swal.fire(
           'Usuario Registrado!',
           'El usuario ha sido registrado éxitosamente',
           'success'
         );
         this.Listado();
-
+        //this.recargarPagina();
         this.formulario.reset();
         this.formulario.markAsPristine();
       },
       (error) => {
+        this.isLoading = false;
         console.log(error);
         Swal.fire({
           icon: 'error',
@@ -445,6 +413,7 @@ export class CrearUsuariosComponent implements OnInit {
   }
 
   guardarUsuario() {
+    this.isLoading = true;
     // Obtener los roles seleccionados
     const rolesSeleccionados = this.rolesOrd.filter(rol => rol.selected);
     this.usuarioGuardar.username = this.personaSele.cedula;
@@ -453,12 +422,14 @@ export class CrearUsuariosComponent implements OnInit {
     console.log(this.usuarioGuardar.password)
     // Verificar que todos los campos necesarios estén completos
     if (!this.usuarioGuardar.username || !this.usuarioGuardar.password || rolesSeleccionados.length === 0) {
+      this.isLoading = false;
       Swal.fire('Campos Vacios', 'Por favor llene todos los campos', 'warning');
       return;
     }
     this.usuariosService.obtenerUsuario(this.usuarioGuardar.username).pipe(
       tap((existeUsuario: boolean) => {
         if (existeUsuario) {
+          this.isLoading = false;
           Swal.fire('Usuario existente', 'El usuario ya está registrado', 'warning');
         } else {
           this.registrarUsuario();
@@ -466,6 +437,7 @@ export class CrearUsuariosComponent implements OnInit {
       }),
       catchError((error) => {
         console.log(error);
+        this.isLoading = false;
         Swal.fire({
           icon: 'error',
           title: 'Error al comprobar usuario',
@@ -475,6 +447,7 @@ export class CrearUsuariosComponent implements OnInit {
         return throwError(error);
       })
     ).subscribe();
+    this.isLoading = false;
   }
 
   cerrarModal() {
@@ -482,8 +455,13 @@ export class CrearUsuariosComponent implements OnInit {
     this.formulario.markAsPristine();
   }
 
-  eliminar(element: any) {
-    const id = element.id;
+  recargarPagina() {
+    // Recargar la página actual
+    timer(1000).subscribe(() => location.reload());
+  }
+
+  eliminar(id: number) {
+    //const id = element.id;
     Swal.fire({
       title: 'Desea eliminarlo?',
       text: "No podrá revertirlo!",
@@ -493,21 +471,54 @@ export class CrearUsuariosComponent implements OnInit {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Si, eliminarlo!',
     }).then((result) => {
+      this.isLoading = true;
       if (result.isConfirmed) {
-        this.usuariosService.eliminarUsuarioLogic(id).subscribe((response) => {
-          this.Listado();
-        });
-
-        Swal.fire('Eliminado!', 'Registro eliminado.', 'success');
+        this.usuariosService.eliminarUsuarioLogic(id).subscribe(
+          (response) => {
+            // Esta función se ejecutará si la operación de eliminar usuario se completa con éxito
+            this.isLoading = false;
+            Swal.fire('Eliminado!', 'Registro eliminado.', 'success');
+            this.Listado();
+            this.recargarPagina();
+          },
+          (error) => {
+            // Esta función se ejecutará si hay algún error en la operación de eliminar usuario
+            console.error("Error al eliminar usuario:", error);
+            // Aquí puedes manejar el error según tus necesidades
+            this.recargarPagina();
+          }
+        );
+      
+      }else{
+        this.isLoading = false;
+        Swal.fire('Se ha cancelado la operación', '', 'info')
       }
-    });
+    });    
   }
 
-  EditarUsuari(usuariossssss: any): void {
-    this.usuariosEdit = usuariossssss;
+  public selec(element: UsuariosProjection) {
 
+    this.usuarioSele.usuarioRolId = element.userrolid
+    this.usuarioEdit.username = element.usuario
+    this.usuarioEdit.password = element.contrasenia
+  }
+
+  usuarioSeleccionado: string = "";
+  contraseniaSeleccionado: string = "**********";
+
+  handleClick(usuario: string, element: UsuariosProjection) {
+
+    this.EditarUsuari(usuario)
+    this.selec(element)
+
+  }
+
+  EditarUsuari(usuario: string): void {
+
+    this.usuarioSeleccionado = usuario;
     // Obtener los roles del usuario base
-    this.usuariorolservice.getRolesPorUsername(this.usuariosEdit.usuario.username).subscribe(
+    this.usuariorolservice.getRolesPorUsername(usuario).subscribe(
+
       (data: Rol[]) => {
         // Almacenar los roles del usuario base en rolesUserBase
         this.rolesUserBase = data;
@@ -525,12 +536,20 @@ export class CrearUsuariosComponent implements OnInit {
     return role1 && role2 ? role1.rolNombre === role2.rolNombre : role1 === role2;
   }
 
-  Actualizar(usuariosdit: UsuarioRol) {
-    if (usuariosdit.usuario.password == "") {
-      usuariosdit.usuario.password = this.usuariosEdit.usuario.password
-    }
+
+  Actualizar(usuariosdit: UsuarioRol, idrol:number) {
+    this.isLoading= true;
+
+  // Verificar que se seleccione al menos un rol
+  const rolesSeleccionados = this.rolesOrd.filter(rol => rol.selected);
+  if (rolesSeleccionados.length === 0) {
+    this.isLoading= false;
+    Swal.fire('Rol Requerido', 'Por favor, seleccione al menos un rol', 'warning');
+    return; // No continuar con el proceso si no se selecciona ningún rol
+  }
     usuariosdit.usuarioRolId = this.usuariosEdit.usuarioRolId;
     console.log(usuariosdit)
+    this.isLoading = false;
     Swal.fire({
       title: '¿Desea modificar los campos?',
       showCancelButton: true,
@@ -538,7 +557,54 @@ export class CrearUsuariosComponent implements OnInit {
       denyButtonText: `NO`,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.usuariorolservice.actualizarSup(usuariosdit.usuarioRolId, usuariosdit, this.getRolesSeleccionados())
+        this.isLoading = true;
+        this.usuariorolservice.actualizarSup(idrol, usuariosdit, this.getRolesSeleccionados())
+          .subscribe((response: any) => {
+            this.isLoading = false;
+            Swal.fire(
+              'Usuario Modificado!',
+              'El usuario ha sido modificado éxitosamente',
+              'success'
+            );
+            this.isLoading = true;
+            this.usuariosEdit = new UsuarioRol();
+            this.usuariosEditGuar = new UsuarioRol();
+            this.Listado();
+            this.recargarPagina();
+            this.isLoading = false;
+          },(error)=>{
+            this.isLoading = false;
+            Swal.fire('Error', 'Error al modificar el usuario', 'error');
+          } );
+      } else {
+        this.isLoading = false;
+        Swal.fire('Se ha cancelado la operación', '', 'info')
+      }
+    })
+  }
+
+
+  Actualizar3(usuariosEditGuar: UsuarioRol) {
+    const usuarioProjection: UsuariosProjection = {
+      id: usuariosEditGuar.usuario.id,
+      nombres: usuariosEditGuar.usuario.username,
+      usuario: usuariosEditGuar.usuario.username,
+      rolnombre: usuariosEditGuar.rol.rolNombre,
+      criterionombre: usuariosEditGuar.rol.rolNombre,
+      evidencianombre: usuariosEditGuar.rol.rolNombre,
+      userrolid: usuariosEditGuar.usuarioRolId,
+      contrasenia: usuariosEditGuar.usuario.password,
+    };
+
+    console.log(usuarioProjection.userrolid);
+    Swal.fire({
+      title: '¿Desea modificar los campos?',
+      showCancelButton: true,
+      confirmButtonText: 'SI',
+      denyButtonText: `NO`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.usuariorolservice.actualizarSup(usuarioProjection.userrolid, usuariosEditGuar, this.getRolesSeleccionados())
           .subscribe((response: any) => {
             Swal.fire(
               'Usuario Modificado!',
@@ -550,10 +616,40 @@ export class CrearUsuariosComponent implements OnInit {
             this.usuariosEditGuar = new UsuarioRol();
           });
       } else {
-        Swal.fire('Se ha cancelado la operación', '', 'info')
+        Swal.fire('Se ha cancelado la operación', '', 'info');
       }
-    })
+    });
   }
+
+  Actualizar2(usuariosdit: UsuariosProjection) {
+    if (usuariosdit.contrasenia === "") {
+      usuariosdit.contrasenia = this.usuariosEdit.usuario.password
+    }
+    console.log(usuariosdit);
+    Swal.fire({
+      title: '¿Desea modificar los campos?',
+      showCancelButton: true,
+      confirmButtonText: 'SI',
+      denyButtonText: `NO`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.usuariorolservice.actualizarSup(usuariosdit.userrolid, usuariosdit, this.getRolesSeleccionados())
+          .subscribe((response: any) => {
+            Swal.fire(
+              'Usuario Modificado!',
+              'El usuario ha sido modificado éxitosamente',
+              'success'
+            );
+            this.Listado();
+            this.usuariosEdit = new UsuarioRol();
+            this.usuariosEditGuar = new UsuarioRol();
+          });
+      } else {
+        Swal.fire('Se ha cancelado la operación', '', 'info');
+      }
+    });
+  }
+
 
   allComplete: boolean = false;
 
@@ -573,12 +669,12 @@ export class CrearUsuariosComponent implements OnInit {
 
   //Contador para combinar celdas
   cacheSpan(key: string, accessor: (d: any) => any) {
-    for (let i = 0; i < this.user.length;) {
-      let currentValue = accessor(this.user[i]);
+    for (let i = 0; i < this.asig.length;) {
+      let currentValue = accessor(this.asig[i]);
       let count = 1;
 
-      for (let j = i + 1; j < this.user.length; j++) {
-        if (currentValue !== accessor(this.user[j])) {
+      for (let j = i + 1; j < this.asig.length; j++) {
+        if (currentValue !== accessor(this.asig[j])) {
           break;
         }
         count++;
@@ -597,77 +693,45 @@ export class CrearUsuariosComponent implements OnInit {
     return this.spans[index] && this.spans[index][col];
   }
 
-  listaractividades(id_modelo: number) {
-    this.usuariorolservice.getusuarios().subscribe((data: Usuario2[]) => {
-      this.dataSource5 = data;
-      this.usuariorolservice.getusuarios().subscribe((data: Usuario2[]) => {
-        this.dataSource5 = data;
-
-        console.log("rechazadai", JSON.stringify(this.dataSource))
-        this.cacheSpan('encargado', (d) => d.encargado);
-        this.cacheSpan('subcriterio', (d) => d.encargado + d.subcriterio);
-        this.cacheSpan('indicadores', (d) => d.encargado + d.subcriterio + d.indicador);
-        this.cacheSpan('evidencia', (d) => d.encargado + d.subcriterio + d.indicador + d.evidencia);
-
-      });
-    });
-  }
-
 
   Listado() {
-    this.usuariorolservice.getusuarios().subscribe((usuarios: any[]) => {
-      const usuariosData = usuarios;
-      console.log("usuarios.. " + JSON.stringify(usuarios))
-      usuariosData.forEach((usuario) => {
-        console.log("usuario id " + JSON.stringify(usuario.usuario.id))
-        this.usuariorolservice.getcriterios(usuario.usuario.id, this.idmodel).subscribe(
-          (criterios: CriteUsuarioProjection[]) => {
-            
-            console.log("usuarios:", JSON.stringify(usuarios))
-            this.cacheSpan('id', (c) => c.usuario.id);
-            this.cacheSpan('nombre', (c) =>  c.usuario.id + c.persona.primer_nombre);
-            this.cacheSpan('usuario', (c) => c.usuario.id + c.persona.primer_nombre + c.usuario.username);
+    this.usuariosService.getusuarioscrite(this.idmodel).subscribe((data: UsuariosProjection[]) => {
+      this.asig = data;
+      console.log("usuarios:", JSON.stringify(this.asig))
+      this.cacheSpan('id', (d) => d.id);
+      this.cacheSpan('nombre', (d) => d.id + d.nombres);
+      this.cacheSpan('usuario', (d) => d.id + d.nombres + d.usuario);
+      this.cacheSpan('rol', (d) => d.id + d.nombres + d.usuario + d.rolnombre);
+      this.cacheSpan('criterio', (d) => d.id + d.nombres + d.usuario + d.rolnombre);
+      this.cacheSpan('actions', (d) => d.id + d.nombres + d.usuario + d.rolnombre + d.usuario);
 
-            usuario.criterio = criterios.map((c) => c.criterio);
-            usuario.evidencia = criterios.map((c) => c.evidencia);
-
-            if (usuariosData.every((u) => u.criterio && u.criterio.length > 0)) {
-              this.dataSource2.data = usuariosData;
-              console.log("criterios v " + JSON.stringify(this.dataSource2.data));
-            }
-
-          
-        }
-        );
-      });
-    }
-    );
+    });
+    this.isLoading = false;
   }
 
+  openDialog(userrolid: any): void {
+    this.criterioService.getcriteriousuario(userrolid, this.idmodel).subscribe((data: CriteUsuarioProjection[]) => {
+      this.criterio = data;
+      console.log("criterios.. " + JSON.stringify(this.criterio));
 
-
-  Listado5() {
-    this.usuariorolservice.getusuarios().subscribe(
-      (usuarios: any[]) => {
-        const usuariosData = usuarios;
-        console.log("usuarios " + JSON.stringify(usuarios))
-        usuariosData.forEach((usuario) => {
-          console.log("usuario id " + JSON.stringify(usuario.usuario.id))
-          this.usuariorolservice.getcriterios(usuario.usuario.id, this.idmodel).subscribe(
-            (criterios: CriteUsuarioProjection[]) => {
-              usuario.criterio = criterios.map((c) => c.criterio);
-              usuario.evidencia = criterios.map((c) => c.evidencia);
-
-              if (usuariosData.every((u) => u.criterio && u.criterio.length > 0)) {
-                this.dataSource2.data = usuariosData;
-                console.log("criterios v " + JSON.stringify(this.dataSource2.data));
-              }
-
-            }
-          );
+      // Crear el HTML para mostrar los criterios en el modal
+      let modalContent = '<ul style="list-style-type: none; padding-left: 0;">'; // Eliminar estilos de viñeta
+      if (this.criterio.length === 0) {
+        modalContent += '<li>SIN CRITERIOS</li>';
+      } else {
+        this.criterio.forEach(criterio => {
+          modalContent += `<li style="margin-left: -1em;">${criterio.criterionombre}</li>`; // Aplicar margen izquierdo negativo
         });
       }
-    );
+      modalContent += '</ul>';
+
+      // Mostrar el modal con los criterios
+      Swal.fire({
+        title: 'CRITERIOS',
+        html: modalContent,
+        confirmButtonText: 'Aceptar'
+      });
+    });
   }
 
 }

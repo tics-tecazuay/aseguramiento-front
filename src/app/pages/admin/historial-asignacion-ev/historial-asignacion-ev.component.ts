@@ -7,6 +7,8 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
 import { LoginService } from 'src/app/services/login.service';
 import { HistorialAsigEvi } from 'src/app/interface/AsigEvidProjection';
 import { ModeloService } from 'src/app/services/modelo.service';
+import { error } from 'jquery';
+import { Modelo } from 'src/app/models/Modelo';
 
 
 @Component({
@@ -19,7 +21,6 @@ export class HistorialAsignacionEvComponent implements OnInit {
   isLoggedIn = false;
   user: any = null;
   idUserLogged!: number;
-  idmodel!: number;
 
   asig!: HistorialAsigEvi[];
   asig2!: HistorialAsigEvi[];
@@ -54,6 +55,8 @@ export class HistorialAsignacionEvComponent implements OnInit {
     return `${startIndex + 1} - ${endIndex} de ${length}`;
   };
 
+  modeloVigente!: Modelo;
+  id_modelo!: number;
   constructor(private router: Router, private servCriterio: CriteriosService, private serviceEvi: AsignaEvidenciaService, private paginatorIntl: MatPaginatorIntl, public login: LoginService, private service: ModeloService
   ) { }
 
@@ -76,67 +79,13 @@ export class HistorialAsignacionEvComponent implements OnInit {
   }
 
   modeloMax() {
-    this.service.getModeMaximo().subscribe((data) => {
-      this.idmodel = data.id_modelo;
-      console.log("ID DEL MODELO", this.idmodel);
-      this.listarCriterioAdmin();
-    })
+    this.modeloVigente = JSON.parse(localStorage.getItem('modelo') || '{}');
+    this.id_modelo = this.modeloVigente.id_modelo;
+    this.listarCriterioAdmin();
   }
 
-  // cacheSpan(key: string, accessor: (d: any) => any) {
-  //   for (let i = 0; i < this.asig.length;) {
-  //     let currentValue = accessor(this.asig[i]);
-  //     let count = 1;
-
-  //     for (let j = i + 1; j < this.asig.length; j++) {
-  //       if (currentValue !== accessor(this.asig[j])) {
-  //         break;
-  //       }
-  //       count++;
-  //     }
-
-  //     if (!this.spans[i]) {
-  //       this.spans[i] = {};
-  //     }
-
-  //     this.spans[i][key] = count;
-  //     i += count;
-  //   }
-  // }
-
-  // getRowSpan(col: any, index: any) {
-  //   return this.spans[index] && this.spans[index][col];
-  // }
-
-
-  // cacheSpan2(key: string, accessor: (d: any) => any) {
-  //   for (let i = 0; i < this.asig2.length;) {
-  //     let currentValue = accessor(this.asig2[i]);
-  //     let count = 1;
-
-  //     for (let j = i + 1; j < this.asig2.length; j++) {
-  //       if (currentValue !== accessor(this.asig2[j])) {
-  //         break;
-  //       }
-  //       count++;
-  //     }
-
-  //     if (!this.spans2[i]) {
-  //       this.spans2[i] = {};
-  //     }
-
-  //     this.spans2[i][key] = count;
-  //     i += count;
-  //   }
-  // }
-
-
-  // getRowSpan2(col: any, index: any) {
-  //   return this.spans2[index] && this.spans2[index][col];
-  // }
-
   listarCriterioAdmin() {
-    this.servCriterio.getCriterioAdm(this.idmodel, this.idUserLogged).subscribe(
+    this.servCriterio.getCriterioAdm(this.id_modelo, this.idUserLogged).subscribe(
       (data: CriterioByAdmin[]) => {
         console.log("Datos recibidos del servicio:", data);
         this.criterio = data;
@@ -147,27 +96,44 @@ export class HistorialAsignacionEvComponent implements OnInit {
     );
   }
 
+  noRegistros: any;
   // cargar tabla
   cargarTabla(idCrite: number) {
     this.nombreCriterio = this.criterio.find(c => c.id_criterio === idCrite)?.nombre_criterio || '';
-    console.log('Cargando tabla para el criterio:', this.nombreCriterio);
+    console.log('Cargando tabla para el criterio:', this.nombreCriterio + idCrite);
 
-    this.serviceEvi.getHistorialAsigEvByUserCrit(this.idUserLogged, idCrite, 'true').subscribe((
+    this.asig = [];
+    this.asig2 = [];
+    this.noRegistros = null;
+    this.serviceEvi.getHistorialAsigEvByUserCrit(idCrite, 'true', this.id_modelo).subscribe((
       data: HistorialAsigEvi[]) => {
-      this.asig = data;
-      console.log("actividades actuales ", JSON.stringify(this.asig))
-      // this.cacheSpan('enc', (d) => d.enc);
-      // this.cacheSpan('nombrescri', (d) => d.enc + d.nombrescri);
+      if (data.length > 0) {
+        this.asig = data;
+        console.log("actividades actuales ", this.asig)
+        // this.cacheSpan('enc', (d) => d.enc);
+        // this.cacheSpan('nombrescri', (d) => d.enc + d.nombrescri);
+      } else {
+        this.noRegistros = 'No hay registros disponibles.';
+      }
 
-    });
+    }, (error) => {
+      console.error("Error al obtener datos del servicio:", error);
+    }
+    );
 
-    this.serviceEvi.getHistorialAsigEvByUserCrit(this.idUserLogged, idCrite, 'false').subscribe((
+    this.serviceEvi.getHistorialAsigEvByUserCrit(idCrite, 'false', this.id_modelo).subscribe((
       data: HistorialAsigEvi[]) => {
-      this.asig2 = data;
-      console.log("actividades anteriores", JSON.stringify(this.asig2))
-      // this.cacheSpan('enc', (d) => d.enc);
-      // this.cacheSpan('nombrescri', (d) => d.enc + d.nombrescri);
+      if (data.length > 0) {
+        this.asig2 = data;
+        console.log("actividades anteriores", this.asig2)
+        // this.cacheSpan('enc', (d) => d.enc);
+        // this.cacheSpan('nombrescri', (d) => d.enc + d.nombrescri);
+      } else {
+        this.noRegistros = 'No hay registros disponibles.';
+      }
 
+    }, (error) => {
+      console.error("Error al obtener datos del servicio:", error);
     });
   }
 

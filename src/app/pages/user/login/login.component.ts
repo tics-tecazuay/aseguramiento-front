@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
 import { LoginService } from 'src/app/services/login.service';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UsuariorolService } from 'src/app/services/usuariorol.service';
 
 @Component({
@@ -27,23 +27,46 @@ export class LoginComponent implements OnInit {
   sobre = false;
   sobre2 = false;
   sobre3 = false;
+  isButtonDisabled= false;
+  isLoading= false;
+
   constructor(private _snack: MatSnackBar, private loginService: LoginService, private router: Router, private usuarioRService : UsuariorolService, private fb: FormBuilder ) { 
     this.formLogin = this.fb.group({
-      username: new FormControl('', [Validators.required, Validators.minLength(10)]),
+      username: new FormControl('', [Validators.required, Validators.minLength(10),noWhitespaceValidator]),
       rol: new FormControl(null, [Validators.required]),
       password: new FormControl('', [Validators.required]),
     });
   }
   
   ngOnInit(): void {
+    this.formLogin.reset();
     if (this.loginService.isLoggedIn()) {
-      this.selectedRoleValue = undefined;
-      this.router.navigate(['user-dashboard']);
-      location.replace('/use/user-dashboard');
+      // Obtener el rol del usuario
+      const userRole = this.loginService.getUserRole();
+  
+      // Redirigir al usuario a su panel de control correspondiente según su rol
+      switch (userRole) {
+        case 'ADMIN':
+        case 'SUPERADMIN':
+        case 'RESPONSABLE':
+        case 'AUTORIDAD':
+          this.router.navigate(['/use/user-dashboard']);
+          break;
+        default:
+          this.router.navigate(['/use/user-dashboard']);
+          break;
+      }
+      
     }
     this.formLogin.get('username')?.valueChanges.subscribe((username) => {
+      if(username.length == 10){
         this.listarRoles(username);
+      }else{
+        console.log('El username no debe contener espacios o estar vacio.');
+      }
     });
+    this.isButtonDisabled= false;
+    this.isLoading= false;
   }
 
   abrir() {
@@ -83,67 +106,88 @@ export class LoginComponent implements OnInit {
     );
   }
   
-
   onChangeRole(event: any) {
     this.selectedRoleValue = event.value;
-    console.log('Rol seleccionado:', this.selectedRoleValue);
-    console.log('Rol seleccionado form group', this.formLogin.value.rol);
   }
 
   formSubmit() {
-    if(this.selectedRoleValue.rolId === 0) {
-      this._snack.open('No hay roles disponibles para este usuario.', '', {
+    if(this.formLogin.invalid) {
+      this._snack.open('Por favor, verifique los datos ingresados.', '', {
         duration: 3000,
-        horizontalPosition: 'center',
+        horizontalPosition: 'right',
         verticalPosition: 'top',
       });
+      this.isLoading= false;
+      this.isButtonDisabled= false;
       return;
-    }
-    console.log(this.formLogin.value);
-    console.log(this.selectedRoleValue);
+    }else{
+      this.isLoading= true;
+      this.isButtonDisabled= true;
       this.loginService.generateToken(this.formLogin.value).subscribe(
         (data: any) => {
-          console.log(data);
           this.loginService.loginUser(data.token);
           this.loginService.getCurrentUser().subscribe((user: any) => {
             this.loginService.setUser(user);
-            console.log(user);
-
-            if (this.selectedRoleValue == 'ADMIN') {
-              this.router.navigate(['user-dashboard']);
-              location.replace('/use/user-dashboard');
+            this.loginService.setUserRole(this.selectedRoleValue);
+            if (this.loginService.getUserRole() == 'ADMIN') {
+              this.router.navigate(['/use/user-dashboard']);
+              //location.replace('#/use/user-dashboard');
               this.loginService.loginStatusSubjec.next(true);
+              this.isLoading= false;
+              this.isButtonDisabled= false;
+              location.reload();
             }
-            else if (this.selectedRoleValue == 'RESPONSABLE') {
-
-              this.router.navigate(['user-dashboard']);
-              location.replace('/use/user-dashboard');
+            else if (this.loginService.getUserRole() == 'RESPONSABLE') {
+              this.router.navigate(['/res/dashboard']);
+              //location.replace('#/use/user-dashboard');
               this.loginService.loginStatusSubjec.next(true);
+              this.isLoading= false;
+              this.isButtonDisabled= false;
+              location.reload();
             }
-            else if (this.selectedRoleValue == 'SUPERADMIN') {
-
-              this.router.navigate(['dashboard']);
-              location.replace('/sup/dashboard');
+            else if (this.loginService.getUserRole() == 'SUPERADMIN') {
+              location.replace('#/sup/dashboard');
               this.loginService.loginStatusSubjec.next(true);
+              this.isLoading= false;
+              this.isButtonDisabled= false;
+              location.reload();
             }
-            else if (this.selectedRoleValue == 'AUTORIDAD') {
-
-              this.router.navigate(['user-dashboard']);
-              location.replace('/use/user-dashboard');
+            else if (this.loginService.getUserRole() == 'AUTORIDAD') {
+              this.router.navigate(['/use/user-dashboard']);
+              //location.replace('#/use/user-dashboard');
               this.loginService.loginStatusSubjec.next(true);
               window.location.reload();
+              this.isLoading= false;
+              this.isButtonDisabled= false;
+              location.reload();
             }
             else {
               this.loginService.logout();
+              this.isLoading= false;
+              this.isButtonDisabled= false;
+              location.reload();
             }
-          })
+        }) 
         }, (error) => {
-          Swal.fire(
-            'Error',
-            'Detalles inválidos , vuelva a intentar !!',
+          if (error.status === 401) {
+           // Credenciales inválidas
+           Swal.fire(
+            'Credenciales Incorrectas',
+            '¡Vuelva a intentarlo!',
             'warning'
-          )
+        );
+        } 
+          this.isLoading= false;
+          this.isButtonDisabled= false;
         }
       )
+    }
   }
+}
+
+export function noWhitespaceValidator(control: AbstractControl): { [key: string]: any } | null {
+  if (control.value && control.value.trim() === '') {
+    return { 'whitespace': true };
+  }
+  return null;
 }

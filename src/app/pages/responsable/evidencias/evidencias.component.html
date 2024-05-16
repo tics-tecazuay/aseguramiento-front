@@ -1,71 +1,104 @@
 <body>
-  <div class="card">
-    <h1 style="padding: 10px; text-align: center">
-      <strong>Listado de Archivos</strong>
-    </h1>
-    <div class="card-body">
-      <div role="search" id="buscar">
-        <input
-        type="text"
-        class="form-control"
-        name="filterPost3"
-        placeholder="Buscar..."
-        [(ngModel)]="filterPost"
-        (input)="aplicarFiltro()"
-      />
+  <div class="container bg-light border border-start-0 rounded-4">
+    <div *ngIf="isLoading" class="loading-overlay">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Cargando...</p>
+    </div>
+    <blockquote class="blockquote text-dark" style="margin-top: 5%">
+      <h1><strong> LISTADO DE ARCHIVOS</strong></h1>
+    </blockquote>
+    <div></div>
+    <div class="card">
+      <div class="nombre-evidencia">
+        <strong style="font-size: medium;">Evidencia:</strong>
+        <br> <br>
+        <p>{{descripcionEvide}}</p>
       </div>
-      <div class="row">
-        <div class="col-md-8">
-          <mat-table [dataSource]="dataSource | buscar : filterPost " class="mat-elevation-z8">
-            <ng-container matColumnDef="Id">
-              <mat-header-cell *matHeaderCellDef  [style.display]="ocultar? '' : 'none'">ID</mat-header-cell>
-              <mat-cell *matCellDef="let file"  [style.display]="ocultar? '' : 'none'">{{ file.id_archivo }}</mat-cell>
-            </ng-container>
-          
-            <ng-container matColumnDef="Evidencia">
-              <mat-header-cell *matHeaderCellDef>Evidencia</mat-header-cell>
-              <mat-cell *matCellDef="let file">
-                <a [href]="file.enlace">{{ file.nombre }}</a>
-              </mat-cell>
-            </ng-container>
-          
-            <ng-container matColumnDef="Descripcion">
-              <mat-header-cell *matHeaderCellDef>Descripcion</mat-header-cell>
-              <mat-cell *matCellDef="let file">{{ file.descripcion }}</mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="Borrar">
-              <mat-header-cell *matHeaderCellDef  [style.display]="veri? '' : 'none'">Borrar</mat-header-cell>
-              <mat-cell *matCellDef="let file"  [style.display]="veri? '' : 'none'">
-                <button class="btn btn-danger" style="background-color: red; margin-right: 5%" role="button"
-                (click)="elim(file.nombre,file)">
-                <i class="fa fa-trash"></i>
-              </button>
-          </mat-cell>
-            </ng-container>
-          
-            <!-- Fila de encabezado -->
-            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          
-            <!-- Filas de datos -->
-            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-          </mat-table>
-          <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-
+      <div class="card-body">
+        <div role="search" id="buscar">
+          <input type="text" class="form-control" name="filterPost3" placeholder="Buscar..." [(ngModel)]="filterPost"
+            (input)="aplicarFiltro()" />
         </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <br />
-            <div class="form-group">
-              <label for="archivo">Archivo:</label>
-              <input id="archivo" type="file" (change)="onFileChange($event)" />
+        <br>
+        <div class="row">
+          <div class="col-md-8" style="margin-bottom: 10%;">
+            <div class="table-responsive">
+              <table mat-table [dataSource]="dataSource | buscar : filterPost ">
+                <ng-container matColumnDef="Id">
+                  <mat-header-cell *matHeaderCellDef [style.display]="ocultar? '' : 'none'">ID</mat-header-cell>
+                  <mat-cell *matCellDef="let file" [style.display]="ocultar? '' : 'none'">{{ file.id_archivo
+                    }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Evidencia">
+                  <mat-header-cell *matHeaderCellDef>EVIDENCIA</mat-header-cell>
+                  <mat-cell *matCellDef="let file">
+                    <a [href]="file.enlace">{{ file.nombre }}</a>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Descripcion">
+                  <mat-header-cell *matHeaderCellDef>DESCRIPCIÓN</mat-header-cell>
+                  <mat-cell *matCellDef="let file">{{ file.descripcion }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="Comentario">
+                  <mat-header-cell *matHeaderCellDef>ESTADO DE ENTREGA</mat-header-cell>
+                  <mat-cell *matCellDef="let file">
+                    <ng-container *ngIf="file.comentario!== null && file.comentario !== ''">
+                      {{ file.comentario }}
+                    </ng-container>
+                    <ng-container *ngIf="file.comentario === null || file.comentario === ''">
+                      <span style="display: block; text-align: center;">Sin registros</span>
+                    </ng-container>
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="Borrar">
+                  <mat-header-cell *matHeaderCellDef [style.display]="veri? '' : 'none'">BORRAR</mat-header-cell>
+                  <mat-cell *matCellDef="let file" [style.display]="veri? '' : 'none'">
+                    <button class="btn btn-danger" style="background-color: red; margin-right: 5%" role="button"
+                      (click)="elim(file.nombre,file)" [disabled]="esFechaPasada(activ)"
+                      [ngbTooltip]="'Eliminar archivo'">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Fila de encabezado -->
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+
+                <!-- Filas de datos -->
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+              </table>
+              <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
             </div>
-            <div class="form-group">
-              <label for="descripcion">Descripción:</label>
-              <textarea id="descripcion" class="form-control" [(ngModel)]="descripcion"></textarea>
+          </div>
+          <div class="col-md-4">
+            <div class="table-responsive">
+              <div class="form-group">
+                <div class="form-group">
+                  <label for="archivo">Archivo:</label>
+                  <input id="archivo" type="file" (change)="onFileChange($event)" />
+                </div>
+                <div class="form-group">
+                  <label for="descripcion">Descripción:</label>
+                  <textarea id="descripcion" class="form-control" [(ngModel)]="descripcion"></textarea>
+                </div>
+                <div class="button-container">
+                  <button class="btn btn-primary" type="button" (click)="onUpload()" [disabled]="!filearchivo">
+                    Subir archivo
+                  </button>
+                  <span *ngIf="esFechaPasada(activ)" class="error-message">Se subirá el archivo con la fecha
+                    atrasada.</span>
+                </div>
+              </div>
             </div>
-            <button class="btn btn-primary" type="button" (click)="onUpload()" *ngIf="veri" [disabled]="!filearchivo">
-              Subir archivo
+
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <button mat-button class="btn-tab" (click)="goBack()">
+              <mat-icon class="blue-icon">reply</mat-icon>
             </button>
           </div>
         </div>

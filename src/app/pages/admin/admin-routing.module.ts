@@ -7,11 +7,14 @@ import { AsignaComponent } from './asigna/asigna.component';
 import { AprobarRechazarAdminComponent } from './aprobar-rechazar-admin/aprobar-rechazar-admin.component';
 import { RoleguardGuard } from 'src/app/services/Guards/roleguard.guard';
 import { AsignacionEvidenciaComponent } from './asignacion-evidencia/asignacion-evidencia.component';
-import { AprobarRechazarDetalleAdminComponent } from './aprobar-rechazar-detalle-admin/aprobar-rechazar-detalle-admin.component';
 import { Historial_notifiComponent } from './historial_notifi/historial_notifi.component';
-import { CriteriosComponent } from './flujo-criterio-ad/criterios/criterios.component';
 import { HistorialAsignacionEvComponent } from './historial-asignacion-ev/historial-asignacion-ev.component';
-import { AsignacionCriterioResponsableComponent } from './asignacion-criterio-responsable/asignacion-criterio-responsable.component';
+import { SeguimientoEvidenciasComponent } from './seguimiento-evidencias/seguimiento-evidencias.component';
+//import { AsignacionCriterioResponsableComponent } from './asignacion-criterio-responsable/asignacion-criterio-responsable.component';
+import { CriterioReporteAdmComponent } from './criterio-reporte-adm/criterio-reporte-adm.component';
+import { EmailResponsablesComponent } from './email-responsables/email-responsables.component';
+import { CalificarIndicarComponent } from './calificar-indicar/calificar-indicar.component';
+
 
 const routes: Routes = [
   {
@@ -21,15 +24,27 @@ const routes: Routes = [
     canActivate: [AdminGuard]
   },
   {
+    path: 'criterioreporte',
+    component: CriterioReporteAdmComponent,
+    pathMatch: 'full',
+    canActivate: [AdminGuard]
+  },
+  {
     path: 'historialnotif',
     component: Historial_notifiComponent,
     pathMatch: 'full',
     canActivate: [RoleguardGuard],
-    data: { allowedRoles: ['SUPERADMIN', 'ADMIN'] } 
+    data: { allowedRoles: ['SUPERADMIN', 'ADMIN'] }
   },
   {
     path: 'evaluacion',
     component: EvalucionComponent,
+    pathMatch: 'full',
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'calificar',
+    component: CalificarIndicarComponent,
     pathMatch: 'full',
     canActivate: [AdminGuard]
   },
@@ -56,20 +71,28 @@ const routes: Routes = [
 
   },
   {
-    path: 'detalleAprobarRechazar',
-    component: AprobarRechazarDetalleAdminComponent,
+    path: 'flujo-criterio-ad',
+    loadChildren: () => import("./flujo-criterio-ad/flujo-criterio-ad.module").then(m => m.FlujoCriterioAdModule)
+  },
+  {
+    path: 'historialAsigna',
+    component: HistorialAsignacionEvComponent,
     pathMatch: 'full',
     canActivate: [RoleguardGuard],
     data: { allowedRoles: ['SUPERADMIN', 'ADMIN'] }
 
   },
   {
-    path: 'flujo-criterio-ad',
-    loadChildren: () => import("./flujo-criterio-ad/flujo-criterio-ad.module").then(m => m.FlujoCriterioAdModule)
+    path: 'seguimientoevidencias',
+    component: SeguimientoEvidenciasComponent,
+    pathMatch: 'full',
+    canActivate: [RoleguardGuard],
+    data: { allowedRoles: ['SUPERADMIN', 'ADMIN'] }
+
   },
-  {  
-    path: 'historialAsigna',
-    component: HistorialAsignacionEvComponent,
+  {
+    path: 'enviaremailadmin',
+    component: EmailResponsablesComponent,
     pathMatch: 'full',
     canActivate: [RoleguardGuard],
     data: { allowedRoles: ['SUPERADMIN', 'ADMIN'] }

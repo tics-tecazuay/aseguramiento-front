@@ -1,5 +1,5 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DialogoCriterioComponent } from '../dialogo-criterio/dialogo-criterio.component';
@@ -12,14 +12,12 @@ import { Indicador } from 'src/app/models/Indicador';
 import { LoginService } from 'src/app/services/login.service';
 import { AsignacionIndicador } from 'src/app/models/AsignacionIndicador';
 import { DialogoSubcriterioComponent } from '../dialogo-subcriterio/dialogo-subcriterio.component';
-import { Asignacion_Criterios } from 'src/app/models/Asignacion-Criterios';
 import { AsignacionCriterioService } from 'src/app/services/asignacion-criterio.service';
 import { IndicadoresService } from 'src/app/services/indicadores.service';
 import { CriteriosService } from 'src/app/services/criterios.service';
 import { SubcriteriosService } from 'src/app/services/subcriterios.service';
 import { ModelIndiProjection } from 'src/app/interface/ModelIndiProjection';
-import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
-import { catchError } from 'rxjs/operators';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { forkJoin } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -71,9 +69,9 @@ export class DialogoModeloModComponent implements OnInit {
     return `${startIndex + 1} - ${endIndex} de ${length}`;
   };
   constructor(public login: LoginService, private asignacionIndicadorService: AsignacionIndicadorService, private dialogRef: MatDialogRef<DialogoModeloModComponent>, private _formBuilder: FormBuilder, private dialog: MatDialog, private router: Router, private modelo_service: ModeloService, private sharedDataService: SharedDataService,
-    private asignacionAdminService: AsignacionCriterioService,private criterioService:CriteriosService,
-    private subcriterioService:SubcriteriosService, private formBuilder: FormBuilder,
-    private indicadorService: IndicadoresService,private paginatorIntl: MatPaginatorIntl,
+    private asignacionAdminService: AsignacionCriterioService, private criterioService:CriteriosService,
+    private subcriterioService: SubcriteriosService, private formBuilder: FormBuilder,
+    private indicadorService: IndicadoresService, private paginatorIntl: MatPaginatorIntl,
     @Inject(MAT_DIALOG_DATA) public data: any) {
       this.paginatorIntl.nextPageLabel = this.nextPageLabel;
       this.paginatorIntl.lastPageLabel = this.lastPageLabel;
@@ -81,7 +79,7 @@ export class DialogoModeloModComponent implements OnInit {
       this.paginatorIntl.previousPageLabel=this.previousPageLabel;
       this.paginatorIntl.itemsPerPageLabel = this.itemsPerPageLabel;
       this.paginatorIntl.getRangeLabel=this.rango;
-  }
+    }
 
   
   ngOnInit(): void {
@@ -289,6 +287,7 @@ export class DialogoModeloModComponent implements OnInit {
             fecha_inicio:new Date,
             nombre:'',
             visible:true,
+            estadoad:true,
             usuario:null
           };
           console.log('Asignaciones indicadores:',  asignacionIndicador.indicador.id_indicador+"id "+id);

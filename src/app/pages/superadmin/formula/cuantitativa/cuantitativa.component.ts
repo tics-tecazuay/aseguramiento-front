@@ -7,6 +7,7 @@ import { Cuantitativa } from 'src/app/models/Cuantitativa';
 import { FormulaService } from 'src/app/services/formula.service';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import Swal from 'sweetalert2';
 
 (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
 
@@ -72,7 +73,7 @@ export class CuantitativaComponent {
 
   }
   ngOnInit(): void {
-    this.listarCaunti();
+    this.listarCuanti();
   }
 
   guardarCuanti() {
@@ -81,30 +82,45 @@ export class CuantitativaComponent {
     this.service.crearCuanti(this.cuanti).
       subscribe(
         (reponse) => {
-          console.log('Formula Cauntitativa creado con éxito:', reponse);
+          console.log('Variable Cauntitativa creado con éxito:', reponse);
           this.guardadoExitoso = true;
-          this.listarCaunti();
-
+          this.listarCuanti();
+          Swal.fire('¡Éxito!', 'La variable cuantitativa ha sido creada correctamente', 'success');
         },
         (error) => {
-          console.error('Error al crear el formula cuanti:', error);
+          console.error('Error al crear la variable cuantitativa:', error);
         }
       )
   }
 
-  eliminarCuanti(cuanti: any) {
+  eliminarCuanti(cuanti: Cuantitativa) {
 
-    this.service.eliminarCuanti(cuanti).
-      subscribe((reponse) => {
-        this.listarCaunti();
-      },
-        (error: any) => {
-          console.error('Error al listar los formulas cuanti al eliminar:', error);
-        })
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción no se puede revertir',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.service.eliminarCuanti(cuanti).subscribe(
+          (response) => {
+            this.listarCuanti();
+            Swal.fire('¡Eliminado!', 'La variable ha sido eliminada', 'success');
+          },
+          (error) => {
+            Swal.fire('Error', 'Ocurrió un error al eliminar la variable', 'error');
+          }
+        );
+      }
+    });
   }
 
 
-  listarCaunti(): void {
+  listarCuanti(): void {
     this.service.getCuantitativa().
       subscribe(
         (data: any) => {
@@ -136,9 +152,12 @@ export class CuantitativaComponent {
     this.service.actualizarCuanti(this.cuanti.id_cuantitativa, this.cuanti)
       .subscribe(response => {
         this.cuanti = new Cuantitativa();
-        this.listarCaunti();
+        this.listarCuanti();
+        Swal.fire('¡Actualizado!', 'Los datos han sido actualizados', 'success');
       });
   }
+
+
   aplicarFiltro() {
     if (this.filterPost) {
       const lowerCaseFilter = this.filterPost.toLowerCase();
@@ -154,7 +173,7 @@ export class CuantitativaComponent {
 
     const docDefinition: any = {
       content: [
-        { text: 'Reporte de Formulas Cuantitativas', style: 'header' },
+        { text: 'Reporte de Variables Cuantitativas', style: 'header' },
         '\n\n',
         {
           table: {

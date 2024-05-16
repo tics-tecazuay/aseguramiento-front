@@ -4,34 +4,31 @@
     <p>Cargando...</p>
   </div>
   <div class="container bg-light border border-start-0 rounded-4">
+    <blockquote class="blockquote text-dark" style="margin-top: 5%">
+      <h1 style="text-transform: uppercase">
+        <strong>RESPONSABLES</strong>
+      </h1>
+    </blockquote>
     <div class="container text-center">
       <div class="row" style="margin-top: 2%; margin-bottom: 10%">
+        <!-- Lista de Responsables-->
         <div class="card">
           <div class="card-body">
-            <div class="d-flex flex-row align-items-center">
-              <figure class="text-center text-dark" style="margin-top: 5%; font-style: italic; font-size: smaller">
-                <blockquote class="blockquote text-dark">
-                  <h1>
-                    <strong>LISTADO RESPONSABLE</strong>
-                  </h1>
-                </blockquote>
-              </figure>
-            </div>
             <div class="form-group">
-              <input type="text" class="form-control" name="filterPost3" placeholder="Buscar..."
-                [(ngModel)]="filterPost" />
+              <input type="text" class="form-control" placeholder="Buscar..." [(ngModel)]="searchTerm" />
             </div>
-            <div class="info-message">
+            <div class="info-message" style="margin-left: -1%;">
               <span class="info-text" style="opacity: 0.5">Seleccione un responsable</span>
             </div>
             <mat-selection-list [multiple]="false" (selectionChange)="onSelectionChange($event)"
               class="selection-list-container">
-              <mat-list-option *ngFor="
-                  let usuario of usuarioResponsable | buscarUsuario : filterPost
-                " [value]="usuario">
+              <mat-list-option *ngFor="let usuario of usuarioResponsable | responsable : searchTerm" [value]="usuario">
                 {{ usuario.persona.primer_nombre }}
                 {{ usuario.persona.primer_apellido }}
               </mat-list-option>
+              <ng-container *ngIf="usuarioResponsable.length === 0">
+                <p class="noregistros">No hay usuarios con evidencias disponibles.</p>
+              </ng-container>
               <div *ngIf="isLoading" class="loading-overlay">
                 <mat-spinner diameter="40"></mat-spinner>
                 <p>Cargando...</p>
@@ -40,97 +37,154 @@
           </div>
         </div>
 
-        <div class="card" style="height: 95%">
+        <!-- Lista de Evidencias-->
+        <blockquote class="blockquote text-dark" style="margin-top: 5%">
+          <h1 style="text-transform: uppercase; text-align: left">
+            <strong> EVIDENCIAS ASIGNADAS</strong>
+          </h1>
+        </blockquote>
+        <div class="card">
           <div class="card-body">
-            <div class="d-flex flex-row align-items-center">
-              <figure class="text-center text-dark" style="margin-top: 5%; font-style: italic; font-size: smaller">
-                <blockquote class="blockquote text-dark">
-                  <h1>
-                    <strong> EVIDENCIAS ASIGNADAS</strong>
-                  </h1>
-                </blockquote>
-              </figure>
+
+            <div style=" margin-top: 1%; margin-bottom: 2%;">
+              <div style=" margin-bottom: 1%; text-align: left;"> <strong>{{titulo}} </strong>
+                {{responsable}}
+              </div>
+              <mat-divider></mat-divider>
+            </div>
+
+            <div class="form-group">
+              <input type="text" class="form-control" name="filterPost3" placeholder="Buscar por evidencia"
+                [formControl]="idFilter" (input)="applyFilter()" />
             </div>
 
             <div class="row align-items-center">
-              <div class="col text-center" style="max-height: 300px; overflow-y: scroll" *ngIf="mostrarBoton">
-                <div class="mat-elevation-z8 table-responsive" style="margin-bottom: 10%">
-                  <div class="form-group">
-                    <input type="text" class="form-control" name="filterPost3"
-                      placeholder="Buscar por ID de tarea asignada" [formControl]="idFilter" (input)="applyFilter()" />
+              <!-- Modal Footer -->
+              <div class="container">
+                <div class="row justify-content-end" style="margin-top: 1%; margin-bottom: 2%; margin-left: 15%;">
+                  <div class="col">
+                    <div style="display: flex; align-items: center">
+                      <div class="mr-1" style="
+                                                      width: 20px;
+                                                      height: 20px;
+                                                      background-color: rgb(96, 179, 114);
+                                                    "></div>
+                      <span class="label" style="font-size: 12px; opacity: 0.7">Aprobadas</span>
+                    </div>
                   </div>
+                  <div class="col">
+                    <div style="display: flex; align-items: center">
+                      <div class="mr-1" style="
+                                                      width: 20px;
+                                                      height: 20px;
+                                                      background-color: rgb(255, 242, 170);
+                                                    "></div>
+                      <span class="label" style="font-size: 12px; opacity: 0.7">Pendientes</span>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div style="display: flex; align-items: center">
+                      <div class="mr-1" style="
+                                                                                          width: 20px;
+                                                                                          height: 20px;
+                                                                                          background-color: rgb(253, 79, 56);
+                                                                                        "></div>
+                      <span class="label" style="font-size: 12px; opacity: 0.7">Rechazadas</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col text-center" *ngIf="mostrarBoton" style="margin-bottom: 2%;">
+                <div class="mat-elevation-z8 table-responsive">
                   <table mat-table [dataSource]="dataSource">
-                    <ng-container matColumnDef="id">
-                      <th mat-header-cell *matHeaderCellDef [style.display]="ocultar? '' : 'none'">ID</th>
-                      <td mat-cell *matCellDef="let elemento" [style.display]="ocultar? '' : 'none'">
+                    <ng-container matColumnDef="id_evidencia">
+                      <th mat-header-cell *matHeaderCellDef [style.display]="ocultar ? '' : 'none'">
+                        ID
+                      </th>
+                      <td mat-cell *matCellDef="let elemento" [style.display]="ocultar ? '' : 'none'">
                         {{ elemento.id_evidencia }}
                       </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="nombre">
+                    <ng-container matColumnDef="nombrecriterio">
                       <th mat-header-cell *matHeaderCellDef>CRITERIO</th>
                       <td mat-cell *matCellDef="let elemento">
-                        {{ elemento.indicador?.subcriterio?.criterio?.nombre }}
+                        {{ elemento.nombrecriterio }}
                       </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="subcriterio">
+                    <ng-container matColumnDef="nombresubcriterio">
                       <th mat-header-cell *matHeaderCellDef>SUBCRITERIO</th>
                       <td mat-cell *matCellDef="let elemento">
-                        {{ elemento.indicador?.subcriterio?.nombre }}
+                        {{ elemento.nombresubcriterio }}
                       </td>
                     </ng-container>
-                    
-                    <ng-container matColumnDef="indicadores">
+
+                    <ng-container matColumnDef="nombreindicador">
                       <th mat-header-cell *matHeaderCellDef>INDICADORES</th>
-                      <td mat-cell *matCellDef="let elemento">
-                        {{ elemento.indicador?.nombre }}
+                      <td mat-cell *matCellDef="let elemento" class="descripcion-cell">
+                        {{ elemento.nombreindicador }}
                       </td>
                     </ng-container>
-                    
-                    <ng-container matColumnDef="descripcion">
-                      <th mat-header-cell *matHeaderCellDef>EVIDENCIA</th>
+
+                    <ng-container matColumnDef="tipo">
+                      <th mat-header-cell *matHeaderCellDef>TIPO</th>
                       <td mat-cell *matCellDef="let elemento">
-                        {{ elemento.descripcion }}
+                        {{ elemento.tipo | uppercase }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="descripcionevidencia">
+                      <th mat-header-cell *matHeaderCellDef>EVIDENCIA</th>
+                      <td mat-cell *matCellDef="let elemento" class="descripcion-cell comentario-cell">
+                        {{ truncateDescription(elemento.descripcionevidencia) }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="comentario">
+                      <th mat-header-cell *matHeaderCellDef>ESTADO ENTREGA</th>
+                      <td mat-cell *matCellDef="let elemento" class="comentario-cell">
+                        <ng-container *ngIf="elemento.comentario!== null && elemento.comentario !== ''">
+                          {{ elemento.comentario }}
+                        </ng-container>
+                        <ng-container *ngIf="elemento.comentario === null || elemento.comentario === ''">
+                          <span style="display: block; text-align: center;">Sin registros</span>
+                        </ng-container>
                       </td>
                     </ng-container>
 
                     <ng-container matColumnDef="actions">
                       <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
-                      <td mat-cell *matCellDef="let element">
-                        <div style="display: flex; align-items: center;">
-                        <button type="button" class="btn btn-primary custom-button" title="Ver las evidencias" style="
-                            background-color: rgb(58, 156, 156);
-                            margin-right: 5%;
-                          " (click)="verDetalles(element)" [disabled]="
-                            element.estado === 'pendiente' && disableVerDetalles
-                          ">
-                          <i class="fas fa-list"></i>
-                          <div *ngIf="isLoading" class="loading-overlay">
-                            <mat-spinner diameter="40"></mat-spinner>
-                            <p>Cargando...</p>
-                          </div>
-                        </button>
-                        <button type="button" class="btn btn-primary custom-buttonEvaluar" mat-icon-button type="button" title="Aprobar o Rechazar"
+                      <td mat-cell *matCellDef="let element" class="accioness-cell">
+
+                        <button type="button" class="btn btn-primary custom-buttonEvaluar" mat-icon-button
                           (click)="seleccionarTarea(element)" style="
                             background-color: rgb(190, 170, 78);
-                            margin-right: 5%;
-                          " data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                            margin-right: 1%;
+                            margin: 2%;
+                          " data-bs-toggle="modal" data-bs-target="#exampleModal2" ngbTooltip="Evaluar">
                           <mat-icon> functions</mat-icon>
                         </button>
-                        </div>
-                        <div style="display: flex; align-items: center;">
-                          <button type="button" class="btn btn-primary custom-button" mat-icon-button type="button" title="Calificar"
-                            (click)="calificar(element)" style="background-color: rgb(190, 170, 78); margin-right: 5%;">
-                            <mat-icon>filter_frames</mat-icon>
-                          </button>
-                          <button *ngIf="element.estado !== 'pendiente'" type="button" class="btn btn-primary custom-buttonDetalle" title="Ver observaciones"
-                            mat-icon-button (click)="seleccionarTareaDetalle(element)"
-                            style="background-color: rgb(150, 215, 219); margin-right: 5%;" data-bs-toggle="modal" data-bs-target="#exampleModal3">
-                            <mat-icon>help</mat-icon>
-                          </button>
-                        </div>
-                        
+                        <button type="button" *ngIf="element.estado !== 'pendiente'"
+                          class="btn btn-primary custom-buttonDetalle" mat-icon-button
+                          (click)="seleccionarTareaDetalle(element)" style="
+                            background-color: rgb(150, 215, 219);
+                            margin-right:1%;
+                            margin: 2%;
+                          " data-bs-toggle="modal" data-bs-target="#exampleModal3" ngbTooltip="Observaciones">
+                          <mat-icon>help</mat-icon>
+                        </button>
+                        <button type="button" class="btn btn-primary custom-buttonFecha" mat-icon-button
+                          style="background-color: rgb(133, 210, 214); margin-right:1%; margin: 2%;"
+                          data-bs-toggle="modal" data-bs-target="#exampleModal4"
+                          (click)="setEvidenciaRechazada(element)" ngbTooltip="Editar fecha plazo">
+                          <mat-icon>calendar_today</mat-icon>
+                        </button>
+                        <button type="button" class="btn btn-primary custom-buttonUsuario" mat-icon-button style="background-color: rgb(58, 135, 156); margin-right:1%;
+                            margin: 2%;" data-bs-toggle="modal" data-bs-target="#exampleModal5"
+                          (click)="setEvidenciaUsuario(element)" ngbTooltip="Cambiar responsable">
+                          <mat-icon>swap_horiz</mat-icon>
+                        </button>
                       </td>
                     </ng-container>
 
@@ -138,49 +192,22 @@
                     <tr mat-row *matRowDef="let fila; columns: columnas"
                       [style.background-color]="getColorByEstado(fila.estado)"></tr>
                   </table>
+                  <ng-container *ngIf="!estadoSeleccionado">
+                    <p class="noregistros">Por favor, seleccione un responsable para ver los registros.</p>
+                  </ng-container>
+                  <ng-container *ngIf="estadoSeleccionado && dataSource.data.length === 0">
+                    <p class="noregistros">No hay registros disponibles.</p>
+                  </ng-container>
                 </div>
               </div>
-             
-              <div class="container">
-                <div class="row justify-content-end">
-                  <div class="col">
-                    <div style="display: flex; align-items: center">
-                      <div class="mr-1" style="
-                          width: 20px;
-                          height: 20px;
-                          background-color: rgb(253, 79, 56);
-                        "></div>
-                      <span class="label" style="font-size: 12px; opacity: 0.7">Rechazadas</span>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div style="display: flex; align-items: center">
-                      <div class="mr-1" style="
-                          width: 20px;
-                          height: 20px;
-                          background-color: rgb(96, 179, 114);
-                        "></div>
-                      <span class="label" style="font-size: 12px; opacity: 0.7">Aprobadas</span>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div style="display: flex; align-items: center">
-                      <div class="mr-1" style="
-                          width: 20px;
-                          height: 20px;
-                          background-color: rgb(255, 242, 170);
-                        "></div>
-                      <span class="label" style="font-size: 12px; opacity: 0.7">Pendientes</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+
             </div>
           </div>
         </div>
 
+        <!--Modal Evaluacion-->
         <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
-          (hidden.bs.modal)="LimpiarModal()">
+          (hidden.bs.modal)="LimpiarModal()" data-bs-backdrop="static" data-bs-keyboard="false">
           <div class="modal-dialog modal-xl">
             <div class="modal-content">
               <div class="modal-header" style="background-color: rgb(0, 122, 255)">
@@ -189,114 +216,271 @@
                   EVALUAR
                 </h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                  (click)="LimpiarModal() "></button>
+                  style="margin-bottom: 10px;" (click)="LimpiarModal()"></button>
               </div>
+              <!-- Modal body -->
               <div class="modal-body">
-                <div class="card">
+                <!-- Detalles -->
+                <div class="card" *ngIf="verModalDetalles">
+                  <!-- Descripción Tarea -->
                   <div class="card-body" style="height: 95%">
                     <h2 class="card-title">
-                      <i class="fas fa-file-alt" style="margin-right: 10px"></i>Detalles
+                      <i class="fas fa-file-alt" style="margin-right: 10px"></i>DETALLES
                     </h2>
-
                     <br />
                     <hr />
-
-                    <div style="display: flex; justify-content: space-between">
-                      <div style="width: 30%; margin-right: 10px">
-                        <mat-form-field class="full-width" appearance="outline">
-                          <mat-label [ngClass]="{'disabledcolor': true}">Fecha de revisión</mat-label>
-                          <input [ngClass]="{'disabledcolor': true}" disabled name="fecha" matInput [value]="fechaFormateada" />
-                        </mat-form-field>
+                    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                      <!-- Descripción Tarea -->
+                      <div style="width: 100%;">
+                        <mat-accordion>
+                          <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true"
+                            (closed)="panelOpenState = false">
+                            <mat-expansion-panel-header>
+                              <mat-panel-title style="margin-top: 2%">
+                                <h4><strong>Evidencia</strong></h4>
+                              </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div style="text-align: justify">
+                              <p>{{descripcionEvi}}</p>
+                            </div>
+                          </mat-expansion-panel>
+                        </mat-accordion>
                       </div>
 
-                      <div style="width: 30%; margin-right: 10px">
-                        <mat-form-field class="full-width" appearance="outline">
-                          <mat-label [ngClass]="{'disabledcolor': true}">Usuario Evaluador</mat-label>
-                          <input [ngClass]="{'disabledcolor': true}" disabled name="usuario" matInput [value]="user.username" />
-                        </mat-form-field>
+                      <!-- Usuario Evaluado, Fecha inicio, Fecha fin -->
+                      <div style="display: flex; width: 100%;  margin-top: 3%; justify-content: space-between;">
+                        <div style="width: 30%; margin-right: 3px;">
+                          <mat-form-field class="full-width" appearance="outline">
+                            <mat-label [ngClass]="{ disabledcolor: true }">Responsable</mat-label>
+                            <input [ngClass]="{ disabledcolor: true }" disabled name="usuario" matInput
+                              [value]="nombreCompleto" />
+                          </mat-form-field>
+                        </div>
+
+                        <div style="width: 30%; margin-right: 3px;">
+                          <mat-form-field class="full-width" appearance="outline">
+                            <mat-label [ngClass]="{ disabledcolor: true }">Fecha Inicio Evidencia</mat-label>
+                            <input [ngClass]="{ disabledcolor: true }" disabled name="fechaInicio" matInput
+                              [value]="formatoFecha(fechaInicio)" />
+                          </mat-form-field>
+                        </div>
+
+                        <div style="width: 30%; margin-right: 3px;">
+                          <mat-form-field class="full-width" appearance="outline">
+                            <mat-label [ngClass]="{ disabledcolor: true }">Fecha Fin Evidencia</mat-label>
+                            <input [ngClass]="{ disabledcolor: true }" disabled name="fechaFin" matInput
+                              [value]="formatoFecha(fechaFin)" />
+                          </mat-form-field>
+                        </div>
                       </div>
 
-                      <div style="width: 30%; margin-right: 10px">
-                        <mat-form-field class="full-width" appearance="outline">
-                          <mat-label [ngClass]="{'disabledcolor': true}">Estado de Tarea</mat-label>
-                          <input [ngClass]="{'disabledcolor': true}" disabled name="estado" matInput [value]="estadoEvi" required />
-                        </mat-form-field>
+                      <!-- Fecha de revisión, Usuario Evaluador, Estado de Tarea -->
+                      <div style="display: flex; width: 100%; justify-content: space-between;">
+
+                        <div style="width: 30%; margin-right: 3px;">
+                          <mat-form-field class="full-width" appearance="outline">
+                            <mat-label [ngClass]="{ disabledcolor: true }">Estado</mat-label>
+                            <input [ngClass]="{ disabledcolor: true }" disabled name="estado" matInput
+                              [value]="estadoEvi" required />
+                          </mat-form-field>
+                        </div>
+
+                        <div style="width: 30%; margin-right: 3px;">
+                          <mat-form-field class="full-width" appearance="outline">
+                            <mat-label [ngClass]="{ disabledcolor: true }">Fecha de revisión</mat-label>
+                            <input [ngClass]="{ disabledcolor: true }" disabled name="fecha" matInput
+                              [value]="fechaFormateada" />
+                          </mat-form-field>
+                        </div>
+
+                        <div style="width: 30%; margin-right: 3px;">
+                          <mat-form-field class="full-width" appearance="outline">
+                            <mat-label [ngClass]="{ disabledcolor: true }">Usuario Evaluador</mat-label>
+                            <input [ngClass]="{ disabledcolor: true }" disabled name="usuario" matInput
+                              [value]="user.persona?.primer_nombre + ' ' + user.persona?.primer_apellido" />
+                          </mat-form-field>
+                        </div>
+
                       </div>
-                    </div>
-                    <div style="width: auto; margin-right: 10px">
-                      <mat-form-field class="full-width" appearance="outline">
-                        <mat-label [ngClass]="{'disabledcolor': true}">Descripción Tarea</mat-label>
-                        <input [ngClass]="{'disabledcolor': true}" disabled name="estado" matInput [value]="evid.descripcion" />
-                      </mat-form-field>
                     </div>
                   </div>
                 </div>
-
+                <!-- Archivos -->
+                <div class="card" *ngIf="verModalArchivo">
+                  <div class="card-body" style="height: 95%">
+                    <h2 class="card-title">
+                      <i class="fa fa-folder-open" style="margin-right: 10px"></i>ARCHIVOS
+                    </h2>
+                    <br />
+                    <hr />
+                    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                      <!-- Descripción Evidencia -->
+                      <div style="width: 100%;">
+                        <mat-accordion>
+                          <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true"
+                            (closed)="panelOpenState = false">
+                            <mat-expansion-panel-header>
+                              <mat-panel-title style="margin-top: 2%">
+                                <h4><strong>Evidencia</strong></h4>
+                              </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div style="text-align: justify">
+                              <p>{{descripcionEvi}}</p>
+                            </div>
+                          </mat-expansion-panel>
+                        </mat-accordion>
+                      </div>
+                      <!-- tabla -->
+                      <div style="display: flex; width: 100%;  margin-top: 3%; max-height: 275px; overflow-y: scroll ">
+                        <div class="table-responsive mat-elevation-z8 modal-table" style="margin-bottom: 1%;">
+                          <table mat-table [dataSource]="dataSource2">
+                            <ng-container matColumnDef="nombreArchi">
+                              <th mat-header-cell *matHeaderCellDef>NOMBRE</th>
+                              <td mat-cell *matCellDef="let elemento">
+                                {{ elemento.nombre }}
+                              </td>
+                            </ng-container>
+                            <ng-container matColumnDef="descripcionArchi">
+                              <th mat-header-cell *matHeaderCellDef>DESCRIPCIÓN</th>
+                              <td mat-cell *matCellDef="let elemento">
+                                {{ elemento.descripcion }}
+                              </td>
+                            </ng-container>
+                            <ng-container matColumnDef="comentario">
+                              <th mat-header-cell *matHeaderCellDef>ESTADO DE ENTREGA</th>
+                              <td mat-cell *matCellDef="let elemento">
+                                {{ elemento.comentario }}
+                              </td>
+                            </ng-container>
+                            <ng-container matColumnDef="enlace">
+                              <th mat-header-cell *matHeaderCellDef>DESCARGAR</th>
+                              <td mat-cell *matCellDef="let elemento">
+                                <a [href]="elemento.enlace" [download]="obtenerNombreArchivo(elemento.enlace)">
+                                  <button class="btn btn-primary" style=" margin-right: 5%; margin-left: 10%;">
+                                    <i class="fas fa-download"></i>
+                                  </button>
+                                </a>
+                              </td>
+                            </ng-container>
+                            <ng-container matColumnDef="visualizar">
+                              <th mat-header-cell *matHeaderCellDef>VISUALIZAR</th>
+                              <td mat-cell *matCellDef="let elemento">
+                                <button class="btn btn-primary" style="margin-right: 5%; margin-left: 10%;"
+                                  (click)="verPDF(elemento.nombre)">
+                                  <i class="fas fa-eye"></i>
+                                </button>
+                              </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="columnasArchi"></tr>
+                            <tr mat-row *matRowDef="let fila; columns: columnasArchi"></tr>
+                          </table>
+                          <ng-container *ngIf="noRegistros">
+                            <br>
+                            <p>{{ noRegistros }}</p>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Acciones -->
                 <div class="row">
-                  <div class="col-sm-6 col-lg-3" style="padding: 10px 20px">
-                    <div class="card">
+                  <div class="col-sm-6 col-lg-3">
+                    <!-- Ver Archivos -->
+                    <div class="card" *ngIf="verModalDetalles">
                       <div class="card-body">
-                        <h3 class="card-title">
-                          <i class="fas fa-pencil-alt" style="margin-right: 5px"></i>
-                          <strong>OBSERVACIONES</strong>
-                        </h3>
+                        <h4 class="card-title">
+                          <i class="fa fa-folder-open" style="margin-right: 10px"></i>
+                          <strong>ARCHIVOS</strong>
+                        </h4>
                         <br />
                         <div class="container">
                           <div class="col">
-                            <button type="button" class="btn btn-warning btn-block" (click)="Limpiar()"
-                            title="Haz clic para borrar">
-                              <i class="fas fa-eraser"></i>
+                            <button type="button" class="btn btn-primary btn-block"
+                              (click)="listarArchivos(id_asig_evid)" ngbTooltip="Ver archivos">
+                              <i class="fas fa-eye"></i>
                             </button>
-                            <button type="button" class="btn btn-success btn-block"
-                              (click)="Aprobado(evid)"
-                              title="Haz clic aquí para aprobar">
-                              <i class="fas fa-thumbs-up"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Ver Detalles -->
+                    <div class="card" *ngIf="verModalArchivo">
+                      <div class="card-body">
+                        <h4 class="card-title">
+                          <i class="fas fa-file-alt" style="margin-right: 10px"></i>
+                          <strong>DETALLES</strong>
+                        </h4>
+                        <br />
+                        <div class="container">
+                          <div class="col">
+                            <button type="button" class="btn btn-primary btn-block" (click)="cambiarVistaDetalles()"
+                              ngbTooltip="Ver detalles">
+                              <i class="fas fa-eye"></i>
                             </button>
-                            <button type="button" class="btn btn-danger btn-block"
-                              (click)="Rechazado(evid)"
-                              title="Haz clic aquí para rechazar">
-                              <i class="fas fa-thumbs-down"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Card de Observaciones -->
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">
+                          <i class="fas fa-pencil-alt" style="margin-right: 10px"></i>
+                          <strong>OBSERVACIONES</strong>
+                        </h4>
+                        <br />
+                        <div class="container">
+                          <div class="col">
+                            <button type="button" class="btn btn-borrar btn-block" (click)="Limpiar()"
+                              ngbTooltip="Borrar">
+                              <i class="fas fa-eraser" style="color: white;"></i>
+                            </button>
+                            <button type="button" class="btn btn-aprobar btn-block" (click)="Aprobado(evid)"
+                              ngbTooltip="Aprobar">
+                              <i class="fas fa-thumbs-up" style="color: white;"></i>
+                            </button>
+                            <button type="button" class="btn btn-rechazar btn-block" (click)="Rechazado(evid)"
+                              ngbTooltip="Rechazar">
+                              <i class="fas fa-thumbs-down" style="color: white;"></i>
                             </button>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-
-                  <div class="col-sm-8 col-lg-6" *ngIf="mostrar" style="width: 75%">
-                    <div class="card">
+                  <!-- Para enviar el correo -->
+                  <div class="col-sm-8 col-lg-6" style="width: 75%">
+                    <div class="card" style="height: 95%;">
                       <div class="card-body">
                         <form (ngSubmit)="enviar()">
                           <div style="
-                              display: flex;
-                              justify-content: flex-start;
-                              gap: 10rem;
-                            ">
+                                                          display: flex;
+                                                          justify-content: flex-start;
+                                                          gap: 1rem;
+                                                        ">
                             <div class="form-floating mb-3" style="width: 45%">
                               <input type="text" id="toUser" name="toUser" required class="form-control"
                                 placeholder="............" [value]="correoEnviar" [(ngModel)]="toUser" required />
                               <label for="toUser">Para:</label>
                             </div>
 
-                            <div class="form-floating mb-3">
-                              <input type="text" id="subject" name="subject" style="margin-right: 5%"
-                                [(ngModel)]="subject" required class="form-control" placeholder="............"
-                                required />
+                            <div class="form-floating mb-3" style="width: 55%">
+                              <input type="text" id="subject" name="subject" [(ngModel)]="subject" required
+                                class="form-control" placeholder="............" required />
                               <label for="subject">Asunto:</label>
                             </div>
                           </div>
 
-                          <div style="margin-bottom: 10%; height: 25px">
+                          <div style="margin-bottom: 10%; height: 50px">
                             <div class="form-floating">
-                              <textarea class="form-control card-textarea" placeholder="Leave a comment here"
-                                id="floatingTextarea2" style="max-height: 75px; overflow-y: auto"
+                              <textarea class="form-control card-textarea" id="floatingTextarea2"
                                 placeholder="Ingrese alguna observación..........." [(ngModel)]="observacion" required
                                 id="message" name="message" [(ngModel)]="message" required rows="12"></textarea>
                               <label for="message">Comentario</label>
                             </div>
                           </div>
-
-                          <div class="button-group" style="display: flex; justify-content: center">
+                          <div class="button-group" style="display: flex; justify-content: center; margin-top: 16%;">
                             <button type="submit" class="btn btn-primary">
                               <i class="fas fa-envelope"></i> Enviar
                             </button>
@@ -317,15 +501,16 @@
                   </div>
                 </div>
               </div>
+              <!-- Modal footer -->
               <div class="modal-footer" style="background-color: rgb(0, 122, 255)">
-                <button type="button" class="btn btn-success" *ngIf="verificar" 
-                [attr.data-bs-dismiss]="verificar ? 'modal' : null"
-                  style="background-color: rgb(10, 8, 94)" (click)="guardarap()">
+                <button type="button" class="btn btn-success" *ngIf="verificar"
+                  [attr.data-bs-dismiss]="verificar ? 'modal' : null" style="background-color: rgb(10, 8, 94)"
+                  (click)="guardarap()">
                   <i class="fas fa-save"></i>
                   Guardar
                 </button>
                 <button type="button" style="margin-left: 5%" class="btn btn-danger" data-bs-dismiss="modal"
-                  (click)="LimpiarModal() ">
+                  (click)="LimpiarModal()">
                   <i class="fas fa-times"></i> Cancelar
                 </button>
               </div>
@@ -333,32 +518,36 @@
           </div>
         </div>
 
+        <!--Modal Observaciones-->
         <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog">
-            <div class="modal-content" >
+            <div class="modal-content">
               <div class="modal-header" style="background-color: rgb(0, 122, 255)">
                 <h1 class="modal-title" style="font-family: Arial, sans-serif; color: white" id="exampleModalLabel">
                   OBSERVACIONES
                 </h1>
-
               </div>
               <div class="modal-body">
                 <div class="mat-elevation-z8" style="margin-bottom: 5%">
-                  <table mat-table [dataSource]="dataSource4">
+                  <table mat-table [dataSource]="dataSource4" class="table-responsive">
                     <ng-container matColumnDef="iddetalle">
-                      <th mat-header-cell *matHeaderCellDef>ID</th>
-                      <td mat-cell *matCellDef="let elemento">
+                      <th mat-header-cell *matHeaderCellDef [style.display]="ocultar ? '' : 'none'">
+                        ID
+                      </th>
+                      <td mat-cell *matCellDef="let elemento" [style.display]="ocultar ? '' : 'none'">
                         {{ elemento.id_detalle_evaluacion }}
                       </td>
                     </ng-container>
                     <ng-container matColumnDef="evi">
-                      <th mat-header-cell *matHeaderCellDef>EVIDENCIA</th>
-                      <td mat-cell *matCellDef="let elemento">
+                      <th mat-header-cell *matHeaderCellDef [style.display]="ocultar ? '' : 'none'">
+                        EVIDENCIA
+                      </th>
+                      <td mat-cell *matCellDef="let elemento" [style.display]="ocultar ? '' : 'none'">
                         {{ elemento.evidencia.id_evidencia }}
                       </td>
                     </ng-container>
                     <ng-container matColumnDef="observacion">
-                      <th mat-header-cell *matHeaderCellDef>OBSERVACIÓN</th>
+                      <th mat-header-cell *matHeaderCellDef>COMENTARIO</th>
                       <td mat-cell *matCellDef="let elemento">
                         {{ elemento.observacion }}
                       </td>
@@ -366,21 +555,24 @@
 
                     <ng-container matColumnDef="estado">
                       <th mat-header-cell *matHeaderCellDef>ESTADO</th>
-                      <td mat-cell *matCellDef="let elemento"
-                        [ngClass]="{'rechazada': !elemento.estado, 'aprobada': elemento.estado}">
-                        {{ elemento.estado ? 'Aprobada' : 'Rechazada' }}
+                      <td mat-cell *matCellDef="let elemento" [ngClass]="{
+                          rechazada: !elemento.estado,
+                          aprobada: elemento.estado
+                        }">
+                        {{ elemento.estado ? "Aprobada" : "Rechazada" }}
                       </td>
                     </ng-container>
 
-
                     <ng-container matColumnDef="fecha">
-                      <th mat-header-cell *matHeaderCellDef>FECHA</th>
+                      <th mat-header-cell *matHeaderCellDef>FECHA Y HORA</th>
                       <td mat-cell *matCellDef="let elemento">
-                        {{ elemento.fecha | date:'dd/MM/yyyy'}}
+                        {{ elemento.fecha | date : 'dd/MM/yyyy HH:mm' }}
                       </td>
                     </ng-container>
                     <ng-container matColumnDef="usua">
-                      <th mat-header-cell *matHeaderCellDef>USUARIO EVALUADOR</th>
+                      <th mat-header-cell *matHeaderCellDef>
+                        USUARIO EVALUADOR
+                      </th>
                       <td mat-cell *matCellDef="let elemento">
                         {{ elemento?.usuario?.persona?.primer_nombre }}
                         {{ elemento?.usuario?.persona?.primer_apellido }}
@@ -390,12 +582,10 @@
                     <ng-container matColumnDef="actions">
                       <th mat-header-cell *matHeaderCellDef>ACCIONES</th>
                       <td mat-cell *matCellDef="let element">
-
                         <button class="btn btn-danger" style="background-color: red; margin-right: 5%" role="button"
-                          (click)="Eliminar(element)">
+                          (click)="Eliminar(element)" ngbTooltip="Eliminar observación">
                           <i class="fa fa-trash"></i>
                         </button>
-
                       </td>
                     </ng-container>
 
@@ -404,13 +594,12 @@
                   </table>
 
                   <ng-container *ngIf="noRegistros">
+                    <br>
                     <p>{{ noRegistros }}</p>
                   </ng-container>
-
                 </div>
               </div>
               <div class="modal-footer" style="background-color: rgb(0, 122, 255)">
-
                 <button type="button" style="margin-left: 5%" class="btn btn-danger" data-bs-dismiss="modal">
                   <i class="fas fa-times"></i> Cerrar
                 </button>
@@ -418,6 +607,102 @@
             </div>
           </div>
         </div>
+
+        <!--Modal Editar Fecha Plazo para Evidencia-->
+        <div class="modal fade" id="exampleModal4" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" style="width: 40%;">
+            <div class="modal-content">
+              <div class="modal-header text-center" style="background-color: rgb(0, 122, 255)">
+                <strong>
+                  <h1 class="modal-title font-weight-bold" style="font-family: Arial, sans-serif; color: white">
+                    Aplazar Fecha de Evidencia
+                  </h1>
+                </strong>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="date-edits">
+                  <mat-form-field appearance="fill" class="date-edit">
+                    <mat-label>Fecha Final:</mat-label>
+                    <input matInput [matDatepicker]="dp4" [(ngModel)]="asignar.fecha_fin" name="fecha_fin" />
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="dp4"></mat-datepicker-toggle>
+                    <mat-datepicker #dp4 disabled="false"></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+              <br>
+              <br>
+              <div class="container text-center">
+                <button mat-raised-button color="primary" data-bs-dismiss="modal" (click)="guardarFechaPlazo()">
+                  <mat-icon>save</mat-icon>Guardar
+                </button>
+                <button type="button" style="margin-left: 5%" class="btn btn-secondary" data-bs-dismiss="modal">
+                  Cancelar
+                </button>
+              </div>
+              <br>
+              <br>
+            </div>
+          </div>
+        </div>
+
+        <!--Modal Cambio de Usuario-->
+        <div class="modal fade" id="exampleModal5" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" style="width: 40%">
+            <div class="modal-content">
+              <div class="modal-header text-center" style="background-color: rgb(0, 122, 255)">
+                <strong>
+                  <h1 class="modal-title font-weight-bold" style="font-family: Arial, sans-serif; color: white">
+                    Cambiar Usuario
+                  </h1>
+                </strong>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <mat-form-field>
+                  <mat-label>Seleccionar Usuario</mat-label>
+                  <mat-select [(value)]="selectedUser">
+                    <mat-option *ngFor="let user of usuariosResponsables" [value]="user">
+                      {{ user.persona.primer_apellido + ' ' + user.persona.segundo_apellido + ' ' +
+                      user.persona.primer_nombre + ' ' + user.persona.segundo_nombre}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <br>
+                <br>
+                <div class="container text-center">
+                  <button mat-raised-button color="primary" data-bs-dismiss="modal" (click)="guardarCambioUsuario()">
+                    <mat-icon>save</mat-icon>Guardar
+                  </button>
+                  <button type="button" style="margin-left: 5%" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancelar
+                  </button>
+                </div>
+                <br>
+                <br>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Visor PDF-->
+        <div class="modal fade" id="modalPdf" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                  style="margin-bottom: 10px;"></button>
+              </div>
+              <div class="modal-body">
+                <div class="pdf-container">
+                  <iframe [src]="pdfUrl" frameborder="0" class="pdf-viewer"></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

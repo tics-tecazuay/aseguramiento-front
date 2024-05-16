@@ -1,3 +1,15 @@
+body {
+  font: 1em/1.618 Inter, sans-serif;
+
+  display: flex;
+  justify-content: center;
+
+  min-height: 100vh;
+  padding-top: 1%;
+
+  color: #224;
+}
+
 .disabledcolor {
   color: #0c0c0c;
   /* Elige el color de texto que desees para el estado desactivado */
@@ -25,4 +37,324 @@
   background-color: #f2f2f2;
   max-height: 200px;
   overflow-y: auto;
+}
+
+.custom-button {
+  position: relative;
+}
+
+.custom-button::after {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 10px;
+  background-color: rgba(34, 32, 32, 0.8);
+  color: #fff;
+  font-size: 14px;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.custom-button:hover::after {
+  opacity: 1;
+}
+
+.custom-buttonEvaluar {
+  position: relative;
+}
+
+.custom-buttonEvaluar::after {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 10px;
+  background-color: rgba(34, 32, 32, 0.8);
+  color: #fff;
+  font-size: 14px;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.custom-buttonEvaluar:hover::after {
+  opacity: 1;
+}
+
+.custom-button2 {
+  position: relative;
+}
+
+.custom-button2::after {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 10px;
+  background-color: rgba(34, 32, 32, 0.8);
+  color: #fff;
+  font-size: 14px;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.custom-button2:hover::after {
+  opacity: 1;
+}
+
+.accioness-cell {
+  min-width: 275px;
+}
+
+.custom-buttonFecha {
+  position: relative;
+}
+
+.custom-buttonFecha::after {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 10px;
+  background-color: rgba(34, 32, 32, 0.8);
+  color: #fff;
+  font-size: 14px;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.custom-buttonFecha:hover::after {
+  opacity: 1;
+}
+
+
+.custom-buttonUsuario {
+  position: relative;
+}
+
+.custom-buttonUsuario::after {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 10px;
+  background-color: rgba(34, 32, 32, 0.8);
+  color: #fff;
+  font-size: 14px;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.custom-buttonUsuario:hover::after {
+  opacity: 1;
+}
+
+.custom-buttonDetalle::after {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 10px;
+  background-color: rgba(34, 32, 32, 0.8);
+  color: #fff;
+  font-size: 14px;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.custom-buttonDetalle:hover::after {
+  opacity: 1;
+}
+
+.descripcion-cell {
+  padding-top: 10px;
+  /* Ajusta el espacio superior según lo necesites */
+  padding-bottom: 10px;
+  /* Ajusta el espacio inferior según lo necesites */
+}
+
+.date-edits {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.date-edit {
+  width: 100%;
+  max-width: 300px;
+  margin: 10px;
+}
+
+::ng-deep .cdk-overlay-container {
+  z-index: 2000;
+}
+
+
+.modal-table {
+  max-height: calc(100vh - 100px);
+}
+
+.modal-dialog {
+  max-width: 70%;
+}
+
+.modal-content {
+  overflow: auto;
+}
+
+.modal-header {
+  padding-top: 2%;
+  padding-bottom: 0%;
+}
+
+.card-textarea {
+  max-height: 133px;
+  height: 133px;
+  overflow-y: auto;
+}
+
+.btn-close {
+  background-color: #f00;
+  margin-bottom: 1%;
+}
+
+.btn-back {
+  background-color: rgba(255, 255, 0, 0.521);
+}
+
+.aprobada {
+  background-color: rgba(96, 179, 114);
+}
+
+.rechazada {
+  background-color: rgba(253, 79, 56);
+}
+
+.comentario-cell {
+  min-width: 200px;
+}
+
+.pdf-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  /* Ajusta según tus necesidades */
+  padding: 2rem;
+}
+
+.pdf-viewer {
+  width: 100%;
+  /* Ajusta según tus necesidades */
+  height: 100%;
+  /* Ajusta según tus necesidades */
+  margin-top: 0;
+  /* Elimina el margen superior */
+  margin-bottom: 0;
+  /* Elimina el margen inferior */
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-active {
+  opacity: 1 !important;
+}
+
+.btn-inactive {
+  opacity: 0.8;
+}
+
+.btn-borrar {
+  background-color: #FFC107;
+  color: #FFC107;
+
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #FFC107;
+  --bs-btn-border-color: #d1b039;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #FFC107;
+  --bs-btn-hover-border-color: #FFC107;
+  --bs-btn-focus-shadow-rgb: 49, 132, 253;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #FFC107;
+  --bs-btn-active-border-color: #d1b039;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #FFC107;
+  --bs-btn-disabled-border-color: #FFC107;
+}
+
+.btn-borrar:hover {
+  color: #fff;
+  background-color: #d3a202;
+  border-color: #d1b039;
+}
+
+
+.btn-aprobar {
+  background-color: #1baf58;
+  color: #198754;
+
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #198754;
+  --bs-btn-border-color: #00a36c;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #198754;
+  --bs-btn-hover-border-color: #198754;
+  --bs-btn-focus-shadow-rgb: 49, 132, 253;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #198754;
+  --bs-btn-active-border-color: #00a36c;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #198754;
+  --bs-btn-disabled-border-color: #198754;
+}
+
+.btn-aprobar:hover {
+  color: #fff;
+  background-color: #198754;
+  border-color: #00a36c;
+}
+
+
+.btn-rechazar {
+  background-color: #d3475a;
+  color: #DC3545;
+
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #DC3545;
+  --bs-btn-border-color: #e05252;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #DC3545;
+  --bs-btn-hover-border-color: #DC3545;
+  --bs-btn-focus-shadow-rgb: 49, 132, 253;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #DC3545;
+  --bs-btn-active-border-color: #e05252;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #DC3545;
+  --bs-btn-disabled-border-color: #DC3545;
+}
+
+.btn-rechazar:hover {
+  color: #fff;
+  background-color: #DC3545;
+  border-color: #e05252;
+}
+.noregistros {
+  padding-top: 10px;
+  /* Ajusta el espacio superior según lo necesites */
+  padding-bottom: 10px;
+  /* Ajusta el espacio inferior según lo necesites */
+  text-align: center;
 }

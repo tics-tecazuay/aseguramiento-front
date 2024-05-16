@@ -5,16 +5,10 @@
     </blockquote>
     <div></div>
     <div class="card">
-      <input
-      type="text"
-      class="form-control"
-      name="filterPost3"
-      placeholder="Buscar..."
-      [(ngModel)]="filterPost"
-      (input)="aplicarFiltro()"
-    />
-    
-    <div class="mat-elevation-z8">
+      <input type="text" class="form-control" name="filterPost3" placeholder="Buscar..." [(ngModel)]="filterPost"
+        (input)="aplicarFiltro()" />
+
+      <div class="mat-elevation-z8">
         <table mat-table [dataSource]="dataSource | buscar : filterPost">
           <ng-container matColumnDef="Id">
             <th mat-header-cell *matHeaderCellDef [style.display]="ocultar? '' : 'none'">ID</th>
@@ -37,6 +31,9 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns" class="tab-apr"></tr>
         </table>
+        <ng-container *ngIf="dataSource.data.length === 0">
+          <p class="noregistros">No hay registros disponibles.</p>
+        </ng-container>
         <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
           aria-label="Select page of periodic elements">
         </mat-paginator>

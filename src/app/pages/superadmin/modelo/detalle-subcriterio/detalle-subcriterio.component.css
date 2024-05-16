@@ -1,14 +1,16 @@
-div.detalle{
+div.detalle {
     border: 2px solid #040936;
-    left : 10px; 
-    
- 
-   
+    left: 10px;
+
+
+
 }
-p.fant {font-family: sans-serif;
-  
-    left : 10px; 
-    text-align: left ;
+
+p.fant {
+    font-family: sans-serif;
+
+    left: 10px;
+    text-align: left;
 }
 
 .boton {
@@ -31,6 +33,7 @@ tr.example-element-row:not(.example-expanded-row):hover {
 tr.example-element-row:not(.example-expanded-row):active {
     background: #efefef;
 }
+
 .example-element-row td {
     border-bottom-width: 0;
 }
@@ -62,21 +65,19 @@ tr.example-element-row:not(.example-expanded-row):active {
 .example-element-description-attribution {
     opacity: 0.5;
 }
+
 a {
     text-decoration: none;
-  }
+}
 
-  body {
+body {
     font: 1em/1.618 Inter, sans-serif;
-  
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    min-height: 100vh;
-    padding: 30px;
-    
-    color: #224;
 
-  }
-  
+    display: flex;
+    justify-content: center;
+
+    min-height: 100vh;
+    padding-top: 1%;
+
+    color: #224;
+}

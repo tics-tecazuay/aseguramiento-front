@@ -21,7 +21,7 @@ export class AsignaComponent implements OnInit {
   asignaciones: asigna_R[] = [];
   asigna = new asigna_R;
   asignaN = new asigna_R;
-  //
+  modeloVigente!: Modelo;
   noti=new Notificacion();
   user:any = null;
   idusuario:any=null;
@@ -46,8 +46,14 @@ export class AsignaComponent implements OnInit {
         this.user = this.login.getUser();
       }
     )
+    this.obtenerModeloVigente();
+    //Directamente guardar en el objeto notificacion el modelo
+    this.noti.id_modelo = this.modeloVigente.id_modelo;
   }
 
+  obtenerModeloVigente(){
+    this.modeloVigente= JSON.parse(localStorage.getItem('modelo') || '{}');
+  }
   listaResponsable() {
     this.asignaService.listarUsuario().
       subscribe(data => {

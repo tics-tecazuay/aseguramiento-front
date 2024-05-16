@@ -58,4 +58,7 @@ export class ModeloService {
   getcriterioadmin(id_modelo:number,id:number): Observable<criteriosdesprojection[]> {
     return this.http.get<criteriosdesprojection[]>(`${baserUrl}/api/modelo/listcriterioadmin/${id_modelo}/${id}`)
   }
+  editarEstadoModeload(id_modelo: number, vnum: number): Observable<any> {
+    return this.http.put(`${baserUrl}/api/modelo/editarEstadoModeloAD/${id_modelo}?vnum=${vnum}`, {});
+  }  
 }

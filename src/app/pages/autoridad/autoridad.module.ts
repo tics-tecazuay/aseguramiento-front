@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { AutoridadRoutingModule } from './autoridad-routing.module';
 import { ReportesComponent } from './reportes/reportes.component';
 import { ConsultaActividadComponent } from './consulta-actividad/consulta-actividad.component';

@@ -1,73 +1,115 @@
-/*body {
-    font: 1em/1.618 Inter, sans-serif;
-  
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    min-height: 100vh;
-    padding: 30px;
-    
-    color: #224;
- 
-  }*/
-  .tabla-container {
-    max-height: 750px;
-    overflow-y: auto;
-  }
-  
-  .carousel-container {
-    display: flex;
-    overflow: hidden;
-    width: 300px;
-    height: 200px;
-    margin: 0 auto;
-  }
-  
-  .slide {
-    flex: 0 0 100%;
-    transition: transform 1s ease;
-  }
-  
-  img {
-    width: 100%; 
-    height: 100%;
-  }
-  
+body {
+  font: 1em/1.618 Inter, sans-serif;
 
-  .imagen img {
-    max-width: 100%;  
-    max-height: 100%; 
-    width: auto;      
-    height: auto;    
-    display: block;   
-    margin: 0 auto;
-    opacity: 0.5;   
-  }
-  
-  .estado-pendiente {
-    background-color: yellow; 
-    color:blue;
-  }
-  
-  .estado-aprobada {
-    background-color: green;
-    color:white;
-  }
-  
-  .estado-rechazada {
-    background-color: red;
-    color:white;
-  }
-  
-  .aprobado {
-    color: green;
-  }
-  
-  .pendiente {
-    color: yellow;
-  }
-  
-  .rechazado {
-    color: red;
-  }
+  display: flex;
+  justify-content: center;
+
+  min-height: 100vh;
+  padding-top: 1%;
+
+  color: #224;
+
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  color: white;
+}
+
+.tabla-container {
+  max-height: 750px;
+  overflow-y: auto;
+}
+
+.carousel-container {
+  display: flex;
+  overflow: hidden;
+  width: 300px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+.slide {
+  flex: 0 0 100%;
+  transition: transform 1s ease;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+}
+
+
+.imagen img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  opacity: 0.5;
+}
+
+.estado-pendiente {
+  background-color: yellow;
+  color: blue;
+}
+
+.estado-aprobada {
+  background-color: green;
+  color: white;
+}
+
+.estado-rechazada {
+  background-color: red;
+  color: white;
+}
+
+.aprobado {
+  color: green;
+}
+
+.pendiente {
+  color: yellow;
+}
+
+.rechazado {
+  color: red;
+}
+
+.message {
+  position: relative;
+  left: 29%;
+  bottom: 20%;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.icono {
+  position: relative;
+  top: 25%;
+}
+
+.descripcion-cell {
+  padding-top: 10px;
+  /* Ajusta el espacio superior según lo necesites */
+  padding-bottom: 10px;
+  /* Ajusta el espacio inferior según lo necesites */
+}
+
+.accioness-cell {
+  min-width: 100px;
+}

@@ -19,7 +19,7 @@
 }
 
 .btn-tabs {
-	display: flex;
+	display: table-row;
 }
 
 .btn-tab {
@@ -184,7 +184,12 @@
 	color: black;
 }
 
-.card {
+.content-container {
+	position: relative;
+	z-index: 1;
+}
+
+.card2 {
 	width: 170px;
 	height: 170px;
 	background-color: transparent;
@@ -194,9 +199,38 @@
 	justify-content: center;
 	align-items: center;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
 }
 
-.content-container {
-	position: relative;
-	z-index: 1;
+.cards {
+	width: 100%;
+	padding: 35px 20px;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-gap: 20px;
+}
+
+.cards .card {
+	padding: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+}
+
+.rojo_evidencia {
+	background-color: rgb(253, 79, 56);
+	color: black;
+}
+
+.amarillo_evidencia {
+	background-color: rgb(255, 242, 170);
+	color: black;
+}
+
+.verde_evidencia {
+	background-color: rgb(96, 179, 114);
+	color: black;
 }

@@ -34,7 +34,8 @@ export class AuthInterceptor implements HttpInterceptor {
         }).then((result) => {
           if (result.isConfirmed) {
             this.loginService.logout();
-            location.replace('/use/login');
+            location.replace('#/use/login');
+            location.reload();
           }
         })
 
@@ -53,7 +54,8 @@ export class AuthInterceptor implements HttpInterceptor {
           if (error.status === 401 && error.error.error === "Unauthorized") {
             // el token ha expirado, cerrar sesión y redirigir a la página de inicio de sesión
             this.loginService.logout();
-            location.replace('/use/login');
+            location.replace('#/use/login');
+            location.reload();
           }
         }
       )

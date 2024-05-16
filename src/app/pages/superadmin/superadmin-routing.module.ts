@@ -10,7 +10,6 @@ import { CriterioReporteComponent } from './pages/criterio-reporte/criterio-repo
 import { DashboardComponent } from '../admin/dashboard/dashboard.component';
 import { EvalucionComponent } from '../admin/evalucion/evalucion.component';
 import { AprobacionactComponent } from './pages/aprobacionact/aprobacionact.component';
-import { DetalleaprobComponent } from './pages/detalleaprob/detalleaprob.component';
 import { SeguimientoUsuariosComponent } from './seguimiento-usuarios/seguimiento-usuarios.component';
 
 const routes: Routes = [{
@@ -71,13 +70,6 @@ const routes: Routes = [{
 {
   path: 'aprobaciones',
   component: AprobacionactComponent,
-  pathMatch: 'full',
-  canActivate: [RoleguardGuard],
-  data: { allowedRoles: ['SUPERADMIN'] }
-},
-{
-  path: 'detalle',
-  component: DetalleaprobComponent,
   pathMatch: 'full',
   canActivate: [RoleguardGuard],
   data: { allowedRoles: ['SUPERADMIN'] }

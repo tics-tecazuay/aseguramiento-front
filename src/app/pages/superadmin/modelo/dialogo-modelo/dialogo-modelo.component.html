@@ -98,7 +98,7 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button class="btn btn-warning" mat-dialog-close>Cancelar</button>
-  <button class="btn btn-primary" cdkFocusInitial (click)="createModelo()">Guardar</button>
+  <button class="btn btn-primary" style="margin-left: 1%;" cdkFocusInitial (click)="createModelo()">Guardar</button>
   <div *ngIf="copiando" class="fullscreen-spinner">
     <div class="spinner-overlay">
       <div class="spinner">
@@ -107,7 +107,7 @@
     </div>
   </div>
   
-  <button class="btn btn-primary" *ngIf="idmax !== null && idmax !== 0 && idmax !== undefined" (click)="copiarmodelo()">Copiar modelo</button>
+  <button class="btn btn-primary" style="margin-left: 1%;" *ngIf="idmax !== null && idmax !== 0 && idmax !== undefined" (click)="copiarModelo()">Copiar modelo</button>
 
   <!-- 
     

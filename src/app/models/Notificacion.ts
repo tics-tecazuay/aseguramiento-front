@@ -8,4 +8,5 @@ export class Notificacion{
     usuario:number=0;
     url:string="";
     idactividad:number=0;
+    id_modelo!:number;
 }

@@ -11,7 +11,7 @@ import { ModeloService } from 'src/app/services/modelo.service';
 export class GraficosComponent {
 
   datasource: any[] = [];
-
+  rol: string = "AUTORIDAD";
   constructor(public dialog: MatDialog, private router: Router, private modeloService: ModeloService) { }
   
   ngOnInit(): void {
@@ -23,7 +23,7 @@ export class GraficosComponent {
   irDetalle(object: any) {
     localStorage.setItem("idM", object.id_modelo.toString());
     console.log(object.id_modelo)
-    this.router.navigate(['/aut/reporte']);
+    this.router.navigate(['/aut/reporte'],{ state: { modelo: object, rol: this.rol } });
   }
 
 }

@@ -7,7 +7,7 @@ import baserUrl from './helper';
   providedIn: 'root'
 })
 export class LoginService {
-
+  rolSelect: any
   public loginStatusSubjec = new Subject<boolean>();
 
   constructor(private http: HttpClient) { }
@@ -35,6 +35,7 @@ export class LoginService {
   public logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('selectedRole');
     return true;
   }
   //obtenemos el token
@@ -55,11 +56,38 @@ export class LoginService {
   }
   public getUserRole() {
     if (localStorage.getItem('user') != null) {
-      let user = this.getUser();
-      return user.authorities[0].authority;
+      this.rolSelect = localStorage.getItem('selectedRole');
+      return this.rolSelect;
     } else {
       this.logout();
       return null;
     }
   }
+
+  public setUserRole(selectedRole: string) {
+    if (localStorage.getItem('user') != null) {
+      let user = this.getUser();
+      const userRoles = user.authorities.map((authority: any) => authority.authority);
+      if (userRoles.includes(selectedRole)) {
+        localStorage.setItem('selectedRole', selectedRole);
+        console.log('Rol seleccionado:', selectedRole);
+      } else {
+        console.error('El usuario no tiene acceso al rol seleccionado.');
+      }
+    } else {
+      this.logout();
+    }
+  }
+  
+
+  public getUserRoles() {
+    if (localStorage.getItem('user') != null) {
+        let user = this.getUser();
+        const roles = user.authorities.map((authority: any) => authority.authority);
+        return roles;
+    } else {
+        this.logout();
+        return [];
+    }
+}
 }

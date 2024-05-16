@@ -5,15 +5,16 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class BuscarUsuarioPipe implements PipeTransform {
 
-  transform(items: any[], searchText: string): any[] {
+  transform(items: any[] | undefined, searchText: string | undefined): any[] | undefined {
     if (!items || !searchText) {
       return items;
     }
-    searchText = searchText.toLowerCase();
+    const lowerSearchText = searchText.toLowerCase();
     return items.filter(item => {
-      // Realiza aquí la lógica de filtrado según tus necesidades
-      // En este ejemplo, se busca en la propiedad "nombre" del objeto
-      return item?.criterionomj.toLowerCase().includes(searchText)    });
+      // Verifica que la propiedad "criterionomj" esté presente en el objeto
+      const criterionomj = item?.criterionomj?.toLowerCase();
+      return criterionomj ? criterionomj.includes(lowerSearchText) : false;
+    });
   }
 
 }

@@ -42,7 +42,7 @@
         </div>
       </div>
     </div>
-
+    <br/>
     <ng-container *ngIf="mostrarPrincipal === 0; then template1; else template2"></ng-container>
     <ng-template #template1>
       <div class="table-container">
@@ -66,7 +66,7 @@
               Matriz de Evaluación
             </th>
             <td mat-cell *matCellDef="let element">
-              <button mat-icon-button (click)="evaluacion($event, element)" class="boton">
+              <button mat-icon-button (click)="evaluacion($event, element)" class="boton" >
                 <mat-icon class="iconoB">check_circle</mat-icon>
               </button>
             </td>
@@ -87,7 +87,7 @@
               Asignación
             </th>
             <td mat-cell *matCellDef="let element">
-              <button mat-icon-button (click)="asignar_criterio($event, element)" class="boton">
+              <button mat-icon-button (click)="asignar_criterio($event, element)" class="boton" [style.opacity]="model.estadoad ? '1' : '0.5'" [disabled]="!model.estadoad">
                 <mat-icon class="iconoB">account_box</mat-icon>
               </button>
             </td>
@@ -128,14 +128,14 @@
         <ng-container matColumnDef="fecha">
           <th mat-header-cell *matHeaderCellDef>Fecha de Reporte</th>
           <td mat-cell *matCellDef="let element">
-            {{ element.fechapo | date : "dd-MM-yyyy" }}
+            {{ element.fechapo | date : "YYYY-MM-dd" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="revisar">
           <th mat-header-cell *matHeaderCellDef>Reporte</th>
           <td mat-cell *matCellDef="let element">
-            <button mat-icon-button (click)="pond(element)" class="boton">
+            <button style="margin: 2%" mat-icon-button (click)="pond(element)" class="boton">
               <mat-icon class="iconoB">assignment</mat-icon>
             </button>
           </td>
@@ -143,7 +143,7 @@
         <ng-container matColumnDef="eliminar">
           <th mat-header-cell *matHeaderCellDef>Eliminar</th>
           <td mat-cell *matCellDef="let element">
-            <button mat-icon-button (click)="elimin(element)" class="boton">
+            <button style="margin: 2%" mat-icon-button (click)="elimin(element)" class="boton" [style.opacity]="model.estadoad ? '1' : '0.5'" [disabled]="!model.estadoad">
               <mat-icon class="iconoB">delete</mat-icon>
             </button>
           </td>

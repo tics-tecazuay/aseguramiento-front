@@ -6,13 +6,15 @@ import { tap, catchError, throwError } from 'rxjs';
 import { AsigEvidProjection } from 'src/app/interface/AsigEvidProjection';
 import { AsignaProjection } from 'src/app/interface/AsignaProjection';
 import { ResponsableProjection } from 'src/app/interface/ResponsableProjection';
-import { Asigna_Evi } from 'src/app/models/Asignacion-Evidencia';
+import { AsignaEvidenciaParamss, Asigna_Evi } from 'src/app/models/Asignacion-Evidencia';
 import { Criterio } from 'src/app/models/Criterio';
 import { Evidencia } from 'src/app/models/Evidencia';
 import { Fenix } from 'src/app/models/Fenix';
+import { Modelo } from 'src/app/models/Modelo';
 import { Notificacion } from 'src/app/models/Notificacion';
 import { Persona2 } from 'src/app/models/Persona2';
 import { Usuario2 } from 'src/app/models/Usuario2';
+import { ActividadService } from 'src/app/services/actividad.service';
 import { AsignaEvidenciaService } from 'src/app/services/asigna-evidencia.service';
 import { AsignacionResponsableService } from 'src/app/services/asignacion-responsable.service';
 import { CriteriosService } from 'src/app/services/criterios.service';
@@ -69,7 +71,6 @@ export class EvalucionComponent implements OnInit {
   spans: any[] = [];
   dataSource4: any[] = [];
   fenix: Fenix = new Fenix();
-  listaPersonas: Persona2[] = [];
   listaUsuarios: ResponsableProjection[] = [];
   listaEvidencias: AsigEvidProjection[] = [];
   selectedCriterio: number = 0;
@@ -84,6 +85,9 @@ export class EvalucionComponent implements OnInit {
   asignacion = new Asigna_Evi();
   asigedit = new Asigna_Evi();
   formulario: FormGroup;
+  mostrarModal: boolean = false;
+  fechaFinalObtenida: Date = new Date();
+  fechaInicioObtenida: Date = new Date();
   roles = [
     { rolId: 3, rolNombre: 'RESPONSABLE' },
   ];
@@ -107,6 +111,9 @@ export class EvalucionComponent implements OnInit {
   ocultar = false;
   rowSpanValue: number = 0;
   vernomIndicador = true;
+  terminoBusqueda = '';
+  modeloVigente!: Modelo;
+
   ngAfterViewInit() {
     // Usuarios
     this.dataSource2.paginator = this.paginator || null
@@ -114,7 +121,7 @@ export class EvalucionComponent implements OnInit {
     // this.dataSource3.paginator = this.paginator2|| null
     // Asignaciones
     // this.dataSource4.paginator = this.paginator3|| null
-    this.Listado();
+
   }
 
   constructor(
@@ -129,7 +136,8 @@ export class EvalucionComponent implements OnInit {
   ) {
     this.formulario = this.formBuilder.group({
       username: { value: '', disabled: true },
-      password: ['', Validators.required]
+      password: ['', Validators.required],
+      rol: ['', Validators.required],
     });
     this.paginatorIntl.nextPageLabel = this.nextPageLabel;
     this.paginatorIntl.lastPageLabel = this.lastPageLabel;
@@ -146,10 +154,8 @@ export class EvalucionComponent implements OnInit {
       data => {
         this.isLoggedIn = this.login.isLoggedIn();
         this.user = this.login.getUser();
-
       }
     );
-
     this.criterioSeleccionado();
     this.criteservice.getCriterios().subscribe(
       data => {
@@ -157,9 +163,10 @@ export class EvalucionComponent implements OnInit {
       }
     );
     this.idUsuarioAsignador = this.user.id;
-    this.personaService.getPersonas().subscribe(
-      listaPerso => this.listaPersonas = listaPerso);
+
     this.modeloMax();
+    //Directamente guardar en el objeto notificacion el modelo
+    this.noti.id_modelo = this.modeloVigente.id_modelo;
     this.Listado();
     this.ListarAsignacion();
   }
@@ -191,11 +198,10 @@ export class EvalucionComponent implements OnInit {
     this.rowSpanValue = this.getRowSpan2('descripcion', index);
   }
   modeloMax() {
-    this.criteservice.getModeMaximo().subscribe((data) => {
-      this.id_mod = data.id_modelo;
-      this.inicio = data.fecha_inicio;
-      this.fin = data.fecha_fin;
-    })
+    this.modeloVigente = JSON.parse(localStorage.getItem('modelo') || '{}');
+    this.id_mod = this.modeloVigente.id_modelo;
+    this.inicio = this.modeloVigente.fecha_inicio;
+    this.fin = this.modeloVigente.fecha_fin;
   }
 
 
@@ -224,10 +230,10 @@ export class EvalucionComponent implements OnInit {
   getRowSpan2(col: any, index: any) {
     return this.spans[index] && this.spans[index][col];
   }
-  notificaruser() {
+  notificaruser(nombreAsignado: string) {
     this.noti.fecha = new Date();
     this.noti.rol = "";
-    this.noti.mensaje = this.user?.persona?.primer_nombre + " " + this.user?.persona?.primer_apellido + " te ha asignado la evidencia " + this.nombreasignado;
+    this.noti.mensaje = this.user?.persona?.primer_nombre + " " + this.user?.persona?.primer_apellido + " te ha asignado la evidencia " + nombreAsignado;
     this.noti.visto = false;
     this.noti.usuario = this.idusuario;
     this.noti.url = "/res/evidenasignada";
@@ -243,14 +249,14 @@ export class EvalucionComponent implements OnInit {
     );
   }
 
-  notificaradmin() {
+  notificaradmin(nombreAsignado: string) {
     this.noti.fecha = new Date();
     this.noti.rol = "ADMIN";
-    this.noti.mensaje = this.user?.persona?.primer_nombre + " " + this.user?.persona?.primer_apellido + " ha asignado la evidencia " + this.nombreasignado
+    this.noti.mensaje = this.user?.persona?.primer_nombre + " " + this.user?.persona?.primer_apellido + " ha asignado la evidencia " + nombreAsignado
       + " a " + this.nombre;
     this.noti.visto = false;
     this.noti.usuario = 0;
-    this.noti.url = "/adm/detalleAprobarRechazar";
+    this.noti.url = "/adm/asignaEvidencia";
     this.noti.idactividad = 0;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
@@ -262,10 +268,10 @@ export class EvalucionComponent implements OnInit {
       }
     );
   }
-  notificarsuperadmin() {
+  notificarsuperadmin(nombreAsignado: string) {
     this.noti.fecha = new Date();
     this.noti.rol = "SUPERADMIN";
-    this.noti.mensaje = this.user?.persona?.primer_nombre + " " + this.user?.persona?.primer_apellido + " ha asignado la evidencia " + this.nombreasignado
+    this.noti.mensaje = this.user?.persona?.primer_nombre + " " + this.user?.persona?.primer_apellido + " ha asignado la evidencia " + nombreAsignado
       + " a " + this.nombre;
     this.noti.visto = false;
     this.noti.usuario = 0;
@@ -288,7 +294,7 @@ export class EvalucionComponent implements OnInit {
       + " a " + this.nombre;
     this.noti.visto = false;
     this.noti.usuario = 0;
-    this.noti.url = "/adm/detalleAprobarRechazar";
+    this.noti.url = "/adm/asignaEvidencia";
     this.noti.idactividad = 0;
     this.notificationService.crear(this.noti).subscribe(
       (data: Notificacion) => {
@@ -340,7 +346,6 @@ export class EvalucionComponent implements OnInit {
     this.fenix_service.getDocenteByNombresCompletos(this.fenix.primer_nombre, this.fenix.primer_apellido).subscribe(
       (result) => {
         this.dataSource = result;
-        console.log(this.dataSource);
       }
     )
   }
@@ -350,11 +355,9 @@ export class EvalucionComponent implements OnInit {
       Swal.fire('Error', 'Debe ingresar una cedula', 'error');
       return;
     }
-    console.log('si entra');
     this.fenix_service.getDocenteByCedula(this.fenix.cedula).subscribe(
       (result) => {
         this.dataSource = result;
-        console.log(this.dataSource);
       }
     )
   }
@@ -415,6 +418,10 @@ export class EvalucionComponent implements OnInit {
     }
   }
 
+  registroHabilitado: boolean = false;
+  public textoBoton: string = 'Registrar';
+  isLoading: boolean = false;
+
   public seleccionar(element: any) {
     this.personaSele.cedula = element.cedula;
     this.personaSele.primer_apellido = element.primer_apellido;
@@ -424,62 +431,119 @@ export class EvalucionComponent implements OnInit {
     this.personaSele.celular = element.celular;
     this.personaSele.correo = element.correo;
     this.personaSele.direccion = element.direccion;
-    console.log(this.personaSele);
     this.usuarioGuardar.username = this.personaSele.cedula;
     this.usuarioGuardar.persona = this.personaSele;
+
+    this.usuariosService.obtenerUsuario(this.usuarioGuardar.username).pipe(
+      tap((existeUsuario: boolean) => {
+        if (existeUsuario) {
+          this.registroHabilitado = true;
+          this.textoBoton = 'Agregar';
+        } else {
+          this.registroHabilitado = false;
+          this.textoBoton = 'Registrar';
+        }
+      }),
+      catchError((error) => {
+        console.log(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al comprobar usuario',
+          text: 'Error al comprobar la existencia del usuario',
+          footer: '<a href=""></a>',
+        });
+        return throwError(error);
+      })
+    ).subscribe();
   }
 
   public seleccionarUsuario(elemento: any) {
     this.usuarioSele.id = elemento.id;
-    console.log("id traido "+this.usuarioSele.id)
     this.usuarioSele.username = elemento.usua;
     this.usuarioSele.persona = elemento.nombres;
     this.nombre = elemento.nombres;
   }
-  
-  public AsignaUsuario(element: any) {
+
+  selectedEvidencias: any[] = [];
+
+  toggleEvidenciaSelection(evidencia: any) {
+    const index = this.selectedEvidencias.indexOf(evidencia);
+    if (index === -1) {
+      // Si la evidencia no está en el array de seleccionadas, la añadimos
+      this.selectedEvidencias.push(evidencia);
+    } else {
+      // Si la evidencia está en el array de seleccionadas, la eliminamos
+      this.selectedEvidencias.splice(index, 1);
+    }
+  }
+  public AsignaUsuario() {
+    this.isLoading = true;
     if (this.asignar.fecha_inicio == null || this.asignar.fecha_fin == null) {
-      Swal.fire('Error', `Debe llenar todos los campos`, 'error');
+      Swal.fire('Advertencia', `Se debe llenar todos los campos`, 'warning');
+      this.isLoading = false;
+      return;
+
+    }
+    if (this.asignar.fecha_inicio >= this.asignar.fecha_fin) {
+      Swal.fire('Advertencia', `La fecha de inicio no puede ser mayor a la fecha fin`, 'warning');
+      this.isLoading = false;
       return;
     }
 
-    if (this.asignar.fecha_inicio >= this.asignar.fecha_fin) {
-      Swal.fire('Error', `La fecha de inicio no puede ser mayor a la fecha fin`, 'error');
+    // Verificar si se han seleccionado evidencias
+    if (!this.selectedEvidencias || this.selectedEvidencias.length === 0) {
+      Swal.fire('Advertencia', 'Debe seleccionar al menos una evidencia', 'warning');
+      this.isLoading = false;
       return;
     }
-    this.asignacion.evidencia.id_evidencia = element.idev;
-    this.nombreasignado = element.descripc;
-    this.asignacion.id_modelo = this.id_mod;
-    this.asignacion.fecha_inicio = this.asignar.fecha_inicio;
-    this.asignacion.fecha_fin = this.asignar.fecha_fin;
-    this.asignacion.usuario.id = this.usuarioSele.id;
-    this.asignacion.id_usuario_asignador = this.idUsuarioAsignador;
-    console.log(this.asignacion)
-    this.asignarEvidenciaService.createAsigna(this.asignacion)
+
+    // Crear array de asignaciones
+    const asignaciones: AsignaEvidenciaParamss[] = [];
+    let nombreAsignado: string;
+
+    for (const evidencia of this.selectedEvidencias) {
+      nombreAsignado = evidencia.descripc;
+      const asignacion: AsignaEvidenciaParamss = {
+        evidencia_id: evidencia.idev,
+        id_modelo: this.id_mod,
+        fecha_inicio: this.asignar.fecha_inicio,
+        fecha_fin: this.asignar.fecha_fin,
+        usuario_id: this.usuarioSele.id,
+        id_usuario_asignador: this.idUsuarioAsignador,
+        nombreasignado: nombreAsignado
+      };
+      asignaciones.push(asignacion);
+    }
+    this.asignarEvidenciaService.createAsigna2(asignaciones)
       .subscribe(
-        (response) => {
+        (responses) => {
           this.idusuario = this.usuarioSele.id;
-          console.log("Nombre asignado " + this.nombreasignado + " Nombre " + this.nombre + " id: " + this.idusuario);
-          this.notificaradmin();
-          this.notificarsuperadmin();
-          this.notificaruser();
           this.listar();
           this.Listado();
           this.ListarAsignacion();
 
+          // Llamar a las funciones de notificación aquí dentro del subscribe
+          for (const asignacion of asignaciones) {
+            this.notificaruser(asignacion.nombreasignado);
+            this.notificarsuperadmin(asignacion.nombreasignado);
+            this.notificaradmin(asignacion.nombreasignado);
+          }
+
           Swal.fire(
             'Exitoso',
-            'Se ha completado la asignación con exito',
+            'Se ha completado la/s asignacion/es con éxito',
             'success'
-          )
+          );
+          this.isLoading = false;
         },
         (error) => {
-          console.error('Error al asignar usuario', error);
+          console.error('Error al realizar la/s asignacion/es al usuario', error);
           Swal.fire(
             'Error',
             'Ha ocurrido un error',
             'warning'
-          )
+          );
+          this.isLoading = false;
         }
       );
   }
@@ -489,11 +553,6 @@ export class EvalucionComponent implements OnInit {
     const fechaFin = new Date(elemento.fecha_fin);
     const fechaActual = new Date();
     return fechaFin < fechaActual;
-  }
-
-  public editarFecha(elemento: any): void {
-    // Aquí puedes implementar la lógica para editar la fecha
-    // Puedes mostrar un cuadro de diálogo o redirigir a una página de edición de fecha.
   }
 
   showSubcriterio() {
@@ -506,7 +565,7 @@ export class EvalucionComponent implements OnInit {
 
   listar() {
 
-    this.evidenciaService.getevitab(this.selectedCriterio).subscribe(
+    this.evidenciaService.obtenerEvidenciasPorCriterio(this.selectedCriterio, this.modeloVigente.id_modelo).subscribe(
       (listaEvi: AsigEvidProjection[]) => {
         this.listaEvidencias = listaEvi; // Asignar la lista directamente
         this.dataSource3 = this.listaEvidencias;
@@ -528,11 +587,10 @@ export class EvalucionComponent implements OnInit {
   ListarAsignacion() {
     this.dataSource4 = [];
     this.spans2 = [];
-    this.asignarEvidenciaService.getAsignacion().subscribe(
+    this.asignarEvidenciaService.getAsignacion(this.modeloVigente.id_modelo).subscribe(
       (listaAsig: AsignaProjection[]) => {
         this.listaAsignaEvidencias = listaAsig;
         this.dataSource4 = this.listaAsignaEvidencias;
-        console.log("Datos as " + JSON.stringify(this.dataSource4));
         //'idasigna', 'criterio','subcriterio', 'evidencia', 'usuario', 'descripcion', 'actions'
         this.cacheSpan('usuario', (d) => d.respon);
         this.cacheSpan('criterio', (d) => d.respon + d.crite);
@@ -566,17 +624,15 @@ export class EvalucionComponent implements OnInit {
   }
 
   getRowSpan(col: any, index: any) {
-    return this.spans2[index] && this.spans2[index][col];
+    return this.spans2[index] && this.spans2[index][col]; this.notificaruser
   }
 
   Listado() {
-    this.responsableService.getResponsables().subscribe(
+    this.responsableService.getResponsables(this.modeloVigente.id_modelo).subscribe(
       (listaUsua: ResponsableProjection[]) => {
         this.listaUsuarios = listaUsua;
         this.dataSource2.data = this.listaUsuarios;
         this.dataSource2.connect(); // Añadir esta línea
-        console.log(this.listaUsuarios);
-        console.log(this.dataSource2.data);
       }
     );
   }
@@ -593,16 +649,15 @@ export class EvalucionComponent implements OnInit {
 
 
   limpiarFormulario() {
+    this.formulario.reset();
   }
 
   registrarUsuario() {
-    console.log(this.usuarioGuardar)
     this.personaService.findByCedula(this.personaSele.cedula).subscribe(
       (data2: Persona2) => {
         if (!data2) { // Si no se encuentra ningún resultado
           this.personaService.createPersona(this.personaSele).subscribe(
             (data) => {
-              console.log(data);
               this.usuarioGuardar.username = data.cedula;
               this.usuarioGuardar.persona = data;
               this.crearUsuario();
@@ -615,6 +670,7 @@ export class EvalucionComponent implements OnInit {
                 text: 'Error al registrar!',
                 footer: '<a href=""></a>',
               });
+              this.isLoading = false;
             }
           );
         } else {
@@ -626,67 +682,55 @@ export class EvalucionComponent implements OnInit {
       },
       (error: any) => {
         console.error('Error al listar los indicadores:', error);
+        this.isLoading = false;
       }
     );
   }
 
   crearUsuario() {
-    console.log(this.usuarioGuardar)
-    this.usuariosService.createUsuarioAdm(this.usuarioGuardar, this.rol,this.idUsuarioAsignador ,this.id_mod).subscribe(
+    this.usuariosService.createUsuarioAdm(this.usuarioGuardar, this.rol, this.idUsuarioAsignador, this.id_mod).subscribe(
       () => {
         Swal.fire(
           'Usuario Registrado!',
-          'El usuario ha sido registrado éxitosamente',
+          'El usuario ha sido registrado y/o agregado éxitosamente',
           'success'
         );
+        this.isLoading = false;
         this.Listado();
-
         this.formulario.reset();
         this.formulario.markAsPristine();
       },
       (error) => {
         console.log(error);
         Swal.fire({
-          icon: 'error',
-          title: 'No se pudo registrar usuario',
-          text: 'Error al registrar!',
+          icon: 'warning',
+          title: 'Usuario ya registrado',
+          text: 'El usuario ya fue registrado por este administrador',
           footer: '<a href=""></a>',
         });
+        this.isLoading = false;
       }
     );
   }
 
   guardarUsuario() {
+    this.isLoading = true;
     this.usuarioGuardar.username = this.personaSele.cedula;
     this.usuarioGuardar.password = this.formulario.value.password;
     this.rol = 3;
-    console.log(this.usuarioGuardar.username)
-    console.log(this.usuarioGuardar.password)
-    console.log(this.rol)
-    if (!this.usuarioGuardar.username || !this.usuarioGuardar.password || !this.rol) {
-      Swal.fire('Campos Vacios', 'Por favor llene todos los campos', 'warning');
-      return;
-    }
 
-    this.usuariosService.obtenerUsuario(this.usuarioGuardar.username).pipe(
-      tap((existeUsuario: boolean) => {
-        if (existeUsuario) {
-          Swal.fire('Usuario existente', 'El usuario ya está registrado', 'warning');
-        } else {
-          this.registrarUsuario();
-        }
-      }),
-      catchError((error) => {
-        console.log(error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error al comprobar usuario',
-          text: 'Error al comprobar la existencia del usuario',
-          footer: '<a href=""></a>',
-        });
-        return throwError(error);
-      })
-    ).subscribe();
+    // Verifica si el usuario ya existe
+    if (this.registroHabilitado) {
+      this.crearUsuario();
+    } else {
+      if (this.formulario.invalid) {
+        Swal.fire('Campos Vacios', 'Por favor llene todos los campos', 'warning');
+        this.isLoading = false;
+        return;
+      } else {
+        this.registrarUsuario();
+      }
+    }
   }
 
   eliminar(element: any) {
@@ -714,20 +758,38 @@ export class EvalucionComponent implements OnInit {
 
   EditarAsigna(element: any) {
     this.idasigna = element.idevid;
-    this.asignar2.fecha_inicio = element.ini;
-    this.asignar2.fecha_fin = element.fini;
+    this.asignar2.fecha_inicio = this.formatDate(element.ini);
+    this.asignar2.fecha_fin = this.formatDate(element.fini);
+
+    //Guardar en variables para posterior validacion
+    this.fechaInicioObtenida = this.asignar2.fecha_inicio;
+    this.fechaFinalObtenida = this.asignar2.fecha_fin;
+    this.mostrarModal = true;
   }
+
+  formatDate(date: number): Date {
+    const formattedDate = new Date(Number(date));
+    return formattedDate;
+  }
+
 
   Actualizarfecha() {
     if (this.asignar2.fecha_inicio == null || this.asignar2.fecha_fin == null) {
-      Swal.fire('Error', `Debe llenar todos los campos`, 'error');
+      Swal.fire('Advertencia', `Debe llenar todos los campos`, 'warning');
       return;
     }
 
     if (this.asignar2.fecha_inicio >= this.asignar2.fecha_fin) {
-      Swal.fire('Error', `La fecha de inicio no puede ser mayor a la fecha fin`, 'error');
+      Swal.fire('Advertencia', `La fecha de inicio no puede ser mayor a la fecha fin`, 'warning');
       return;
     }
+
+    if (this.asignar2.fecha_inicio.getTime() === this.fechaInicioObtenida.getTime() &&
+      this.asignar2.fecha_fin.getTime() === this.fechaFinalObtenida.getTime()) {
+      Swal.fire('Advertencia', 'No se han realizado cambios en las fechas', 'warning');
+      return;
+    }
+
     Swal.fire({
       title: 'Actualizar',
       text: "Se cambiaran las fechas de esta asignación",
@@ -742,7 +804,6 @@ export class EvalucionComponent implements OnInit {
         this.asigedit.id_asignacion_evidencia = this.idasigna;
         this.asigedit.fecha_inicio = this.asignar2.fecha_inicio;
         this.asigedit.fecha_fin = this.asignar2.fecha_fin;
-        console.log("Datos actualizar " + JSON.stringify(this.asigedit));
         this.asignarEvidenciaService.editarAsigna(this.asigedit).subscribe((response) => {
           this.ListarAsignacion();
         });
@@ -813,7 +874,7 @@ export class EvalucionComponent implements OnInit {
     if (this.selectedCriterio != 0) {
       const criterioSeleccionado = this.listacriterios.find(criterio => criterio.id_criterio === this.selectedCriterio);
       this.titulocrite = "Evidencias del criterio " + criterioSeleccionado?.nombre || '';
-      this.evidenciaService.getevitab(this.selectedCriterio).subscribe(
+      this.evidenciaService.obtenerEvidenciasPorCriterio(this.selectedCriterio, this.modeloVigente.id_modelo).subscribe(
         (listaEvi: AsigEvidProjection[]) => {
           this.listaEvidencias = listaEvi;
           this.dataSource3 = this.listaEvidencias;
@@ -821,16 +882,23 @@ export class EvalucionComponent implements OnInit {
           this.cacheSpan2('indicador', (d) => d.nombsub + d.nombind);
           this.cacheSpan2('descripcion', (d) => d.nombsub + d.nombind + d.descripc);
           this.cacheSpan2('idevi', (d) => d.nombsub + d.nombind + d.descripc + d.idev);
-          console.log("lista evidencias" + this.listaEvidencias);
           setTimeout(() => {
             this.aplicar();
           }, 0);
 
-          console.log("evidenica lisra" + JSON.stringify(this.dataSource3))
         }
       );
     } else {
       this.titulocrite = "Debe seleccionar un criterio para ver sus evidencias";
+    }
+  }
+
+  truncateDescription(description: string): string {
+    const words = description.split(' ');
+    if (words.length > 10) {
+      return words.slice(0, 10).join(' ') + '...';
+    } else {
+      return description;
     }
   }
 }

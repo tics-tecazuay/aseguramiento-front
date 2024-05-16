@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Formulas } from '../models/Formulas';
+import { Formulas, FormulasProjection } from '../models/Formulas';
 import { Observable, map } from 'rxjs';
 import baserUrl from './helper';
 import { Cuantitativa } from '../models/Cuantitativa';
@@ -14,8 +14,8 @@ export class FormulaService {
 
   constructor(private http: HttpClient) { }
 
-  getFormulas(): Observable<Formulas[]> {
-    return this.http.get<Formulas[]>(`${baserUrl}/api/formula/listarv`);
+  getFormulas(id_modelo: number): Observable<FormulasProjection[]> {
+    return this.http.get<FormulasProjection[]>(`${baserUrl}/api/formula/listarv/${id_modelo}`);
   }
   searchFormula(id: any): Observable<Formulas> {
     return this.http.get<Formulas>(`${baserUrl}/api/formula/buscar/${id}`);
@@ -36,10 +36,10 @@ export class FormulaService {
   crearCuanti(cuanti: Cuantitativa): Observable<any> {
     return this.http.post<Cuantitativa>(`${baserUrl}/api/cuantitativa/crear`, cuanti);
   }
-  actualizarCuanti(id: any, cuanti: any): Observable<any> {
+  actualizarCuanti(id: number, cuanti: Cuantitativa): Observable<any> {
     return this.http.put(`${baserUrl}/api/cuantitativa/actualizar/${id}`, cuanti);
   }
-  eliminarCuanti(cuanti: any): Observable<any> {
+  eliminarCuanti(cuanti: Cuantitativa): Observable<any> {
     return this.http.put(`${baserUrl}/api/cuantitativa/eliminarlogic/${cuanti.id_cuantitativa}`, cuanti);
   }
 

@@ -1,18 +1,18 @@
 import { Component, ViewChild } from '@angular/core';
-import { MatPaginator, MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { EvidenciaService } from 'src/app/services/evidencia.service';
 import { LoginService } from 'src/app/services/login.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { ModeloService } from 'src/app/services/modelo.service';
-
-import { AsignaEvidenciaService } from 'src/app/services/asigna-evidencia.service';
 import { EvidenciaProjection } from 'src/app/interface/EvidenciaProjection';
 import { DetalleEvaluacionService } from 'src/app/services/detalle-evaluacion.service';
 import { CriteriosService } from 'src/app/services/criterios.service';
-import { Observacion2 } from 'src/app/models/Observaciones2';
 import { detalleEvaluacion } from 'src/app/models/DetalleEvaluacion';
+import { AsignaEvidenciaService } from 'src/app/services/asigna-evidencia.service';
+import { Asigna_Evi } from 'src/app/models/Asignacion-Evidencia';
+import { Modelo } from 'src/app/models/Modelo';
 
 @Component({
   selector: 'app-evidencia-tareas-asginadas',
@@ -21,18 +21,23 @@ import { detalleEvaluacion } from 'src/app/models/DetalleEvaluacion';
 })
 export class EvidenciaTareasAsginadasComponent {
   // Propiedades y métodos anteriores
-  evidencias: EvidenciaProjection[] = []; 
+  evidencias: EvidenciaProjection[] = [];
   isLoggedIn: boolean;
   user: any;
- verificar=false;
- titulo="";
- ocultar=false;
+  verificar = false;
+  titulo = "";
+  ocultar = false;
+  isLoading = false;
   botonDeshabilitado: boolean | undefined;
   dataSource = new MatTableDataSource<EvidenciaProjection>();
-  displayedColumns: string[] = ['ID', 'Criterio', 'Subcriterio', 'Indicador', 'Actividad'];
-  id_modelo!:number;
+  displayedColumns: string[] = ['ID', 'Criterio', 'Subcriterio', 'Indicador', 'Evidencia', 'Subido', 'Actividad'];
+  id_modelo!: number;
+  conteoArchivos!: number;
+  activ: Asigna_Evi = new Asigna_Evi();
+  modeloVigente!: Modelo;
+
   constructor(private detaeva: DetalleEvaluacionService,
-    private login: LoginService,private httpCriterios: CriteriosService,
+    private login: LoginService, private httpCriterios: CriteriosService,
     private evidenciaService: EvidenciaService,
     private modeloService: ModeloService, private router: Router,
     private paginatorIntl: MatPaginatorIntl) {
@@ -47,7 +52,7 @@ export class EvidenciaTareasAsginadasComponent {
       if (length == 0 || pageSize == 0) {
         return `0 de ${length}`;
       }
-    
+
       length = Math.max(length, 0);
       const startIndex = page * pageSize;
       const endIndex =
@@ -58,35 +63,31 @@ export class EvidenciaTareasAsginadasComponent {
     };
   }
 
- /* ngAfterViewInit() {
-    console.log('Paginator:', this.paginator);
-    if (this.paginator) {
-      this.dataSource.paginator = this.paginator;
-    }
-  }*/
+  /* ngAfterViewInit() {
+     console.log('Paginator:', this.paginator);
+     if (this.paginator) {
+       this.dataSource.paginator = this.paginator;
+     }
+   }*/
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  
-
- 
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.login.loginStatusSubjec.asObservable().subscribe(
       data => {
         this.isLoggedIn = this.login.isLoggedIn();
         this.user = this.login.getUser();
-       
+
       }
     );
-     this.Inicio();
-    localStorage.removeItem("eviden");   
+    this.Inicio();
+    this.Listado();
+    localStorage.removeItem("eviden");
   }
 
-  Inicio(){
-    this.httpCriterios.getModeMaximo().subscribe((data) => {
-      this.id_modelo =data.id_modelo;
-      console.log("ID modelo"+this.id_modelo);
-      this.Listado();
-    });  
+  Inicio() {
+    this.modeloVigente = JSON.parse(localStorage.getItem('modelo') || '{}');
+    this.id_modelo = this.modeloVigente.id_modelo;
   }
 
   spans: any[] = [];
@@ -102,31 +103,31 @@ export class EvidenciaTareasAsginadasComponent {
         }
         count++;
       }
-  
+
       if (!this.spans[i]) {
         this.spans[i] = {};
       }
-  
+
       this.spans[i][key] = count;
       i += count;
     }
   }
-  
-  
+
+
   getRowSpan(col: any, index: any) {
     return this.spans[index] && this.spans[index][col];
   }
 
   Listado(): void {
-    this.evidenciaService.getevilist(this.user.username).subscribe((data: any[]) => {
+    this.evidenciaService.getevilist(this.user.username, this.id_modelo).subscribe((data: any[]) => {
       if (data.length != 0) {
         this.verificar = true;
-        this.titulo = 'ACTIVIDADES ASIGNADAS';
+        this.titulo = 'EVIDENCIAS ASIGNADAS';
         this.evidencias = data;
 
         this.cacheSpan('crite', (d) => d.criterio);
         this.cacheSpan('subcrite', (d) => d.criterio + d.subcriterio);
-        this.cacheSpan('indi', (d) =>  d.criterio + d.subcriterio + d.indicador);
+        this.cacheSpan('indi', (d) => d.criterio + d.subcriterio + d.indicador);
 
         data.forEach(evidencia => {
           this.detaeva.getObservaciones(evidencia.id_evidencia, this.id_modelo).subscribe(
@@ -137,18 +138,20 @@ export class EvidenciaTareasAsginadasComponent {
         });
 
         this.dataSource.data = this.evidencias;
+        this.isLoading = false;
       } else {
+        this.isLoading = false;
         this.titulo = 'NO TIENES ACTIVIDADES ASIGNADAS';
       }
     });
   }
 
-  
-  
+
+
   verDetalles(evidencia: any) {
     this.router.navigate(['/res/ActividadesResponsable'], { state: { data: evidencia.id_evidencia } });
   }
-    
+
   getColorEstado(estado: string): string {
     switch (estado.toLowerCase()) {
       case 'pendiente':
@@ -161,7 +164,7 @@ export class EvidenciaTareasAsginadasComponent {
         return '';
     }
   }
-  
+
 
   verificarFechaLimite() {
     this.modeloService.getModeMaximo().subscribe(data => {
@@ -184,4 +187,14 @@ export class EvidenciaTareasAsginadasComponent {
       confirmButtonText: 'Aceptar'
     });
   }
+
+  truncateDescription(description: string): string {
+    const words = description.split(' ');
+    if (words.length > 10) {
+      return words.slice(0, 10).join(' ') + '...';
+    } else {
+      return description;
+    }
+  }
+
 }

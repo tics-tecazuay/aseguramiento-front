@@ -1,0 +1,91 @@
+<body>
+    <div *ngIf="isLoading" class="loading-overlay">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Cargando...</p>
+    </div>
+    <div class="container bg-light border border-start-0 rounded-4">
+        <blockquote class="blockquote text-dark" style="margin-top: 5%">
+            <h1><strong> Enviar E-mails</strong></h1>
+        </blockquote>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Buscar..." [(ngModel)]="searchTerm" />
+                </div>
+                <div class="mat-elevation-z8 table-responsive">
+                    <table mat-table [dataSource]="usuarioResponsable| responsable:searchTerm ">
+                        <ng-container matColumnDef="cedula">
+                            <th mat-header-cell *matHeaderCellDef> CÉDULA </th>
+                            <td mat-cell *matCellDef="let a"> {{a.persona.cedula}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nombre">
+                            <th mat-header-cell *matHeaderCellDef> NOMBRE </th>
+                            <td mat-cell *matCellDef="let a; let i = index"> {{a.persona.primer_nombre}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="apellido">
+                            <th mat-header-cell *matHeaderCellDef> APELLIDO </th>
+                            <td mat-cell *matCellDef="let a; let i = index"> {{a.persona.primer_apellido}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="celular">
+                            <th mat-header-cell *matHeaderCellDef> CELULAR </th>
+                            <td mat-cell *matCellDef="let a; let i = index"> {{a.persona.celular}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="direccion">
+                            <th mat-header-cell *matHeaderCellDef> DIRECCIÓN </th>
+                            <td mat-cell *matCellDef="let a; let i = index"> {{a.persona.direccion}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="sendMessage">
+                            <th mat-header-cell *matHeaderCellDef> ENVIAR MENSAJE </th>
+                            <td mat-cell *matCellDef="let a">
+                                <button type="button"
+                                    (click)="mecorreo(a.persona.correo); notificar(a.persona.id_persona)"
+                                    data-bs-toggle="modal" data-bs-target="#modalEnviarCorreo"
+                                    class="btn btn-outline-primary">
+                                    <i class="fas fa-paper-plane mr-2"></i>
+                                    Enviar correo
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                        <tr mat-row *matRowDef="let a; columns: displayedColumns2"></tr>
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalEnviarCorreo" data-bs-backdrop="static" data-bs-keyboard="false"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header bg-blue">
+                    <h3 class="modal-title">
+                        <i class="fas fa-clipboard"></i> Envío de correos
+                    </h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form (ngSubmit)="enviar()">
+                        <label for="toUser">Para: </label>
+                        <input type="email" id="toUser" name="toUser" [(ngModel)]="toUser" required disabled="false" />
+                        <label for="subject">Asunto:</label>
+                        <input type="text" id="subject" name="subject" [(ngModel)]="subject" required />
+                        <label for="message">Mensaje:</label>
+                        <textarea id="message" name="message" [(ngModel)]="message" required></textarea>
+                        <button type="submit" class="btn btn-primary btn-lg" data-bs-dismiss="modal">
+                            <i class="bi bi-airplane"></i> Enviar correo
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

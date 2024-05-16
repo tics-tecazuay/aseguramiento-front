@@ -2,15 +2,12 @@
   <div class="container bg-light border border-start-0 rounded-4">
     <blockquote class="blockquote text-dark" style="margin-top: 5%">
       <h1 style="text-transform: uppercase">
-        <strong
-          ><a style="cursor: pointer" (click)="irinicio()">Modelos </a>
+        <strong><a style="cursor: pointer" (click)="irinicio()">Modelos </a>
           >
-          <a style="cursor: pointer" (click)="verCriterios()"
-            >{{ model.nombre }}
+          <a style="cursor: pointer" (click)="verCriterios()">{{ model.nombre }}
           </a>
           >
-          <a>PONDERACIÓN DE MODELO </a></strong
-        >
+          <a>PONDERACIÓN DE MODELO </a></strong>
       </h1>
     </blockquote>
     <table>
@@ -44,77 +41,28 @@
 
     <div class="container">
       <form (submit)="guardarDatosEnAPI($event)" action="">
-        <div class="tabla-contenedor"  border="1px" class="table">
-          
+        <div class="tabla-contenedor" border="1px" class="table">
 
           <table mat-table [dataSource]="dataSource">
             <ng-container matColumnDef="criterio_nombre">
               <th mat-header-cell *matHeaderCellDef>CRITERIO</th>
-              <td
-                mat-cell
-                *matCellDef="let elemento; let i = index"
-                [ngClass]="{
-                  'same-name':
-                    i !== 0 &&
-                    elemento.subcriterio?.criterio?.nombre ===
-                      dataSource.data[i - 1].subcriterio?.criterio?.nombre,
-                  'different-name':
-                    i === 0 ||
-                    elemento.subcriterio?.criterio?.nombre !==
-                      dataSource.data[i - 1].subcriterio?.criterio?.nombre
-                }"
-               
-              >
-                <!-- Verifica si es el primer elemento o si el nombre es diferente al elemento anterior -->
-                <ng-container
-                  *ngIf="
-                    i === 0 ||
-                      elemento.subcriterio?.criterio?.nombre !==
-                        dataSource.data[i - 1].subcriterio?.criterio?.nombre;
-                    else sameName
-                  "
-                >
-                  {{ elemento.subcriterio?.criterio?.nombre }}
-                </ng-container>
-                <!-- Si el nombre es el mismo que el elemento anterior, no muestra nada -->
-                <ng-template #sameName></ng-template>
-              </td>
+              <td mat-cell *matCellDef="let elemento; let i = index" [attr.rowspan]="getRowSpan('criterio_nombre', i)"
+              [style.display]="getRowSpan('criterio_nombre', i) ? '' : 'none'">
+                {{ elemento.nombrecriterio }}</td>
             </ng-container>
 
             <ng-container matColumnDef="subcriterio_nombre">
               <th mat-header-cell *matHeaderCellDef>SUBCRITERIO</th>
-              <td
-                mat-cell
-                *matCellDef="let elemento; let i = index"
-                [ngClass]="{
-                  'same-name':
-                    i !== 0 &&
-                    elemento.subcriterio?.nombre ==
-                      dataSource.data[i - 1].subcriterio?.nombre,
-                  'different-name':
-                    i === 0 ||
-                    elemento.subcriterio?.nombre !==
-                      dataSource.data[i - 1].subcriterio?.nombre
-                }"
-                
-              >
-                <ng-container
-                  *ngIf="
-                    i === 0 ||
-                      elemento.subcriterio?.nombre !==
-                        dataSource.data[i - 1].subcriterio?.nombre;
-                    else sameName
-                  "
-                >
-                  {{ elemento.subcriterio?.nombre }}
-                </ng-container>
-                <ng-template #sameName></ng-template>
-              </td>
+              <td mat-cell *matCellDef="let elemento; let i = index" [attr.rowspan]="getRowSpan('subcriterio_nombre', i)"
+              [style.display]="getRowSpan('subcriterio_nombre', i) ? '' : 'none'">
+                {{ elemento.nombresubcriterio }}</td>
             </ng-container>
 
             <ng-container matColumnDef="indicador_nombre">
               <th mat-header-cell *matHeaderCellDef>INDICADOR</th>
-              <td mat-cell *matCellDef="let elemento">{{ elemento.nombre }}</td>
+              <td mat-cell *matCellDef="let elemento; let i = index" [attr.rowspan]="getRowSpan('indicador_nombre', i)"
+              [style.display]="getRowSpan('indicador_nombre', i) ? '' : 'none'">
+                {{ elemento.nombreindicador }}</td>
             </ng-container>
 
             <ng-container matColumnDef="peso">
@@ -124,29 +72,23 @@
 
             <ng-container matColumnDef="porc_valor">
               <th style="text-align: right;" mat-header-cell *matHeaderCellDef>%VALOR</th>
-              <td
-                mat-cell
-                *matCellDef="let elemento"
-                [class.color-verde]="elemento.color === 'verde'"
-                [class.color-rojo]="elemento.color === 'rojo'"
-                [class.color-naranja]="elemento.color === 'naranja'"
-                [class.color-amarillo]="elemento.color === 'amarillo'"
-                style="text-align: right;"
-              >
-                {{ elemento.porc_obtenido }}
+              <td mat-cell *matCellDef="let elemento" [class.color-verde]="elemento.color === 'verde'"
+                [class.color-rojo]="elemento.color === 'rojo'" [class.color-naranja]="elemento.color === 'naranja'"
+                [class.color-amarillo]="elemento.color === 'amarillo'" style="text-align: right;">
+                {{ elemento.porcentajeobtenido | number:'1.2-2'}}
               </td>
             </ng-container>
 
             <ng-container matColumnDef="porc_utilidad">
               <th style="text-align: right;" mat-header-cell *matHeaderCellDef>%UTILIDAD</th>
               <td style="text-align: right;" mat-cell *matCellDef="let elemento">
-                {{ elemento.porc_utilida_obtenida }}
+                {{ elemento.porcentajeutilidad | number:'1.2-2' }}
               </td>
             </ng-container>
             <ng-container matColumnDef="valor_obt">
               <th style="text-align: right;" mat-header-cell *matHeaderCellDef>VALOR</th>
               <td style="text-align: right;" mat-cell *matCellDef="let elemento">
-                {{ elemento.valor_obtenido }}
+                {{ elemento.valorobtenido | number:'1.4-4'}}
               </td>
             </ng-container>
 
@@ -154,17 +96,12 @@
             <tr mat-row *matRowDef="let fila; columns: columnasUsuario"></tr>
           </table>
 
-          <mat-paginator
-            [pageSizeOptions]="[5, 10, 20]"
-            showFirstLastButtons
-            aria-label="Select page of periodic elements"
-            itemsPerPageLabel="Items por página:"
-            nextPageLabel="Siguiente"
-            previousPageLabel="Anterior"
-          >
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+            aria-label="Select page of periodic elements" itemsPerPageLabel="Items por página:"
+            nextPageLabel="Siguiente" previousPageLabel="Anterior">
           </mat-paginator>
         </div>
-        <button type="submit" class="btn btn-primary" *ngIf="!ocultarBoton">
+        <button type="submit" class="btn btn-primary" *ngIf="!ocultarBoton" [style.opacity]="model.estadoad ? '1' : '0.5'" [disabled]="!model.estadoad">
           Guardar
         </button>
       </form>

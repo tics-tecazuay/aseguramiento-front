@@ -13,3 +13,15 @@ export class Ponderacion {
     modelo : Modelo| null = null;
     contador:number=0;
 }
+
+export interface PonderacionPDTO {
+    fecha: Date;
+    peso: number;
+    porcentajeobtenido: number;
+    porcentajeutilidad: number;
+    valorobtenido: number;
+    idindicador: number;
+    idmodelo: number;
+    contador: number;
+}
+
