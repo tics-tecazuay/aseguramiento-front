@@ -14,6 +14,7 @@ import { SeguimientoEvidenciasComponent } from './seguimiento-evidencias/seguimi
 import { CriterioReporteAdmComponent } from './criterio-reporte-adm/criterio-reporte-adm.component';
 import { EmailResponsablesComponent } from './email-responsables/email-responsables.component';
 import { CalificarIndicarComponent } from './calificar-indicar/calificar-indicar.component';
+import { EvaluarEvidenciaAdminComponent } from './evaluar-evidencia-admin/evaluar-evidencia-admin.component';
 
 
 const routes: Routes = [
@@ -39,6 +40,12 @@ const routes: Routes = [
   {
     path: 'evaluacion',
     component: EvalucionComponent,
+    pathMatch: 'full',
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'evaluarevidencia',
+    component: EvaluarEvidenciaAdminComponent,
     pathMatch: 'full',
     canActivate: [AdminGuard]
   },

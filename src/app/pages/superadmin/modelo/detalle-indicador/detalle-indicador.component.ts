@@ -52,6 +52,8 @@ export class DetalleIndicadorComponent implements OnInit {
   dataSource = new MatTableDataSource<any>();
   columnasUsuario: string[] = ['id_indicador', 'nombre', 'descripcion', 'peso', 'valor_obtenido', 'porc_obtenido', 'estandar', 'tipo','resp'];
   asignacion: any;
+  rolUser: string = '';
+  id_criterio: number = 0;
 
   @ViewChild('datosModalRef') datosModalRef: any;
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
@@ -114,6 +116,8 @@ export class DetalleIndicadorComponent implements OnInit {
   recibeIndicador() {
     this.model = history.state.modelo;
     let id = history.state.data;
+    this.id_criterio=history.state.criterio;
+    this.rolUser = history.state.rol;
     //this.asignacionIndicadorService.getAsignacionIndicadorByIdModelo(this.model.id_modelo).subscribe((info) => {
       this.indicadorservice.getSubcrindica(id,this.model.id_modelo).subscribe((info) => {
        /* this.dataSource.data = [];
@@ -147,14 +151,27 @@ export class DetalleIndicadorComponent implements OnInit {
   }
 
   verCriterios() {
-    this.router.navigate(['/sup/modelo/detallemodelo'], { state: { modelo: this.model } });
+    if(this.rolUser=="ADMIN"){
+      this.router.navigate(['/adm/calificar']);
+    }else{
+      this.router.navigate(['/sup/modelo/detallemodelo'], { state: { modelo: this.model } });
+    }
   }
+  
   goBack() {
-    window.history.back();
-    this.router.navigate(['/sup/modelo/detalle-subcriterio'], { state: { modelo: this.model , data:  history.state.data}});
+    if(this.rolUser=="ADMIN"){
+      this.router.navigate(['/sup/modelo/detalle-subcriterio'], { state: { modelo: this.model , data: this.id_criterio, rol: this.rolUser}});
+    }else{
+      window.history.back();
+      this.router.navigate(['/sup/modelo/detalle-subcriterio'], { state: { modelo: this.model , data:  this.id_criterio}});
+    }
   }
 
   irinicio() {
-    this.router.navigate(['/sup/modelo/modelo']);
+    if(this.rolUser=="ADMIN"){
+      this.router.navigate(['/adm/calificar']);
+    }else{
+      this.router.navigate(['/sup/modelo/modelo']);
+    }
   }
 }

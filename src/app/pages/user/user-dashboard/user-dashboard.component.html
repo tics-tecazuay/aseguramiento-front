@@ -191,11 +191,7 @@
                       </div>
                     </th>
                     <td mat-cell style="padding: 4px; font-size: 14px;" *matCellDef="let element"
-                      [style.display]="verArchivo ? '' : 'none'" [ngClass]="{
-                      'rojo_evidencia': element.estado_evi === 'Rechazada',
-                      'amarillo_evidencia': element.estado_evi === 'pendiente' || '',
-                      'verde_evidencia': element.estado_evi === 'Aprobada'
-                    }">
+                      [style.display]="verArchivo ? '' : 'none'" >
                       <mat-checkbox [(ngModel)]="element.isSelected"></mat-checkbox>
                       <ng-container *ngIf="element.archivo_enlace && element.archivo_nombre">
                         <a href="{{ element.archivo_enlace }}" download>{{ element.archivo_nombre }}</a>

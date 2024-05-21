@@ -21,7 +21,9 @@ const routes: Routes = [
     path: 'detalle-indicador',
     component: DetalleIndicadorComponent,
     pathMatch: 'full',
-    canActivate: [SuperGuard]
+    //canActivate: [SuperGuard]
+    canActivate: [RoleguardGuard],
+    data: { allowedRoles: ['SUPERADMIN', 'ADMIN'] }
   },
   
 
@@ -36,7 +38,9 @@ const routes: Routes = [
     path: 'detallemodelo',
     component: DetalleModeloComponent,
     pathMatch: 'full',
-    canActivate: [SuperGuard]
+    //canActivate: [SuperGuard]
+    canActivate: [RoleguardGuard],
+    data: { allowedRoles: ['SUPERADMIN', 'ADMIN'] }
   },
   {
     path: 'matriz-evaluacion',

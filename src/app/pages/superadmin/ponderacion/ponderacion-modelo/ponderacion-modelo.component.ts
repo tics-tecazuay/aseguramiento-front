@@ -13,6 +13,9 @@ import Swal from 'sweetalert2';
 import { PonderacionService } from 'src/app/services/ponderacion.service';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { PonderacionProjection } from 'src/app/interface/PonderacionProjection';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+(<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-ponderacion-modelo',
@@ -170,7 +173,7 @@ export class PonderacionModeloComponent implements OnInit {
         this.indicadores = result;
         this.dataSource.data = [];
         this.asignacion = info;
-        //console.log("indicadores... " + JSON.stringify(this.indicadores))
+        console.log("criterios... " + JSON.stringify(this.indicadores))
         this.cacheSpan('criterio_nombre', (d) => d.nombrecriterio);
         this.cacheSpan('subcriterio_nombre', (d) => d.nombrecriterio + d.nombresubcriterio);
         this.cacheSpan('indicador_nombre', (d) => d.nombrecriterio + d.nombresubcriterio + d.nombreindicador);
@@ -223,106 +226,144 @@ export class PonderacionModeloComponent implements OnInit {
       });
     });
   }
-
-  recibeIndicador2() {
-    this.asignacionIndicadorService.getAsignacionIndicadorByIdModelo(Number(this.model.id_modelo)).subscribe(info => {
-      let cont = history.state.contador;
-      let fecha = history.state.fecha;
-
-      const fechaFormateada = this.formatDate(fecha);
-      this.servicePonderacion.listarPonderacionPorFecha(fechaFormateada, Number(cont)).subscribe(data => {
-        this.dataSource.data.forEach((indicador: any) => {
-          data.forEach((ponderacion: any) => {
-            if (indicador.idindicador == ponderacion.idindicador) {
-              indicador.nombreindicador = ponderacion.nombreindicador;
-              indicador.peso = ponderacion.peso;
-              indicador.porcentajeobtenido = ponderacion.porcentajeobtenido;
-              indicador.porcentajeutilidad = ponderacion.porcentajeutilidad;
-              indicador.valorobtenido = ponderacion.valorobtenido;
-            }
-            this.indicadores = data;
-            this.dataSource.data = [];
-            this.asignacion = info;
-            console.log("ponderacion por fecha... " + JSON.stringify(this.indicadores))
-            this.cacheSpan('criterio_nombre', (d) => d.nombrecriterio);
-            this.cacheSpan('subcriterio_nombre', (d) => d.nombrecriterio + d.nombresubcriterio);
-            this.cacheSpan('indicador_nombre', (d) => d.nombrecriterio + d.nombresubcriterio + d.nombreindicador);
-
-          });
-
-        });
-        if (this.conf == 1) {
-          this.dataSource.data = data.filter((indicador: any) => {
-            return info.some((asignacion: any) => {
-              return indicador.id_indicador === asignacion.indicador.id_indicador;
-            });
-          });
-
-          this.createChart();
-          this.GraficaPastel();
-          this.calculatePromedioPorCriterio();
-          this.calcularTSumaPesos();
-          this.calcularUtilidad();
-          this.coloresTabla();
-        } else {
-          this.dataSource.data = data.filter((indicador: any) => {
-            return info.some((asignacion: any) => {
-              return indicador.id_indicador === asignacion.indicador.id_indicador;
-            });
-          });
-          this.createChart();
-          this.GraficaPastel();
-          this.calculatePromedioPorCriterio();
-          this.calcularTSumaPesos();
-          this.calcularUtilidad();
-          this.coloresTabla();
-        }
-      });
+  
+  coloresTabla2() {
+    this.dataSource.data.forEach((indicador: any) => {
+      if (indicador.porcentajeobtenido > 75 && indicador.porcentajeobtenido <= 100) {
+        indicador.color = '#00FF00'; // verde
+      }
+      else if (indicador.porcentajeobtenido > 50 && indicador.porcentajeobtenido <= 75) {
+        indicador.color = '#FFFF00'; // amarillo
+      }
+      else if (indicador.porcentajeobtenido > 25 && indicador.porcentajeobtenido <= 50) {
+        indicador.color = '#FFA500'; // naranja
+      } else if (indicador.porcentajeobtenido <= 25) {
+        indicador.color = '#FF0000'; // rojo
+      } else {
+        indicador.color = 'transparent'; // Si no cumple ninguna condición, se establece transparente
+      }
     });
   }
 
-  recibeIndicador3() {
-    this.asignacionIndicadorService.getAsignacionIndicadorByIdModelo(Number(this.model.id_modelo)).subscribe(info => {
-      let cont = history.state.contador;
-      let fecha = history.state.fecha;
+  generarInformeTotal(): void {
+    this.coloresTabla2();
 
-      this.indicadorservice.getIndicadoresModelo(Number(this.model.id_modelo)).subscribe(result => {
-        this.indicadores = result;
-        this.dataSource.data = [];
-        this.asignacion = info;
-        console.log("indicadores... " + JSON.stringify(this.indicadores))
-        this.cacheSpan('criterio_nombre', (d) => d.nombrecriterio);
-        this.cacheSpan('subcriterio_nombre', (d) => d.nombrecriterio + d.nombresubcriterio);
-        this.cacheSpan('indicador_nombre', (d) => d.nombrecriterio + d.nombresubcriterio + d.nombreindicador);
-        if (this.conf == 1) {
-          this.dataSource.data = result.filter((indicador: any) => {
-            return info.some((asignacion: any) => {
-              return indicador.id_indicador === asignacion.indicador.id_indicador;
-            });
-          });
+    const content = [];
+    const fechaGeneracion = new Date().toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+    content.push({ text: `Fecha de generación: ${fechaGeneracion}`, alignment: 'right' });
+    content.push({ text: 'Reporte - Ponderación de Modelo', style: 'titulo' });
+    content.push({ text: '\n' });
 
-          this.createChart();
-          this.GraficaPastel();
-          this.calculatePromedioPorCriterio();
-          this.calcularTSumaPesos();
-          this.calcularUtilidad();
-          this.coloresTabla();
-        } else {
-          this.dataSource.data = result.filter((indicador: any) => {
-            return info.some((asignacion: any) => {
-              return indicador.id_indicador === asignacion.indicador.id_indicador;
-            });
-          });
-          this.createChart();
-          this.GraficaPastel();
-          this.calculatePromedioPorCriterio();
-          this.calcularTSumaPesos();
-          this.calcularUtilidad();
-          this.coloresTabla();
-        }
+    content.push({ text: 'Datos del Modelo', style: 'subtitulo' });
+    content.push({ text: 'ID: ' + this.model.id_modelo });
+    content.push({ text: 'NOMBRE: ' + this.model.nombre });
+    content.push({ text: 'FECHA INICIO: ' + (new Date(this.model.fecha_inicio)).toLocaleDateString('es-ES') });
+    content.push({ text: 'FECHA FIN: ' + (new Date(this.model.fecha_fin)).toLocaleDateString('es-ES') });
+    content.push({ text: 'PESO TOTAL: ' + this.sumaTotalPesos.toFixed(2) });
+    content.push({ text: 'UTILIDAD TOTAL: ' + this.sumaUtilidad.toFixed(2) });
+    content.push({ text: '\n' });
+
+    const headerStyle = {
+      fillColor: '#72B6FF',
+      bold: true,
+      color: '#FFFFFF',
+    };
+
+    const tableBody = [];
+    tableBody.push([
+      { text: 'CRITERIO', style: headerStyle },
+      { text: 'SUBCRITERIO', style: headerStyle },
+      { text: 'INDICADOR', style: headerStyle },
+      { text: 'PESO', style: headerStyle },
+      { text: '% VALOR', style: headerStyle },
+      { text: '% UTILIDAD', style: headerStyle },
+      { text: 'VALOR', style: headerStyle },
+    ]);
+
+    const criteriosUnicos = Array.from(new Set(this.dataSource.data.map(elemento => elemento.nombrecriterio)));
+    criteriosUnicos.forEach(criterio => {
+      const indicadoresCriterio = this.dataSource.data.filter(elemento => elemento.nombrecriterio === criterio);
+
+      indicadoresCriterio.forEach((indicador, index) => {
+        const rowStyle = (index % 2 === 0) ? { fillColor: '#F2F2F2' } : {};
+
+        const valorColor = indicador.color || 'transparent';
+        const valorCellStyle = { fillColor: valorColor };
+
+        const rowData = [
+          { text: (index === 0 ? criterio : ''), style: rowStyle, rowSpan: indicadoresCriterio.length },
+          { text: indicador.nombresubcriterio, style: rowStyle },
+          { text: indicador.nombreindicador, style: rowStyle },
+          { text: indicador.peso, style: rowStyle },
+          { text: indicador.porcentajeobtenido.toFixed(2), style: { ...rowStyle, ...valorCellStyle } }, // Aplicar estilo al %VALOR
+          { text: indicador.porcentajeutilidad.toFixed(2), style: rowStyle },
+          { text: indicador.valorobtenido.toFixed(4), style: rowStyle }
+        ];
+
+        tableBody.push(rowData);
       });
     });
+
+    content.push({
+      table: {
+        headerRows: 1,
+        body: tableBody,
+      },
+      style: 'tabla',
+    });
+
+    // Convertir los canvas a imágenes base64
+    const pastelImg = this.convertCanvasToImage('pastel');
+    const myChartImg = this.convertCanvasToImage('MyChart');
+
+    // Agregar las imágenes de las gráficas al PDF y centrar las imágenes
+    content.push({ text: '\n' });
+    content.push({ text: 'Gráfica de pastel por Indicadores', style: 'titulo' });
+    content.push({ image: pastelImg, width: 500, alignment: 'center' });
+    content.push({ text: 'Gráfica de Barras Por Criterios', style: 'titulo' });
+    content.push({ image: myChartImg, width: 500, alignment: 'center' });
+
+    const footer = (currentPage: number, pageCount: number) => {
+      return { text: `Página ${currentPage} de ${pageCount}`, alignment: 'center' };
+    };
+
+    const styles = {
+      titulo: {
+        fontSize: 18,
+        bold: true,
+        alignment: 'center',
+      },
+      subtitulo: {
+        fontSize: 16,
+        bold: true,
+        margin: [0, 10, 0, 5],
+      },
+      tabla: {
+        margin: [0, 10, 0, 10],
+      },
+    };
+
+    const documentDefinition: any = {
+      content,
+      styles,
+      pageOrientation: 'landscape',
+      footer: footer,
+    };
+
+    pdfMake.createPdf(documentDefinition).download('ponderacion_de_modelo.pdf');
+    this.coloresTabla();
   }
+
+  // Método para convertir canvas a imagen base64
+  convertCanvasToImage(id: string): string {
+    const canvas = document.getElementById(id) as HTMLCanvasElement;
+    return canvas.toDataURL('image/png');
+  }
+
 
   guardarDatosEnAPI(event: Event): void {
     event.preventDefault();

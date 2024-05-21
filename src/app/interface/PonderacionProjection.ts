@@ -13,4 +13,5 @@ export interface PonderacionProjection{
     porcentajeobtenido: number;
     porcentajeutilidad: number;
     peso: number;
+    color: string;
 }

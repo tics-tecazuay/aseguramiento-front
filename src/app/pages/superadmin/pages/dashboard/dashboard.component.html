@@ -190,11 +190,7 @@
                         </button>
                       </div>
                     </th>
-                    <td mat-cell *matCellDef="let element" mat-cell style="border:1px solid rgba(0, 0, 0, 0.151)" [style.display]="verArchivo ? '' : 'none'" [ngClass]="{
-                      'rojo_evidencia': element.estado_evi === 'Rechazada',
-                      'amarillo_evidencia': element.estado_evi === 'pendiente' || '',
-                      'verde_evidencia': element.estado_evi === 'Aprobada'
-                    }">
+                    <td mat-cell *matCellDef="let element" mat-cell style="border:1px solid rgba(0, 0, 0, 0.151)" [style.display]="verArchivo ? '' : 'none'" >
                       <mat-checkbox [(ngModel)]="element.isSelected"></mat-checkbox>
                       <ng-container *ngIf="element.archivo_enlace && element.archivo_nombre">
                         <a href="{{ element.archivo_enlace }}" download [ngbTooltip]="'Descargar archivo evidencia'">{{ element.archivo_nombre }} </a>

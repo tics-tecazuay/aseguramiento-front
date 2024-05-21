@@ -33,7 +33,7 @@ export class SidebarService {
       icono: 'nav-icon fas fa-exclamation-circle',
       titulo: "Revisión",
       submenu: [
-        //{ titulo: 'Evaluar Evidencias', url: 'adm/apruebaAdmin', icono: 'fas fa-times-circle' },
+        { titulo: 'Evaluar Evidencias', url: 'adm/evaluarevidencia', icono: 'fas fa-times-circle' },
         { titulo: 'Matriz de Evaluación', url: 'adm/calificar', icono: 'fas fa-times-circle' },
         { titulo: 'Estado Evidencias', url: 'adm/seguimientoevidencias', icono: 'fas fa-cubes' }
       ]

@@ -133,12 +133,7 @@
            <th mat-header-cell *matHeaderCellDef  [style.display]="verArchivo ? '' : 'none'">  
            </th>
            <td mat-cell style="padding: 4px; font-size: 14px;" *matCellDef="let element; let i = index"
-           [style.display]="verArchivo && getRowSpan3('Archivos', i) ? '' : 'none'"
-           [ngClass]="{
-            'rojo_evidencia': element.estado_evi === 'Rechazada',
-            'amarillo_evidencia': element.estado_evi === 'pendiente' || '',
-            'verde_evidencia': element.estado_evi === 'Aprobada'
-          }">
+           [style.display]="verArchivo && getRowSpan3('Archivos', i) ? '' : 'none'">
             <a href="{{ element.archivo_enlace }}" download>{{ element.archivo_nombre }}</a>
             <ng-container *ngIf="!element.archivo_enlace || !element.archivo_nombre">
               Sin archivo/s

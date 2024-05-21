@@ -441,7 +441,7 @@ export class AprobarRechazarAdminComponent implements OnInit {
         this.archivoSe = data;
         this.dataSource2.data = this.archivoSe;
       } else {
-        this.noRegistros = 'No hay registros disponibles.';
+        this.noRegistros = 'No hay archivos disponibles.';
       }
     });
   }

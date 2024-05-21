@@ -44,9 +44,9 @@ export class DetalleSubcriterioComponent {
   modelo: Modelo = new Modelo();
   buscar = '';
   miModal!: ElementRef;
-
+  rolUser: string = '';
   columnasUsuario: string[] = ['id_subcriterio', 'nombre', 'descripcion', 'indicadores'];
-
+  idcriterio: number = 0;
   @ViewChild('datosModalRef') datosModalRef: any;
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
 
@@ -76,7 +76,10 @@ export class DetalleSubcriterioComponent {
   recibeSubcriterio() {
     this.modelo = history.state.modelo;
     let id_criterio = history.state.data;
+    this.idcriterio = id_criterio;
     this.model = history.state.modelo;
+    this.rolUser= history.state.rol;
+    
     this.subcriterioservice.getSubcritIndi(id_criterio,Number(this.modelo.id_modelo)).subscribe(info => {
       this.dataSource.data =info;
      
@@ -87,13 +90,27 @@ export class DetalleSubcriterioComponent {
 
 
   verIndicadores(element: any) {
-    this.router.navigate(['/sup/modelo/detalle-indicador'], { state: { data: element.id_subcriterio, modelo: this.model } });
+    if(this.rolUser=="ADMIN"){
+      this.router.navigate(['/sup/modelo/detalle-indicador'], { state: { data: element.id_subcriterio, modelo: this.model, criterio: this.idcriterio, rol: this.rolUser } }); 
+    }else{
+      this.router.navigate(['/sup/modelo/detalle-indicador'], { state: { data: element.id_subcriterio,criterio: this.idcriterio,modelo: this.model } });
+    }
   }
+  
   verCriterios() {
-    this.router.navigate(['/sup/modelo/detallemodelo'], { state: { modelo: this.model } });
+    if(this.rolUser=="ADMIN"){
+      this.router.navigate(['/adm/calificar']);
+    }else{
+      this.router.navigate(['/sup/modelo/detallemodelo'], { state: { modelo: this.model } });
+    } 
   }
   irinicio() {
-    this.router.navigate(['/sup/modelo/modelo']);
+    if(this.rolUser=="ADMIN"){
+      this.router.navigate(['/adm/calificar']);
+      }else{
+      // código del método del botón
+      this.router.navigate(['/sup/modelo/modelo']);
+      }
   }
 }
 

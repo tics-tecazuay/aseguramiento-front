@@ -16,6 +16,7 @@ import { CriterioReporteAdmComponent } from './criterio-reporte-adm/criterio-rep
 import { EmailResponsablesComponent } from './email-responsables/email-responsables.component';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { CalificarIndicarComponent } from './calificar-indicar/calificar-indicar.component';
+import { EvaluarEvidenciaAdminComponent } from './evaluar-evidencia-admin/evaluar-evidencia-admin.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { CalificarIndicarComponent } from './calificar-indicar/calificar-indicar
     SeguimientoEvidenciasComponent,
     CriterioReporteAdmComponent,
     EmailResponsablesComponent,
-    CalificarIndicarComponent
+    CalificarIndicarComponent,
+    EvaluarEvidenciaAdminComponent
   ],
   imports: [
     CommonModule,

@@ -62,7 +62,7 @@ export class CalificarIndicarComponent implements OnInit {
   pageSize = 10;
   pageIndex = 0;
   columnsToDisplay = ['nombre_criterio', 'descripcion_criterio'];
-  columnsToDisplayWithExpand = [...this.columnsToDisplay, 'matriz'];
+  columnsToDisplayWithExpand = [...this.columnsToDisplay,'subcriterios', 'matriz'];
   expandedElement: any;
   model: Modelo = new Modelo();
   mostrarPrincipal: number = 0;
@@ -118,7 +118,6 @@ export class CalificarIndicarComponent implements OnInit {
     this.idUserLogged = this.user.id;
     this.rolUser=this.user.authorities[0].authority;
     this.obtenerModeloMax();
-    console.log("Modelo a ver" + this.model.id_modelo)
     localStorage.removeItem("datopasado"); 
   }
 
@@ -135,6 +134,10 @@ export class CalificarIndicarComponent implements OnInit {
       }
     );
   }
+  mostrar(element: any) {
+    this.router.navigate(['/sup/modelo/detalle-subcriterio'], { state: { data: element.id_criterio, modelo: this.model, rol: this.rolUser } });
+  }
+
   // Función para formatear la fecha en el formato YYYY-MM-DD
   formatDate(dateString: string): string {
     const date = new Date(dateString);

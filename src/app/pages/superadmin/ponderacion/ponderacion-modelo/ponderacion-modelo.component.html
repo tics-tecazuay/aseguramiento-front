@@ -36,9 +36,13 @@
         <td style="text-align: right;">{{ sumaUtilidad.toFixed(2) }}</td>
       </tr>
     </table>
-
+    <br>
+    <button type="button" class="btn btn-primary ml-auto" (click)="generarInformeTotal()">
+      <i class="fa fa-file-pdf"></i>
+      Generar pdf
+    </button>
+    <br>
     <br />
-
     <div class="container">
       <form (submit)="guardarDatosEnAPI($event)" action="">
         <div class="tabla-contenedor" border="1px" class="table">
@@ -46,22 +50,19 @@
           <table mat-table [dataSource]="dataSource">
             <ng-container matColumnDef="criterio_nombre">
               <th mat-header-cell *matHeaderCellDef>CRITERIO</th>
-              <td mat-cell *matCellDef="let elemento; let i = index" [attr.rowspan]="getRowSpan('criterio_nombre', i)"
-              [style.display]="getRowSpan('criterio_nombre', i) ? '' : 'none'">
+              <td mat-cell *matCellDef="let elemento">
                 {{ elemento.nombrecriterio }}</td>
             </ng-container>
 
             <ng-container matColumnDef="subcriterio_nombre">
               <th mat-header-cell *matHeaderCellDef>SUBCRITERIO</th>
-              <td mat-cell *matCellDef="let elemento; let i = index" [attr.rowspan]="getRowSpan('subcriterio_nombre', i)"
-              [style.display]="getRowSpan('subcriterio_nombre', i) ? '' : 'none'">
+              <td mat-cell *matCellDef="let elemento">
                 {{ elemento.nombresubcriterio }}</td>
             </ng-container>
 
             <ng-container matColumnDef="indicador_nombre">
               <th mat-header-cell *matHeaderCellDef>INDICADOR</th>
-              <td mat-cell *matCellDef="let elemento; let i = index" [attr.rowspan]="getRowSpan('indicador_nombre', i)"
-              [style.display]="getRowSpan('indicador_nombre', i) ? '' : 'none'">
+              <td mat-cell *matCellDef="let elemento">
                 {{ elemento.nombreindicador }}</td>
             </ng-container>
 
@@ -101,7 +102,8 @@
             nextPageLabel="Siguiente" previousPageLabel="Anterior">
           </mat-paginator>
         </div>
-        <button type="submit" class="btn btn-primary" *ngIf="!ocultarBoton" [style.opacity]="model.estadoad ? '1' : '0.5'" [disabled]="!model.estadoad">
+        <button type="submit" class="btn btn-primary" *ngIf="!ocultarBoton"
+          [style.opacity]="model.estadoad ? '1' : '0.5'" [disabled]="!model.estadoad">
           Guardar
         </button>
       </form>
